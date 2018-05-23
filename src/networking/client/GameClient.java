@@ -1,6 +1,6 @@
-package client;
+package networking.client;
 
-import server.GameServer;
+import networking.server.GameServer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
