@@ -3,6 +3,8 @@ package client;
 import client.gui.StartScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import server.GameServer;
@@ -16,11 +18,14 @@ public class GameClient extends Application {
     private final int WIDTH = 512;
     private final int HEIGHT = 512;
 
+    private Stage primaryStage;
     private Scene scene;
     private Socket socket;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+
         primaryStage.setTitle("RTS Game Client");
 
         Group root = new Group();
@@ -29,7 +34,7 @@ public class GameClient extends Application {
 
 //        initSocketConnection();
 
-        StartScreen start = new StartScreen(WIDTH, HEIGHT);
+        StartScreen start = new StartScreen(WIDTH, HEIGHT, this);
         root.getChildren().add(start);
 
         primaryStage.show();
@@ -43,5 +48,10 @@ public class GameClient extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setScene(Parent root) {
+        Scene newScene = new Scene(root);
+        primaryStage.setScene(newScene);
     }
 }
