@@ -1,6 +1,6 @@
-package client.gui;
+package gui;
 
-import client.GameClient;
+import networking.client.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

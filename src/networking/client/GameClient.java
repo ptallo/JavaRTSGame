@@ -1,13 +1,12 @@
-package client;
+package networking.client;
 
-import client.gui.StartScreen;
+import gui.StartScreen;
 import javafx.application.Application;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import server.GameServer;
+import networking.server.GameServer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -20,7 +19,8 @@ public class GameClient extends Application {
 
     private Stage primaryStage;
     private Scene scene;
-    private Socket socket;
+
+    private ClientConnectionHandler handler;
 
     @Override
     public void start(Stage primaryStage) {
@@ -32,7 +32,7 @@ public class GameClient extends Application {
         scene = new Scene(root, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
 
-//        initSocketConnection();
+        initSocketConnection();
 
         StartScreen start = new StartScreen(WIDTH, HEIGHT, this);
         root.getChildren().add(start);
@@ -42,9 +42,10 @@ public class GameClient extends Application {
 
     private void initSocketConnection() {
         try {
-            socket = new Socket("localhost", GameServer.PORT);
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            DataInputStream in = new DataInputStream(socket.getInputStream());
+            Socket socket = new Socket("localhost", GameServer.PORT);
+            DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
+            DataInputStream din = new DataInputStream(socket.getInputStream());
+            handler = new ClientConnectionHandler(socket, din, dout);
         } catch (IOException e) {
             e.printStackTrace();
         }

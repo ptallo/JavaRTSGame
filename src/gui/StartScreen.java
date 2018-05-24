@@ -1,15 +1,14 @@
-package client.gui;
+package gui;
 
-import client.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import networking.client.GameClient;
 
 
 public class StartScreen extends VBox {
-
 
     private final GameClient client;
 

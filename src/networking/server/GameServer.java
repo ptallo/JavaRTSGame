@@ -1,4 +1,4 @@
-package server;
+package networking.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,7 +13,7 @@ public class GameServer {
             ServerSocket server = new ServerSocket(PORT);
             while (true) {
                 Socket socket = server.accept();
-                ConnectionHandler handler = new ConnectionHandler(socket);
+                ServerConnectionHandler handler = new ServerConnectionHandler(socket);
                 new Thread(handler).start();
             }
         } catch (IOException e) {

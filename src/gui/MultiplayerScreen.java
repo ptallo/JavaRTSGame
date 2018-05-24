@@ -1,6 +1,6 @@
-package client.gui;
+package gui;
 
-import client.GameClient;
+import networking.client.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -19,6 +19,8 @@ public class MultiplayerScreen extends GridPane {
     private GameClient client;
     private double width;
     private double height;
+    private TableView tableView;
+    private TextField searchGameTextField;
 
     public MultiplayerScreen(double width, double height, GameClient client) {
         this.client = client;
@@ -27,7 +29,6 @@ public class MultiplayerScreen extends GridPane {
 
         setConstraints(10, 60);
 
-        setPrefSize(width, height);
         setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);
@@ -60,7 +61,7 @@ public class MultiplayerScreen extends GridPane {
         getRowConstraints().add(tableRow);
     }
 
-    public void initBackButton(){
+    private void initBackButton(){
         Button backButton = new Button("Back");
         backButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -76,6 +77,7 @@ public class MultiplayerScreen extends GridPane {
     private void initSearchTextField() {
         TextField searchGameTextField = new TextField();
         add(searchGameTextField, 1, 0);
+        this.searchGameTextField = searchGameTextField;
     }
 
     private void initRefreshButton() {
@@ -84,7 +86,7 @@ public class MultiplayerScreen extends GridPane {
         add(refreshButton, 2, 0);
     }
 
-    public void initGameTableView(){
+    private void initGameTableView(){
         TableView tableView = new TableView();
 
         TableColumn nameColumn = new TableColumn("Game Name");
@@ -94,5 +96,12 @@ public class MultiplayerScreen extends GridPane {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         add(tableView, 0, 1, 3, 3);
+        this.tableView = tableView;
     }
+
+    private void populateTable(){
+
+    }
+
+
 }
