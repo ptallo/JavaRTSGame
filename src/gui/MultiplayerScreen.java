@@ -28,7 +28,7 @@ public class MultiplayerScreen extends GridPane {
         this.height = height;
 
         setConstraints(10, 60);
-
+        setPrefSize(width, height);
         setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);
