@@ -1,14 +1,10 @@
 package client.gui;
 
 import client.GameClient;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 
@@ -17,7 +13,7 @@ public class StartScreen extends VBox {
 
     private final GameClient client;
 
-    public StartScreen(int width, int height, GameClient client){
+    public StartScreen(double width, double height, GameClient client){
         this.client = client;
         setAlignment(Pos.CENTER);
         setPrefSize(width, height);
@@ -28,27 +24,29 @@ public class StartScreen extends VBox {
         initMultiplayerButton(width, height, client);
     }
 
-    private void initMultiplayerButton(int width, int height, GameClient client) {
-        Button multiplayer = new Button("Multiplayer");
+    private void initMultiplayerButton(double width, double height, GameClient client) {
+        Button multiPlayerButton = new Button("Multiplayer");
+        multiPlayerButton.setMinWidth(getPrefWidth() * 0.8);
         EventHandler<MouseEvent> multiplayerEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 client.setScene(new MultiplayerScreen(width, height, client));
             }
         };
-        multiplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, multiplayerEventHandler);
-        getChildren().add(multiplayer);
+        multiPlayerButton.addEventFilter(MouseEvent.MOUSE_CLICKED, multiplayerEventHandler);
+        getChildren().add(multiPlayerButton);
     }
 
-    private void initSinglePlayerButton(int width, int height, GameClient client) {
-        Button singleplayer = new Button("Singleplayer");
+    private void initSinglePlayerButton(double width, double height, GameClient client) {
+        Button singlePlayerButton = new Button("Singleplayer");
+        singlePlayerButton.setMinWidth(getPrefWidth() * 0.8);
         EventHandler<MouseEvent> singleplayerEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 client.setScene(new SingleplayerScreen(width, height, client));
             }
         };
-        singleplayer.addEventFilter(MouseEvent.MOUSE_CLICKED, singleplayerEventHandler);
-        getChildren().add(singleplayer);
+        singlePlayerButton.addEventFilter(MouseEvent.MOUSE_CLICKED, singleplayerEventHandler);
+        getChildren().add(singlePlayerButton);
     }
 }

@@ -3,7 +3,6 @@ package client.gui;
 import client.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -11,11 +10,11 @@ import javafx.scene.text.Text;
 
 public class SingleplayerScreen extends GridPane {
 
-    private int height;
-    private int width;
+    private double height;
+    private double width;
     private GameClient client;
 
-    public SingleplayerScreen(int height, int width, GameClient client){
+    public SingleplayerScreen(double height, double width, GameClient client){
         this.height = height;
         this.width = width;
         this.client = client;
