@@ -43,9 +43,7 @@ public class GameClient extends Application {
     private void initSocketConnection() {
         try {
             Socket socket = new Socket("localhost", GameServer.PORT);
-            DataOutputStream dout = new DataOutputStream(socket.getOutputStream());
-            DataInputStream din = new DataInputStream(socket.getInputStream());
-            handler = new ClientConnectionHandler(socket, din, dout);
+            handler = new ClientConnectionHandler(socket);
         } catch (IOException e) {
             e.printStackTrace();
         }
