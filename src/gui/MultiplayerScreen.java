@@ -1,5 +1,14 @@
 package gui;
 
+import core.GameLobby;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import networking.client.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,6 +21,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+
+import java.util.ArrayList;
 
 
 public class MultiplayerScreen extends GridPane {
@@ -97,18 +108,32 @@ public class MultiplayerScreen extends GridPane {
     private void initGameTableView(){
         TableView tableView = new TableView();
 
-        TableColumn nameColumn = new TableColumn("Game Name");
-        TableColumn idColumn = new TableColumn("Game ID");
+        TableColumn<GameLobby, String> nameColumn = new TableColumn<GameLobby, String>("Game Name");
+        TableColumn<GameLobby, String> idColumn = new TableColumn<GameLobby, String>("Game ID");
 
         tableView.getColumns().addAll(nameColumn, idColumn);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        nameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<GameLobby, String> p) {
+                return new ReadOnlyObjectWrapper(p.getValue().getLobbyName());
+            }
+        });
+
+        idColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<GameLobby, String> p) {
+                return new ReadOnlyObjectWrapper(p.getValue().getId());
+            }
+        });
 
         add(tableView, 0, 1, 3, 3);
         this.tableView = tableView;
     }
 
     private void populateTable(){
-
+        ArrayList<GameLobby> lobbyArrayList = client.getHandler().getGameLobbies();
+        ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbyArrayList);
+        tableView.setItems(data);
     }
 
 

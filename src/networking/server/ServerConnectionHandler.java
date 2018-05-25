@@ -1,26 +1,51 @@
 package networking.server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import networking.message.GameMessage;
+import networking.message.LobbiesMessage;
+
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerConnectionHandler implements Runnable {
 
-    private Socket socket;
-    private DataOutputStream dout;
-    private DataInputStream din;
+    private ObjectOutputStream dout;
+    private ObjectInputStream din;
+    private ArrayList<GameMessage> messageQueue = new ArrayList<>();
+    private boolean isConnected;
 
     public ServerConnectionHandler(Socket socket) {
-        this.socket = socket;
+        try {
+            dout = new ObjectOutputStream(socket.getOutputStream());
+            din = new ObjectInputStream(socket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        isConnected = true;
     }
 
     @Override
     public void run() {
         try {
-            dout = new DataOutputStream(socket.getOutputStream());
-            din = new DataInputStream(socket.getInputStream());
-        } catch (IOException e) {
+            while (isConnected) {
+                if (!messageQueue.isEmpty()) {
+                    GameMessage message = messageQueue.get(0);
+                    messageQueue.remove(0);
+                    dout.writeObject(message);
+                }
+
+                GameMessage message = (GameMessage) din.readObject();
+                if (message != null) {
+                    if (message instanceof LobbiesMessage) {
+                        LobbiesMessage sendMessage = new LobbiesMessage("Sending Lobbies", GameServer.getLobbies());
+                        messageQueue.add(sendMessage);
+                    }
+                }
+            }
+        } catch (EOFException e) {
+            isConnected = false;
+            e.printStackTrace();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

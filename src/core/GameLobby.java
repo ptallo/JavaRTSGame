@@ -19,4 +19,12 @@ public class GameLobby implements Serializable {
     public void addPlayer(Player player){
         players.add(player);
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getLobbyName() {
+        return lobbyName;
+    }
 }

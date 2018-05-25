@@ -8,8 +8,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import networking.server.GameServer;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -44,6 +42,13 @@ public class GameClient extends Application {
         try {
             Socket socket = new Socket("localhost", GameServer.PORT);
             handler = new ClientConnectionHandler(socket);
+            primaryStage.setOnCloseRequest(event -> {
+                try {
+                    handler.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,5 +57,9 @@ public class GameClient extends Application {
     public void setScene(Parent root) {
         Scene newScene = new Scene(root);
         primaryStage.setScene(newScene);
+    }
+
+    public ClientConnectionHandler getHandler() {
+        return handler;
     }
 }
