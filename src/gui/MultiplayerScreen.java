@@ -77,6 +77,14 @@ public class MultiplayerScreen extends GridPane {
     private void initRefreshButton() {
         Button refreshButton = new Button("Refresh");
         refreshButton.setMaxWidth(Double.MAX_VALUE);
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                tableView.getItems().removeAll(tableView.getItems());
+                populateTable();
+            }
+        };
+        refreshButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         add(refreshButton, 2, 0);
     }
 
