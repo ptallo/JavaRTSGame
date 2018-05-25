@@ -27,28 +27,28 @@ public class MultiplayerScreen extends GridPane {
         this.width = width;
         this.height = height;
 
-        setConstraints(10, 60);
+        setConstraints(10, 33);
         setPrefSize(width, height);
         setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);
 
-        initSearchTextField();
+        initCreateGameLobby();
         initRefreshButton();
         initBackButton();
         initGameTableView();
+        initCreateGameLobby();
+
+        populateTable();
     }
 
     private void setConstraints(int headRowHeight, int tableColumnWidth) {
         ColumnConstraints smallColumn = new ColumnConstraints();
-        smallColumn.setPercentWidth((100 - tableColumnWidth) / 2);
+        smallColumn.setPercentWidth(tableColumnWidth);
         smallColumn.setHgrow(Priority.ALWAYS);
 
-        ColumnConstraints largeColumn = new ColumnConstraints();
-        largeColumn.setPercentWidth(tableColumnWidth);
-
         getColumnConstraints().add(smallColumn);
-        getColumnConstraints().add(largeColumn);
+        getColumnConstraints().add(smallColumn);
         getColumnConstraints().add(smallColumn);
 
         RowConstraints headerRow = new RowConstraints();
@@ -74,16 +74,16 @@ public class MultiplayerScreen extends GridPane {
         add(backButton, 0, 0);
     }
 
-    private void initSearchTextField() {
-        TextField searchGameTextField = new TextField();
-        add(searchGameTextField, 1, 0);
-        this.searchGameTextField = searchGameTextField;
-    }
-
     private void initRefreshButton() {
         Button refreshButton = new Button("Refresh");
         refreshButton.setMaxWidth(Double.MAX_VALUE);
         add(refreshButton, 2, 0);
+    }
+
+    private void initCreateGameLobby(){
+        Button createGameLobbyButton = new Button("Create Game");
+        createGameLobbyButton.setMaxWidth(Double.MAX_VALUE);
+        add(createGameLobbyButton, 1, 0);
     }
 
     private void initGameTableView(){
