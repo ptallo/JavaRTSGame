@@ -1,6 +1,7 @@
 package gui;
 
 import core.GameLobby;
+import core.Player;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +9,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Popup;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+import networking.client.ClientConnectionHandler;
 import networking.client.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -32,11 +36,14 @@ public class MultiplayerScreen extends GridPane {
     private double height;
     private TableView tableView;
     private TextField searchGameTextField;
+    private Player player;
 
     public MultiplayerScreen(double width, double height, GameClient client) {
         this.client = client;
         this.width = width;
         this.height = height;
+
+        player = new Player();
 
         setConstraints(10, 33);
         setPrefSize(width, height);
@@ -72,7 +79,7 @@ public class MultiplayerScreen extends GridPane {
         getRowConstraints().add(tableRow);
     }
 
-    private void initBackButton(){
+    private void initBackButton() {
         Button backButton = new Button("Back");
         backButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -99,13 +106,28 @@ public class MultiplayerScreen extends GridPane {
         add(refreshButton, 2, 0);
     }
 
-    private void initCreateGameLobby(){
+    private void initCreateGameLobby() {
         Button createGameLobbyButton = new Button("Create Game");
         createGameLobbyButton.setMaxWidth(Double.MAX_VALUE);
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                CreateLobbyPopup lobbyPopup = new CreateLobbyPopup(player);
+                lobbyPopup.setOnHidden(hideEvent -> {
+                    GameLobby lobby = lobbyPopup.getGameLobby();
+                    if (lobby != null) {
+                        ClientConnectionHandler handler = client.getHandler();
+                        handler.createGameLobby(lobby);
+                    }
+                });
+                lobbyPopup.show();
+            }
+        };
+        createGameLobbyButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         add(createGameLobbyButton, 1, 0);
     }
 
-    private void initGameTableView(){
+    private void initGameTableView() {
         TableView tableView = new TableView();
 
         TableColumn<GameLobby, String> nameColumn = new TableColumn<GameLobby, String>("Game Name");
@@ -130,11 +152,9 @@ public class MultiplayerScreen extends GridPane {
         this.tableView = tableView;
     }
 
-    private void populateTable(){
+    private void populateTable() {
         ArrayList<GameLobby> lobbyArrayList = client.getHandler().getGameLobbies();
         ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbyArrayList);
         tableView.setItems(data);
     }
-
-
 }
