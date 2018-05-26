@@ -1,6 +1,8 @@
 package networking.client;
 
 import core.GameLobby;
+import core.Player;
+import networking.message.JoinLobbyMessage;
 import networking.message.LobbiesMessage;
 import networking.message.LobbyMessage;
 
@@ -30,6 +32,7 @@ public class ClientConnectionHandler {
     public ArrayList<GameLobby> getGameLobbies(){
         try {
             LobbiesMessage message = new LobbiesMessage("GET", null);
+            dout.reset();
             dout.writeObject(message);
 
             LobbiesMessage response = (LobbiesMessage) din.readObject();
@@ -43,10 +46,27 @@ public class ClientConnectionHandler {
     public void createGameLobby(GameLobby lobby){
         try {
             LobbyMessage message = new LobbyMessage("CREATE", lobby);
+            dout.reset();
             dout.writeObject(message);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public GameLobby joinGameLobby(GameLobby lobby, Player player){
+        try {
+            JoinLobbyMessage lobbyMessage = new JoinLobbyMessage("JOIN", lobby, player);
+            dout.reset();
+            dout.writeObject(lobbyMessage);
+
+            JoinLobbyMessage returnMessage = (JoinLobbyMessage) din.readObject();
+            if (returnMessage.getJoined()){
+                return returnMessage.getObject();
+            }
+        } catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void close() throws IOException {

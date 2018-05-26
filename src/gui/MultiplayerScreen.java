@@ -6,15 +6,12 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 import networking.client.ClientConnectionHandler;
 import networking.client.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -128,8 +125,9 @@ public class MultiplayerScreen extends GridPane {
 
         TableColumn<GameLobby, String> nameColumn = new TableColumn<GameLobby, String>("Game Name");
         TableColumn<GameLobby, String> idColumn = new TableColumn<GameLobby, String>("Game ID");
+        TableColumn<GameLobby, Boolean> joinGameButtonColumn = new TableColumn<GameLobby, Boolean>("");
 
-        tableView.getColumns().addAll(nameColumn, idColumn);
+        tableView.getColumns().addAll(nameColumn, idColumn, joinGameButtonColumn);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         nameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, String>, ObservableValue<String>>() {
@@ -141,6 +139,20 @@ public class MultiplayerScreen extends GridPane {
         idColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, String>, ObservableValue<String>>() {
             public ObservableValue<String> call(TableColumn.CellDataFeatures<GameLobby, String> p) {
                 return new ReadOnlyObjectWrapper(p.getValue().getId());
+            }
+        });
+
+        joinGameButtonColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, Boolean>, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<GameLobby, Boolean> param) {
+                return null;
+            }
+        });
+
+        joinGameButtonColumn.setCellFactory(new Callback<TableColumn<GameLobby, Boolean>, TableCell<GameLobby, Boolean>>() {
+            @Override
+            public TableCell<GameLobby, Boolean> call(TableColumn<GameLobby, Boolean> param) {
+                return new JoinGameTableCell(width, height, client, player);
             }
         });
 

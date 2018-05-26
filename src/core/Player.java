@@ -9,4 +9,8 @@ public class Player implements Serializable {
     public Player() {
         id = UUID.randomUUID().toString();
     }
+
+    public String getId() {
+        return id;
+    }
 }

@@ -14,20 +14,26 @@ public class GameLobby implements Serializable {
     public GameLobby(Player owner, String name, int playerLimit) {
         id = UUID.randomUUID().toString();
         lobbyOwner = owner;
+        addPlayer(lobbyOwner);
         lobbyName = name;
         this.playerLimit = playerLimit;
     }
 
-    public void addPlayer(Player player){
+    public Boolean addPlayer(Player player){
         if (players.size() < playerLimit) {
             players.add(player);
+            return true;
         } else {
-            throw new ArrayIndexOutOfBoundsException("Player Limit Met!");
+            return false;
         }
     }
 
     public String getId() {
         return id;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 
     public String getLobbyName() {

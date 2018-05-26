@@ -4,6 +4,7 @@ import core.GameLobby;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -24,8 +25,10 @@ public class GameLobbyScreen extends GridPane {
 
         initRefreshButton(width, height, client);
 
-        TableView tableView = new TableView();
+        Label label = new Label(lobby.getLobbyName());
+        add(label, 1, 0);
 
+        TableView tableView = new TableView();
         add(tableView, 0 ,1);
     }
 

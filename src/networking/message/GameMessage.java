@@ -16,6 +16,10 @@ public abstract class GameMessage<T> implements Serializable {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public T getObject() {
         return object;
     }

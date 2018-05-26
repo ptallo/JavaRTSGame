@@ -2,6 +2,7 @@ package networking.server;
 
 import core.GameLobby;
 import networking.message.GameMessage;
+import networking.message.JoinLobbyMessage;
 import networking.message.LobbiesMessage;
 import networking.message.LobbyMessage;
 
@@ -42,13 +43,23 @@ public class ServerConnectionHandler implements Runnable {
                     if (message instanceof LobbiesMessage) {
                         LobbiesMessage sendMessage = new LobbiesMessage("Sending Lobbies", GameServer.getLobbies());
                         messageQueue.add(sendMessage);
-                    } else if (message instanceof LobbyMessage){
+                    } else if (message instanceof LobbyMessage) {
                         GameServer.getLobbies().add(((LobbyMessage) message).getObject());
+                    } else if (message instanceof JoinLobbyMessage) {
+                        JoinLobbyMessage joinLobbyMessage = (JoinLobbyMessage) message;
+                        for (GameLobby lobby : GameServer.getLobbies()) {
+                            if (lobby.getId().equals(joinLobbyMessage.getObject().getId())) {
+                                Boolean added = lobby.addPlayer(joinLobbyMessage.getPlayer());
+                                JoinLobbyMessage returnMessage = new JoinLobbyMessage("JOIN RETURN", lobby, joinLobbyMessage.getPlayer());
+                                returnMessage.setJoined(added);
+                                dout.writeObject(returnMessage);
+                            }
+                        }
                     }
                 }
             }
         } catch (EOFException e) {
-            e.printStackTrace();
+            System.out.println("CLIENT DISONNECTED!");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
