@@ -2,6 +2,7 @@ package networking.client;
 
 import core.GameLobby;
 import networking.message.LobbiesMessage;
+import networking.message.LobbyMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,6 +37,15 @@ public class ClientConnectionHandler {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void createGameLobby(GameLobby lobby){
+        try {
+            LobbyMessage message = new LobbyMessage("CREATE", lobby);
+            dout.writeObject(message);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -2,6 +2,7 @@ package networking.server;
 
 import networking.message.GameMessage;
 import networking.message.LobbiesMessage;
+import networking.message.LobbyMessage;
 
 import java.io.*;
 import java.net.Socket;
@@ -39,6 +40,8 @@ public class ServerConnectionHandler implements Runnable {
                     if (message instanceof LobbiesMessage) {
                         LobbiesMessage sendMessage = new LobbiesMessage("Sending Lobbies", GameServer.getLobbies());
                         messageQueue.add(sendMessage);
+                    } else if (message instanceof LobbyMessage){
+                        GameServer.getLobbies().add(((LobbyMessage) message).getObject());
                     }
                 }
             }

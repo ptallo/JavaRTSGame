@@ -62,4 +62,8 @@ public class GameClient extends Application {
     public ClientConnectionHandler getHandler() {
         return handler;
     }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
 }

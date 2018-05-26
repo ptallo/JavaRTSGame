@@ -1,8 +1,6 @@
 package networking.server;
 
 import core.GameLobby;
-import core.Player;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,8 +14,6 @@ public class GameServer {
 
     public static void main(String[] args) {
         try {
-            lobbies.add(new GameLobby(new Player(), "Test1"));
-            lobbies.add(new GameLobby(new Player(), "Test2"));
             ServerSocket server = new ServerSocket(PORT);
             while (true) {
                 Socket socket = server.accept();
