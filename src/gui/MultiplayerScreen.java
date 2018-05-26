@@ -2,15 +2,10 @@ package gui;
 
 import core.GameLobby;
 import core.Player;
-import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Popup;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import networking.client.ClientConnectionHandler;
 import networking.client.GameClient;
@@ -51,11 +46,10 @@ public class MultiplayerScreen extends GridPane {
         setHgap(10);
         setVgap(10);
 
-        initCreateGameLobby();
+        initCreateGameLobbyButton();
         initRefreshButton();
         initBackButton();
         initGameTableView();
-        initCreateGameLobby();
 
         populateTable();
     }
@@ -106,7 +100,7 @@ public class MultiplayerScreen extends GridPane {
         add(refreshButton, 2, 0);
     }
 
-    private void initCreateGameLobby() {
+    private void initCreateGameLobbyButton() {
         Button createGameLobbyButton = new Button("Create Game");
         createGameLobbyButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
@@ -119,6 +113,8 @@ public class MultiplayerScreen extends GridPane {
                         ClientConnectionHandler handler = client.getHandler();
                         handler.createGameLobby(lobby);
                     }
+                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(width, height, client, lobby);
+                    client.setScene(lobbyScreen);
                 });
                 lobbyPopup.show();
             }
