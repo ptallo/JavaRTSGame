@@ -1,5 +1,6 @@
 package networking.server;
 
+import core.GameLobby;
 import networking.message.GameMessage;
 import networking.message.LobbiesMessage;
 import networking.message.LobbyMessage;
@@ -32,6 +33,7 @@ public class ServerConnectionHandler implements Runnable {
                 if (!messageQueue.isEmpty()) {
                     GameMessage message = messageQueue.get(0);
                     messageQueue.remove(0);
+                    dout.reset();
                     dout.writeObject(message);
                 }
 
@@ -46,7 +48,6 @@ public class ServerConnectionHandler implements Runnable {
                 }
             }
         } catch (EOFException e) {
-            isConnected = false;
             e.printStackTrace();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
