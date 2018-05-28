@@ -19,7 +19,7 @@ public class GameLobby implements Serializable {
         this.playerLimit = playerLimit;
     }
 
-    public Boolean addPlayer(Player player){
+    public Boolean addPlayer(Player player) {
         if (players.size() < playerLimit) {
             players.add(player);
             return true;
@@ -30,6 +30,10 @@ public class GameLobby implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public Player getOwner(){
+        return lobbyOwner;
     }
 
     public ArrayList<Player> getPlayers() {

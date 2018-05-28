@@ -34,13 +34,15 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
             GameLobby newLobby = client.getHandler().joinGameLobby(lobby, player);
             lobby.addPlayer(player);
             boolean inPlayers = false;
-            for (Player lPlayer : newLobby.getPlayers()){
-                if (lPlayer.getId().equals(player.getId())){
-                    inPlayers = true;
+            if (newLobby != null) {
+                for (Player lPlayer : newLobby.getPlayers()){
+                    if (lPlayer.getId().equals(player.getId())){
+                        inPlayers = true;
+                    }
                 }
             }
             if (inPlayers) {
-                GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby);
+                GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby, player);
                 client.setScene(lobbyScene);
             }
         };

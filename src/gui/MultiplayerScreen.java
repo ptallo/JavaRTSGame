@@ -20,6 +20,8 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 
 public class MultiplayerScreen extends GridPane {
 
@@ -48,7 +50,20 @@ public class MultiplayerScreen extends GridPane {
         initBackButton();
         initGameTableView();
 
-        populateTable();
+        Runnable updateTable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(true){
+                        sleep(250);
+                        populateTable();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(updateTable).start();
     }
 
     private void setConstraints(int headRowHeight, int tableColumnWidth) {
@@ -110,7 +125,7 @@ public class MultiplayerScreen extends GridPane {
                         ClientConnectionHandler handler = client.getHandler();
                         handler.createGameLobby(lobby);
                     }
-                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(width, height, client, lobby);
+                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(width, height, client, lobby, player);
                     client.setScene(lobbyScreen);
                 });
                 lobbyPopup.show();

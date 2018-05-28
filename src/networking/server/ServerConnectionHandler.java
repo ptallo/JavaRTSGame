@@ -1,10 +1,8 @@
 package networking.server;
 
 import core.GameLobby;
-import networking.message.GameMessage;
-import networking.message.JoinLobbyMessage;
-import networking.message.LobbiesMessage;
-import networking.message.LobbyMessage;
+import core.Player;
+import networking.message.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -55,6 +53,20 @@ public class ServerConnectionHandler implements Runnable {
                                 dout.writeObject(returnMessage);
                             }
                         }
+                    } else if (message instanceof LeaveLobbyMessage) {
+                        LeaveLobbyMessage leaveLobbyMessage = (LeaveLobbyMessage) message;
+                        GameLobby lobby = leaveLobbyMessage.getObject();
+                        Player player = leaveLobbyMessage.getPlayer();
+                        GameLobby lobbyToRemove = null;
+                        for (GameLobby serverLobby : GameServer.getLobbies()) {
+                            if (serverLobby.getId().equals(lobby.getId())) {
+                                serverLobby.getPlayers().remove(player);
+                                if (serverLobby.getOwner().getId().equals(player.getId())) {
+                                    lobbyToRemove = serverLobby;
+                                }
+                            }
+                        }
+                        GameServer.getLobbies().remove(lobbyToRemove);
                     }
                 }
             }

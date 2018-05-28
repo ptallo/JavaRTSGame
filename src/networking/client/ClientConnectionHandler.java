@@ -3,6 +3,7 @@ package networking.client;
 import core.GameLobby;
 import core.Player;
 import networking.message.JoinLobbyMessage;
+import networking.message.LeaveLobbyMessage;
 import networking.message.LobbiesMessage;
 import networking.message.LobbyMessage;
 
@@ -67,6 +68,15 @@ public class ClientConnectionHandler {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void leaveGameLobby(GameLobby lobby, Player player){
+        try {
+            LeaveLobbyMessage leaveLobbyMessage = new LeaveLobbyMessage("LEAVE", lobby, player);
+            dout.writeObject(leaveLobbyMessage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void close() throws IOException {
