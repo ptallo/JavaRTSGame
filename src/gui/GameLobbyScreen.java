@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -170,7 +171,10 @@ public class GameLobbyScreen extends GridPane {
         if (!inLobbies){
             MultiplayerScreen screen = new MultiplayerScreen(width, height, client);
             client.setScene(screen);
-            // TODO implement popup which tells player they have been kicked from the lobby
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Lobby Dialog");
+            alert.setContentText("You have been kicked from the lobby!");
+            alert.showAndWait();
         }
         ObservableList<Player> data = FXCollections.observableArrayList(lobby.getPlayers());
         tableView.setItems(data);

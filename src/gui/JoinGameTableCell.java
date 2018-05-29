@@ -3,6 +3,7 @@ package gui;
 import core.GameLobby;
 import core.Player;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
@@ -45,7 +46,10 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
                 GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby, player);
                 client.setScene(lobbyScene);
             } else {
-                // TODO implement popup telling them they have failed to join the game
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Lobby Dialog");
+                alert.setContentText("You have failed to join the game!");
+                alert.showAndWait();
             }
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
