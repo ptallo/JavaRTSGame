@@ -2,16 +2,23 @@ package gui;
 
 import core.GameLobby;
 import core.Player;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
-import javafx.stage.Popup;
+import javafx.util.Callback;
 import networking.client.ClientConnectionHandler;
 import networking.client.GameClient;
 
@@ -28,6 +35,7 @@ public class GameLobbyScreen extends GridPane {
 
     private double width;
     private double height;
+    private TableView tableView;
 
     public GameLobbyScreen(double width, double height, GameClient client, GameLobby lobby, Player player) {
         this.lobby = lobby;
@@ -44,17 +52,13 @@ public class GameLobbyScreen extends GridPane {
         setHgap(10);
         setVgap(10);
 
-        initRefreshButton(width, height, client);
+        initLeaveGameButton();
+        initStartGameButton();
+        initTableSection();
+        initHeaderSection();
 
-        Label label = new Label(lobby.getLobbyName());
-        add(label, 1, 0);
-
-        TableView tableView = new TableView();
-        add(tableView, 0, 1, 3, 3);
-
-        Runnable update = new Runnable() {
-            @Override
-            public void run() {
+        Runnable update = () -> {
+            while (true) {
                 try {
                     sleep(250);
                     updateGameLobby();
@@ -66,7 +70,42 @@ public class GameLobbyScreen extends GridPane {
         new Thread(update).start();
     }
 
-    private void initRefreshButton(double width, double height, GameClient client) {
+    private void initHeaderSection() {
+        Text nameLabel = new Text("Name: ");
+        add(nameLabel, 0, 0);
+
+        Text name = new Text(lobby.getLobbyName());
+        add(name, 1, 0);
+    }
+
+    private void initTableSection(){
+        TableView tableView = new TableView();
+
+        TableColumn<Player, String> nameColumn = new TableColumn<>("Player Id");
+        TableColumn<Player, Boolean> readyColumn = new TableColumn<>("Player Id");
+
+        tableView.getColumns().addAll(nameColumn, readyColumn);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        nameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Player, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Player, String> param) {
+                return new ReadOnlyObjectWrapper<>(param.getValue().getId());
+            }
+        });
+
+        readyColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Player, Boolean>, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Player, Boolean> param) {
+                return new ReadOnlyBooleanWrapper(param.getValue().getReady());
+            }
+        });
+
+        add(tableView, 0, 1, 3, 1);
+        this.tableView = tableView;
+    }
+
+    private void initLeaveGameButton() {
         Button refreshButton = new Button("Leave");
         refreshButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
@@ -75,7 +114,27 @@ public class GameLobbyScreen extends GridPane {
             client.setScene(screen);
         };
         refreshButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-        add(refreshButton, 0, 0);
+        add(refreshButton, 0, 2);
+    }
+
+    private void initStartGameButton(){
+        Button startGameButton = new Button("Start");
+        startGameButton.setMaxWidth(Double.MAX_VALUE);
+        EventHandler<MouseEvent> eventHandler = event -> {
+            boolean startGame = true;
+            for (Player player : lobby.getPlayers()) {
+                if (!player.getReady()){
+                    startGame = false;
+                }
+            }
+            if (startGame) {
+                GameScreen gameScreen = new GameScreen(width, height, client);
+                client.setScene(gameScreen);
+                // TODO start game on server
+            }
+        };
+        startGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+        add(startGameButton, 1, 2);
     }
 
     private void initConstraints(){
@@ -91,10 +150,11 @@ public class GameLobbyScreen extends GridPane {
         headerRow.setPercentHeight(10);
 
         RowConstraints tableRow = new RowConstraints();
-        tableRow.setPercentHeight(90);
+        tableRow.setPercentHeight(80);
 
         getRowConstraints().add(headerRow);
         getRowConstraints().add(tableRow);
+        getRowConstraints().add(headerRow);
     }
 
     private void updateGameLobby() {
@@ -110,13 +170,9 @@ public class GameLobbyScreen extends GridPane {
         if (!inLobbies){
             MultiplayerScreen screen = new MultiplayerScreen(width, height, client);
             client.setScene(screen);
-
-            Popup popup = new Popup();
-            VBox vBox = new VBox();
-            vBox.setAlignment(Pos.CENTER);
-            vBox.getChildren().add(new Text("The lobby has been closed! You have been kicked!"));
-            popup.getContent().add(vBox);
-            popup.show(client.getPrimaryStage());
+            // TODO implement popup which tells player they have been kicked from the lobby
         }
+        ObservableList<Player> data = FXCollections.observableArrayList(lobby.getPlayers());
+        tableView.setItems(data);
     }
 }

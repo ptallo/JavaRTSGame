@@ -10,11 +10,12 @@ public class GameLobby implements Serializable {
     private Player lobbyOwner;
     private int playerLimit;
     private ArrayList<Player> players = new ArrayList<>();
+    //TODO implement some way to associate a socket with a player so when a socket disconnects the player will leave the lobby
 
     public GameLobby(Player owner, String name, int playerLimit) {
         id = UUID.randomUUID().toString();
         lobbyOwner = owner;
-        addPlayer(lobbyOwner);
+        players.add(owner);
         lobbyName = name;
         this.playerLimit = playerLimit;
     }

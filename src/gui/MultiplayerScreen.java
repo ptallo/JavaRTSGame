@@ -46,21 +46,17 @@ public class MultiplayerScreen extends GridPane {
         setVgap(10);
 
         initCreateGameLobbyButton();
-        initRefreshButton();
         initBackButton();
         initGameTableView();
 
-        Runnable updateTable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while(true){
-                        sleep(250);
-                        populateTable();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        Runnable updateTable = () -> {
+            try {
+                while(true){
+                    sleep(250);
+                    populateTable();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         };
         new Thread(updateTable).start();
@@ -96,20 +92,6 @@ public class MultiplayerScreen extends GridPane {
         };
         backButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         add(backButton, 0, 0);
-    }
-
-    private void initRefreshButton() {
-        Button refreshButton = new Button("Refresh");
-        refreshButton.setMaxWidth(Double.MAX_VALUE);
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                tableView.getItems().removeAll(tableView.getItems());
-                populateTable();
-            }
-        };
-        refreshButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-        add(refreshButton, 2, 0);
     }
 
     private void initCreateGameLobbyButton() {
@@ -177,7 +159,9 @@ public class MultiplayerScreen extends GridPane {
 
     private void populateTable() {
         ArrayList<GameLobby> lobbyArrayList = client.getHandler().getGameLobbies();
-        ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbyArrayList);
-        tableView.setItems(data);
+        if (lobbyArrayList != null){
+            ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbyArrayList);
+            tableView.setItems(data);
+        }
     }
 }

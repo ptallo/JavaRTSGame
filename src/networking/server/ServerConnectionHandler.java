@@ -57,16 +57,23 @@ public class ServerConnectionHandler implements Runnable {
                         LeaveLobbyMessage leaveLobbyMessage = (LeaveLobbyMessage) message;
                         GameLobby lobby = leaveLobbyMessage.getObject();
                         Player player = leaveLobbyMessage.getPlayer();
-                        GameLobby lobbyToRemove = null;
-                        for (GameLobby serverLobby : GameServer.getLobbies()) {
-                            if (serverLobby.getId().equals(lobby.getId())) {
-                                serverLobby.getPlayers().remove(player);
-                                if (serverLobby.getOwner().getId().equals(player.getId())) {
-                                    lobbyToRemove = serverLobby;
+
+                        GameLobby serverLobby = null;
+                        Player playerToRemove = null;
+                        for (GameLobby lobby1 : GameServer.getLobbies()) {
+                            if (lobby1.getId().equals(lobby.getId())) {
+                                for (Player player1 : lobby1.getPlayers()) {
+                                    if (player1.getId().equals(player.getId())) {
+                                        serverLobby = lobby1;
+                                        playerToRemove = player1;
+                                    }
                                 }
                             }
                         }
-                        GameServer.getLobbies().remove(lobbyToRemove);
+                        serverLobby.getPlayers().remove(playerToRemove);
+                        if (serverLobby.getOwner().getId().equals(playerToRemove.getId())) {
+                            GameServer.getLobbies().remove(serverLobby);
+                        }
                     }
                 }
             }

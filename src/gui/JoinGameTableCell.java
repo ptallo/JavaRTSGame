@@ -44,6 +44,8 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
             if (inPlayers) {
                 GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby, player);
                 client.setScene(lobbyScene);
+            } else {
+                // TODO implement popup telling them they have failed to join the game
             }
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
