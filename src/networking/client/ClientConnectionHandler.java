@@ -2,10 +2,6 @@ package networking.client;
 
 import core.GameLobby;
 import core.Player;
-import networking.message.JoinLobbyMessage;
-import networking.message.LeaveLobbyMessage;
-import networking.message.LobbiesMessage;
-import networking.message.LobbyMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,62 +20,65 @@ public class ClientConnectionHandler {
         this.socket = socket;
         try {
             dout = new ObjectOutputStream(socket.getOutputStream());
+            dout.flush();
             din = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<GameLobby> getGameLobbies(){
+    public ArrayList<GameLobby> getGameLobbies() {
         try {
-            LobbiesMessage message = new LobbiesMessage("GET", null);
             dout.reset();
-            dout.writeObject(message);
-
-            LobbiesMessage response = (LobbiesMessage) din.readObject();
-            return response.getObject();
+            dout.writeInt(1);
+            dout.flush();
+            ArrayList<GameLobby> lobbies = (ArrayList<GameLobby>) din.readObject();
+            return lobbies;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void createGameLobby(GameLobby lobby){
-        try {
-            LobbyMessage message = new LobbyMessage("CREATE", lobby);
-            dout.reset();
-            dout.writeObject(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public GameLobby joinGameLobby(GameLobby lobby, Player player){
-        try {
-            JoinLobbyMessage lobbyMessage = new JoinLobbyMessage("JOIN", lobby, player);
-            dout.reset();
-            dout.writeObject(lobbyMessage);
-
-            JoinLobbyMessage returnMessage = (JoinLobbyMessage) din.readObject();
-            if (returnMessage.getJoined()){
-                return returnMessage.getObject();
-            }
-        } catch (IOException | ClassNotFoundException e){
             e.printStackTrace();
         }
         return null;
     }
 
-    public void leaveGameLobby(GameLobby lobby, Player player){
+    public void createGameLobby(GameLobby lobby) {
         try {
-            LeaveLobbyMessage leaveLobbyMessage = new LeaveLobbyMessage("LEAVE", lobby, player);
-            dout.writeObject(leaveLobbyMessage);
+            dout.writeInt(2);
+            dout.writeObject(lobby);
+            dout.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public Boolean joinGameLobby(GameLobby lobby, Player player) {
+        try {
+            dout.writeInt(3);
+            dout.writeObject(lobby);
+            dout.writeObject(player);
+            dout.flush();
+            return din.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public Boolean leaveGameLobby(GameLobby lobby, Player player) {
+        try {
+            dout.writeInt(4);
+            dout.writeObject(lobby);
+            dout.writeObject(player);
+            dout.flush();
+            return din.readBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public void close() throws IOException {
         socket.close();
+        dout.close();
+        din.close();
     }
 }

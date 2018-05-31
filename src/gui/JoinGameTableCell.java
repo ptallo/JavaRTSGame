@@ -32,17 +32,9 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
         joinGameButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
             GameLobby lobby = (GameLobby) getTableRow().getItem();
-            GameLobby newLobby = client.getHandler().joinGameLobby(lobby, player);
+            Boolean added = client.getHandler().joinGameLobby(lobby, player);
             lobby.addPlayer(player);
-            boolean inPlayers = false;
-            if (newLobby != null) {
-                for (Player lPlayer : newLobby.getPlayers()){
-                    if (lPlayer.getId().equals(player.getId())){
-                        inPlayers = true;
-                    }
-                }
-            }
-            if (inPlayers) {
+            if (added) {
                 GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby, player);
                 client.setScene(lobbyScene);
             } else {

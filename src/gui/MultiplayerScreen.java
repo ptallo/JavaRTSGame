@@ -47,19 +47,10 @@ public class MultiplayerScreen extends GridPane {
 
         initCreateGameLobbyButton();
         initBackButton();
+        initRefreshButton();
         initGameTableView();
 
-        Runnable updateTable = () -> {
-            try {
-                while(true){
-                    sleep(250);
-                    populateTable();
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        };
-        new Thread(updateTable).start();
+        populateTable();
     }
 
     private void setConstraints(int headRowHeight, int tableColumnWidth) {
@@ -106,15 +97,28 @@ public class MultiplayerScreen extends GridPane {
                     if (lobby != null) {
                         ClientConnectionHandler handler = client.getHandler();
                         handler.createGameLobby(lobby);
+                        GameLobbyScreen lobbyScreen = new GameLobbyScreen(width, height, client, lobby, player);
+                        client.setScene(lobbyScreen);
                     }
-                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(width, height, client, lobby, player);
-                    client.setScene(lobbyScreen);
                 });
                 lobbyPopup.show();
             }
         };
         createGameLobbyButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         add(createGameLobbyButton, 1, 0);
+    }
+
+    private void initRefreshButton(){
+        Button refreshButton = new Button("Refresh");
+        refreshButton.setMaxWidth(Double.MAX_VALUE);
+        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                populateTable();
+            }
+        };
+        refreshButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);
+        add(refreshButton, 2, 0);
     }
 
     private void initGameTableView() {
@@ -159,9 +163,7 @@ public class MultiplayerScreen extends GridPane {
 
     private void populateTable() {
         ArrayList<GameLobby> lobbyArrayList = client.getHandler().getGameLobbies();
-        if (lobbyArrayList != null){
-            ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbyArrayList);
-            tableView.setItems(data);
-        }
+        ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbyArrayList);
+        tableView.setItems(data);
     }
 }

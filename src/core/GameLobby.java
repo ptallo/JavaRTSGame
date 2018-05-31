@@ -44,4 +44,14 @@ public class GameLobby implements Serializable {
     public String getLobbyName() {
         return lobbyName;
     }
+
+    public Boolean removePlayer(Player removePlayer) {
+        Player playerToRemove = null;
+        for (Player player : players){
+            if (player.getId().equals(removePlayer.getId())) {
+                playerToRemove = player;
+            }
+        }
+        return players.remove(playerToRemove);
+    }
 }

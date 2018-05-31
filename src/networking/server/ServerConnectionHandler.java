@@ -1,86 +1,69 @@
 package networking.server;
 
+
 import core.GameLobby;
 import core.Player;
-import networking.message.*;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
+
+import static java.lang.Thread.sleep;
 
 public class ServerConnectionHandler implements Runnable {
 
     private ObjectOutputStream dout;
     private ObjectInputStream din;
-    private ArrayList<GameMessage> messageQueue = new ArrayList<>();
-    private boolean isConnected;
 
     public ServerConnectionHandler(Socket socket) {
         try {
             dout = new ObjectOutputStream(socket.getOutputStream());
+            dout.flush();
             din = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        isConnected = true;
     }
 
     @Override
     public void run() {
-        try {
-            while (isConnected) {
-                if (!messageQueue.isEmpty()) {
-                    GameMessage message = messageQueue.get(0);
-                    messageQueue.remove(0);
+        while (true) {
+            try {
+                int messageType = din.readInt();
+                if (messageType == 1) {
                     dout.reset();
-                    dout.writeObject(message);
-                }
-
-                GameMessage message = (GameMessage) din.readObject();
-                if (message != null) {
-                    if (message instanceof LobbiesMessage) {
-                        LobbiesMessage sendMessage = new LobbiesMessage("Sending Lobbies", GameServer.getLobbies());
-                        messageQueue.add(sendMessage);
-                    } else if (message instanceof LobbyMessage) {
-                        GameServer.getLobbies().add(((LobbyMessage) message).getObject());
-                    } else if (message instanceof JoinLobbyMessage) {
-                        JoinLobbyMessage joinLobbyMessage = (JoinLobbyMessage) message;
-                        for (GameLobby lobby : GameServer.getLobbies()) {
-                            if (lobby.getId().equals(joinLobbyMessage.getObject().getId())) {
-                                Boolean added = lobby.addPlayer(joinLobbyMessage.getPlayer());
-                                JoinLobbyMessage returnMessage = new JoinLobbyMessage("JOIN RETURN", lobby, joinLobbyMessage.getPlayer());
-                                returnMessage.setJoined(added);
-                                dout.writeObject(returnMessage);
-                            }
-                        }
-                    } else if (message instanceof LeaveLobbyMessage) {
-                        LeaveLobbyMessage leaveLobbyMessage = (LeaveLobbyMessage) message;
-                        GameLobby lobby = leaveLobbyMessage.getObject();
-                        Player player = leaveLobbyMessage.getPlayer();
-
-                        GameLobby serverLobby = null;
-                        Player playerToRemove = null;
-                        for (GameLobby lobby1 : GameServer.getLobbies()) {
-                            if (lobby1.getId().equals(lobby.getId())) {
-                                for (Player player1 : lobby1.getPlayers()) {
-                                    if (player1.getId().equals(player.getId())) {
-                                        serverLobby = lobby1;
-                                        playerToRemove = player1;
-                                    }
-                                }
-                            }
-                        }
-                        serverLobby.getPlayers().remove(playerToRemove);
-                        if (serverLobby.getOwner().getId().equals(playerToRemove.getId())) {
-                            GameServer.getLobbies().remove(serverLobby);
+                    dout.writeObject(GameServer.getLobbies());
+                } else if (messageType == 2) {
+                    GameLobby lobby = (GameLobby) din.readObject();
+                    GameServer.getLobbies().add(lobby);
+                } else if (messageType == 3) {
+                    GameLobby lobby = (GameLobby) din.readObject();
+                    Player player = (Player) din.readObject();
+                    Boolean added = false;
+                    for (GameLobby serverLobby : GameServer.getLobbies()){
+                        if (serverLobby.getId().equals(lobby.getId())) {
+                            added = serverLobby.addPlayer(player);
                         }
                     }
+                    dout.writeBoolean(added);
+                    dout.flush();
+                } else if (messageType == 4){
+                    GameLobby lobby = (GameLobby) din.readObject();
+                    Player player = (Player) din.readObject();
+                    Boolean removed = false;
+                    for (GameLobby serverLobby : GameServer.getLobbies()){
+                        if (serverLobby.getId().equals(lobby.getId())) {
+                            removed = serverLobby.removePlayer(player);
+                        }
+                    }
+                    dout.writeBoolean(removed);
+                    dout.flush();
                 }
+            } catch (EOFException e) {
+                e.printStackTrace();
+                break;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        } catch (EOFException e) {
-            System.out.println("CLIENT DISONNECTED!");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -61,7 +61,7 @@ public class GameLobbyScreen extends GridPane {
         Runnable update = () -> {
             while (true) {
                 try {
-                    sleep(250);
+                    sleep(100);
                     updateGameLobby();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
