@@ -30,28 +30,19 @@ public class GameClient extends Application {
         scene = new Scene(root, WIDTH, HEIGHT);
         primaryStage.setScene(scene);
 
-        initSocketConnection();
+        handler = new ClientConnectionHandler();
+        primaryStage.setOnCloseRequest(event -> {
+            try {
+                handler.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         StartScreen start = new StartScreen(WIDTH, HEIGHT, this);
         root.getChildren().add(start);
 
         primaryStage.show();
-    }
-
-    private void initSocketConnection() {
-        try {
-            Socket socket = new Socket("localhost", GameServer.PORT);
-            handler = new ClientConnectionHandler(socket);
-            primaryStage.setOnCloseRequest(event -> {
-                try {
-                    handler.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setScene(Parent root) {
@@ -61,9 +52,5 @@ public class GameClient extends Application {
 
     public ClientConnectionHandler getHandler() {
         return handler;
-    }
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
     }
 }

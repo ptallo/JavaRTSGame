@@ -32,17 +32,11 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
         joinGameButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
             GameLobby lobby = (GameLobby) getTableRow().getItem();
-            Boolean added = client.getHandler().joinGameLobby(lobby, player);
+            client.getHandler().joinGameLobby(lobby, player);
             lobby.addPlayer(player);
-            if (added) {
-                GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby, player);
-                client.setScene(lobbyScene);
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Lobby Dialog");
-                alert.setContentText("You have failed to join the game!");
-                alert.showAndWait();
-            }
+            GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby, player);
+            client.setScene(lobbyScene);
+
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
     }

@@ -2,6 +2,7 @@ package networking.client;
 
 import core.GameLobby;
 import core.Player;
+import networking.server.GameServer;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,11 +17,10 @@ public class ClientConnectionHandler {
     private ObjectInputStream din;
 
 
-    public ClientConnectionHandler(Socket socket) {
-        this.socket = socket;
+    public ClientConnectionHandler() {
         try {
+            socket = new Socket("localhost", GameServer.PORT);;
             dout = new ObjectOutputStream(socket.getOutputStream());
-            dout.flush();
             din = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,21 +28,22 @@ public class ClientConnectionHandler {
     }
 
     public ArrayList<GameLobby> getGameLobbies() {
+        ArrayList<GameLobby> lobbies = null;
         try {
-            dout.reset();
-            dout.writeInt(1);
+            dout.write(1);
             dout.flush();
-            ArrayList<GameLobby> lobbies = (ArrayList<GameLobby>) din.readObject();
-            return lobbies;
-        } catch (IOException | ClassNotFoundException e) {
+            lobbies = (ArrayList<GameLobby>) din.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return null;
+        return lobbies;
     }
 
     public void createGameLobby(GameLobby lobby) {
         try {
-            dout.writeInt(2);
+            dout.write(2);
             dout.writeObject(lobby);
             dout.flush();
         } catch (IOException e) {
@@ -50,35 +51,31 @@ public class ClientConnectionHandler {
         }
     }
 
-    public Boolean joinGameLobby(GameLobby lobby, Player player) {
+    public void joinGameLobby(GameLobby lobby, Player player) {
         try {
-            dout.writeInt(3);
+            dout.write(3);
             dout.writeObject(lobby);
             dout.writeObject(player);
             dout.flush();
-            return din.readBoolean();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public Boolean leaveGameLobby(GameLobby lobby, Player player) {
+    public void leaveGameLobby(GameLobby lobby, Player player) {
         try {
-            dout.writeInt(4);
+            dout.write(4);
             dout.writeObject(lobby);
             dout.writeObject(player);
             dout.flush();
-            return din.readBoolean();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     public void close() throws IOException {
-        socket.close();
         dout.close();
         din.close();
+        socket.close();
     }
 }
