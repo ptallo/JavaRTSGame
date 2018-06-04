@@ -28,11 +28,15 @@ public class ClientConnectionHandler {
     }
 
     public ArrayList<GameLobby> getGameLobbies() {
-        ArrayList<GameLobby> lobbies = null;
+        ArrayList<GameLobby> lobbies = new ArrayList<>();
         try {
             dout.write(1);
             dout.flush();
-            lobbies = (ArrayList<GameLobby>) din.readObject();
+            int numberLobbies = din.readInt();
+            for (int i = 0; i < numberLobbies; i++) {
+                GameLobby lobby = (GameLobby) din.readObject();
+                lobbies.add(lobby);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -74,8 +78,8 @@ public class ClientConnectionHandler {
     }
 
     public void close() throws IOException {
-        dout.close();
         din.close();
+        dout.close();
         socket.close();
     }
 }

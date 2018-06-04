@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerConnectionHandler implements Runnable {
 
@@ -32,15 +33,21 @@ public class ServerConnectionHandler implements Runnable {
         try {
             while (true) {
                 int messageType = din.read();
-                System.out.println("messageType " + messageType);
                 if (messageType == 1) {
-                    dout.reset();
-                    dout.writeObject(GameServer.getLobbies());
+                    // GetGameLobbies
+                    ArrayList<GameLobby> lobbies = GameServer.getLobbies();
+                    dout.writeInt(lobbies.size());
+                    for (GameLobby lobby : lobbies) {
+                        GameLobby clone = new GameLobby(lobby);
+                        dout.writeObject(clone);
+                    }
                     dout.flush();
                 } else if (messageType == 2) {
+                    // CreateGameLobby
                     GameLobby newLobby = (GameLobby) din.readObject();
                     GameServer.getLobbies().add(newLobby);
                 } else if (messageType == 3) {
+                    // JoinGameLobby
                     GameLobby newLobby = (GameLobby) din.readObject();
                     Player player = (Player) din.readObject();
                     for (GameLobby lobby : GameServer.getLobbies()) {
@@ -49,20 +56,27 @@ public class ServerConnectionHandler implements Runnable {
                         }
                     }
                 } else if (messageType == 4) {
+                    // LeaveGameLobby
                     GameLobby newLobby = (GameLobby) din.readObject();
                     Player player = (Player) din.readObject();
+                    GameLobby lobbyToRemove = null;
                     for (GameLobby lobby : GameServer.getLobbies()) {
                         if (lobby.getId().equals(newLobby.getId())) {
                             Player playerToRemove = null;
-                            for (Player serverPlayer : lobby.getPlayers()){
+                            for (Player serverPlayer : lobby.getPlayers()) {
                                 if (serverPlayer.getId().equals(player.getId())) {
                                     playerToRemove = serverPlayer;
                                 }
                             }
-                            if (playerToRemove != null) {
+                            if (playerToRemove.getId().equals(lobby.getOwner().getId())) {
+                                lobbyToRemove = lobby;
+                            } else {
                                 lobby.getPlayers().remove(playerToRemove);
                             }
                         }
+                    }
+                    if (lobbyToRemove != null) {
+                        GameServer.getLobbies().remove(lobbyToRemove);
                     }
                 } else if (messageType == -1) {
                     break;

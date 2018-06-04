@@ -20,6 +20,15 @@ public class GameLobby implements Serializable {
         this.playerLimit = playerLimit;
     }
 
+    public GameLobby(GameLobby lobby){
+        this.id = lobby.getId();
+        this.lobbyName = lobby.getLobbyName();
+        this.lobbyOwner = lobby.getOwner();
+        this.playerLimit = lobby.getPlayerLimit();
+        players.addAll(lobby.getPlayers());
+        // TODO handler concurrent mod exception to players
+    }
+
     public Boolean addPlayer(Player player) {
         if (players.size() < playerLimit) {
             players.add(player);
@@ -43,6 +52,10 @@ public class GameLobby implements Serializable {
 
     public String getLobbyName() {
         return lobbyName;
+    }
+
+    public int getPlayerLimit() {
+        return playerLimit;
     }
 
     public Boolean removePlayer(Player removePlayer) {

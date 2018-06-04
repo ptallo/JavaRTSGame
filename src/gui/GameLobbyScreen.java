@@ -2,6 +2,7 @@ package gui;
 
 import core.GameLobby;
 import core.Player;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +38,7 @@ public class GameLobbyScreen extends GridPane {
     private double width;
     private double height;
     private TableView tableView;
+    private boolean inLobby = true;
 
     public GameLobbyScreen(double width, double height, GameClient client, GameLobby lobby, Player player) {
         this.lobby = lobby;
@@ -58,17 +60,15 @@ public class GameLobbyScreen extends GridPane {
         initTableSection();
         initHeaderSection();
 
-        Runnable update = () -> {
-            while (true) {
-                try {
-                    sleep(100);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while (inLobby) {
                     updateGameLobby();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
         };
-        new Thread(update).start();
+        new Thread(runnable).start();
     }
 
     private void initHeaderSection() {
@@ -79,7 +79,7 @@ public class GameLobbyScreen extends GridPane {
         add(name, 1, 0);
     }
 
-    private void initTableSection(){
+    private void initTableSection() {
         TableView tableView = new TableView();
 
         TableColumn<Player, String> nameColumn = new TableColumn<>("Player Id");
@@ -110,35 +110,40 @@ public class GameLobbyScreen extends GridPane {
         Button refreshButton = new Button("Leave");
         refreshButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
-            MultiplayerScreen screen = new MultiplayerScreen(width, height, client);
-            client.getHandler().leaveGameLobby(lobby, player);
-            client.setScene(screen);
+            inLobby = false;
+            Platform.runLater(() -> {
+                MultiplayerScreen screen = new MultiplayerScreen(width, height, client);
+                client.getHandler().leaveGameLobby(lobby, player);
+                client.setScene(screen);
+            });
         };
         refreshButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         add(refreshButton, 0, 2);
     }
 
-    private void initStartGameButton(){
+    private void initStartGameButton() {
         Button startGameButton = new Button("Start");
         startGameButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
             boolean startGame = true;
             for (Player player : lobby.getPlayers()) {
-                if (!player.getReady()){
+                if (!player.getReady()) {
                     startGame = false;
                 }
             }
             if (startGame) {
-                GameScreen gameScreen = new GameScreen(width, height, client);
-                client.setScene(gameScreen);
-                // TODO start game on server
+                Platform.runLater(() -> {
+                    GameScreen gameScreen = new GameScreen(width, height, client);
+                    client.setScene(gameScreen);
+                    // TODO start game on server
+                });
             }
         };
         startGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         add(startGameButton, 1, 2);
     }
 
-    private void initConstraints(){
+    private void initConstraints() {
         ColumnConstraints smallColumn = new ColumnConstraints();
         smallColumn.setPercentWidth(33);
         smallColumn.setHgrow(Priority.ALWAYS);
@@ -163,20 +168,28 @@ public class GameLobbyScreen extends GridPane {
         ArrayList<GameLobby> lobbies = handler.getGameLobbies();
         boolean inLobbies = false;
         for (GameLobby lobby : lobbies) {
-            if (lobby.getId().equals(this.lobby.getId())){
-                inLobbies = true;
+            if (lobby.getId().equals(this.lobby.getId())) {
                 this.lobby = lobby;
+                for (Player lPlayer : lobby.getPlayers()) {
+                    if (lPlayer.getId().equals(player.getId())) {
+                        inLobbies = true;
+                    }
+                }
             }
         }
-        if (!inLobbies){
+        if (!inLobbies) {
             MultiplayerScreen screen = new MultiplayerScreen(width, height, client);
-            client.setScene(screen);
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Lobby Dialog");
-            alert.setContentText("You have been kicked from the lobby!");
-            alert.showAndWait();
+            Platform.runLater(() -> {
+                client.setScene(screen);
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Lobby Dialog");
+                alert.setContentText("You have been kicked from the lobby!");
+                alert.showAndWait();
+            });
         }
-        ObservableList<Player> data = FXCollections.observableArrayList(lobby.getPlayers());
-        tableView.setItems(data);
+        Platform.runLater(() -> {
+            ObservableList<Player> data = FXCollections.observableArrayList(lobby.getPlayers());
+            tableView.setItems(data);
+        });
     }
 }
