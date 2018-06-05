@@ -60,11 +60,12 @@ public class GameLobbyScreen extends GridPane {
         initTableSection();
         initHeaderSection();
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                while (inLobby) {
+        Runnable runnable = () -> {
+            while (inLobby) {
+                try {
                     updateGameLobby();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
@@ -83,24 +84,19 @@ public class GameLobbyScreen extends GridPane {
         TableView tableView = new TableView();
 
         TableColumn<Player, String> nameColumn = new TableColumn<>("Player Id");
-        TableColumn<Player, Boolean> readyColumn = new TableColumn<>("Player Id");
+        TableColumn<Player, Boolean> readyColumn = new TableColumn<>("Ready");
+        TableColumn<Player, Boolean> readyPlayerButtonColumn = new TableColumn<>();
 
-        tableView.getColumns().addAll(nameColumn, readyColumn);
+        tableView.getColumns().addAll(nameColumn, readyColumn, readyPlayerButtonColumn);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        nameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Player, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Player, String> param) {
-                return new ReadOnlyObjectWrapper<>(param.getValue().getId());
-            }
-        });
+        nameColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getId()));
 
-        readyColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Player, Boolean>, ObservableValue<Boolean>>() {
-            @Override
-            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Player, Boolean> param) {
-                return new ReadOnlyBooleanWrapper(param.getValue().getReady());
-            }
-        });
+        readyColumn.setCellValueFactory(param -> new ReadOnlyBooleanWrapper(param.getValue().getReady()));
+
+        readyPlayerButtonColumn.setCellValueFactory(param -> null);
+
+        readyPlayerButtonColumn.setCellFactory(param -> new ReadyPlayerTableCell(player, lobby, client));
 
         add(tableView, 0, 1, 3, 1);
         this.tableView = tableView;
@@ -163,7 +159,7 @@ public class GameLobbyScreen extends GridPane {
         getRowConstraints().add(headerRow);
     }
 
-    private void updateGameLobby() {
+    private void updateGameLobby() throws Exception {
         ClientConnectionHandler handler = client.getHandler();
         ArrayList<GameLobby> lobbies = handler.getGameLobbies();
         boolean inLobbies = false;
@@ -178,14 +174,7 @@ public class GameLobbyScreen extends GridPane {
             }
         }
         if (!inLobbies) {
-            MultiplayerScreen screen = new MultiplayerScreen(width, height, client);
-            Platform.runLater(() -> {
-                client.setScene(screen);
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Lobby Dialog");
-                alert.setContentText("You have been kicked from the lobby!");
-                alert.showAndWait();
-            });
+            throw new Exception("Player no longer in lobby");
         }
         Platform.runLater(() -> {
             ObservableList<Player> data = FXCollections.observableArrayList(lobby.getPlayers());

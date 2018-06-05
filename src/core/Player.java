@@ -19,4 +19,8 @@ public class Player implements Serializable {
     public Boolean getReady() {
         return ready;
     }
+
+    public void setReady(Boolean ready){
+        this.ready = ready;
+    }
 }
