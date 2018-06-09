@@ -4,6 +4,7 @@ import core.GameLobby;
 import core.Player;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import networking.GameClient;
@@ -15,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
@@ -44,6 +46,13 @@ public class MultiplayerScreen extends GridPane {
         initCreateGameLobbyButton();
         initRefreshButton();
         initGameTableView();
+
+        client.getLobbyArrayList().addListener(new ListChangeListener<GameLobby>() {
+            @Override
+            public void onChanged(Change<? extends GameLobby> c) {
+                tableView.setItems(client.getLobbyArrayList());
+            }
+        });
 
         populateTable();
     }
@@ -115,9 +124,10 @@ public class MultiplayerScreen extends GridPane {
     }
 
     private void populateTable() {
-        ArrayList<GameLobby> lobbies = new ArrayList<>();
-        client.getHandler().sendMessage(new GameMessage());
-        ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbies);
-        tableView.setItems(data);
+        try {
+            client.getHandler().sendMessage(1, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
