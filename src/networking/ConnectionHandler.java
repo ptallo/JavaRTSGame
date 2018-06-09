@@ -1,24 +1,19 @@
 package networking;
 
-import core.GameLobby;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
 
-import static java.lang.Thread.sleep;
+public abstract class ConnectionHandler {
 
-public class ConnectionHandler {
+    protected Socket socket;
+    protected ObjectOutputStream oos;
+    protected ObjectInputStream ois;
 
-    private Socket socket;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
-
-    private Boolean isConnected;
+    protected Boolean isConnected;
 
     public ConnectionHandler(Socket socket){
         this.socket = socket;
@@ -31,21 +26,17 @@ public class ConnectionHandler {
         }
     }
 
+    public abstract void handleMessage(int messageType) throws IOException, ClassNotFoundException;
+
     public void listenForMessages(){
         while (isConnected) {
             try {
                 int messageType = ois.read();
-                if (messageType == 1) {
-                    int size = GameServer.getLobbies().size();
-                    for (GameLobby lobby : GameServer.getLobbies()) {
-                        GameLobby temp = new GameLobby(lobby);
-                        oos.writeObject(temp);
-                    }
-                }
+                handleMessage(messageType);
             } catch (EOFException | SocketException e) {
                 isConnected = false;
                 close();
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -59,5 +50,16 @@ public class ConnectionHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendMessage(int messageType, Object... objects) throws IOException {
+        System.out.println("sending message type: " + messageType);
+        oos.write(messageType);
+        if (objects != null){
+            for (Object object : objects){
+                oos.writeObject(object);
+            }
+        }
+        oos.flush();
     }
 }

@@ -4,8 +4,6 @@ import core.GameLobby;
 import core.Player;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -23,7 +21,7 @@ public class GameServer {
             ServerSocket server = new ServerSocket(PORT);
             while (true) {
                 Socket socket = server.accept();
-                ConnectionHandler handler = new ConnectionHandler(socket);
+                ServerConnectionHandler handler = new ServerConnectionHandler(socket);
                 Runnable runnable = handler::listenForMessages;
                 new Thread(runnable).start();
             }
