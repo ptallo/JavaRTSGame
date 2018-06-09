@@ -3,12 +3,11 @@ package gui;
 import core.GameLobby;
 import core.Player;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
-import networking.client.GameClient;
+import networking.GameClient;
 
 
 public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
@@ -32,11 +31,7 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
         joinGameButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
             GameLobby lobby = (GameLobby) getTableRow().getItem();
-            client.getHandler().joinGameLobby(lobby, player);
-            lobby.addPlayer(player);
-            GameLobbyScreen lobbyScene = new GameLobbyScreen(width, height, client, lobby, player);
-            client.setScene(lobbyScene);
-
+            // TODO add way to join game lobby
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
     }

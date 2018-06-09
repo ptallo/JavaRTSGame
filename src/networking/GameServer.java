@@ -1,7 +1,11 @@
-package networking.server;
+package networking;
 
 import core.GameLobby;
+import core.Player;
+
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,12 +17,15 @@ public class GameServer {
     private static ArrayList<GameLobby> lobbies = new ArrayList<>();
 
     public static void main(String[] args) {
+        lobbies.add(new GameLobby(new Player(), "test1" , 2));
+        lobbies.add(new GameLobby(new Player(), "test2" , 2));
         try {
             ServerSocket server = new ServerSocket(PORT);
             while (true) {
                 Socket socket = server.accept();
-                ServerConnectionHandler handler = new ServerConnectionHandler(socket);
-                new Thread(handler).start();
+                ConnectionHandler handler = new ConnectionHandler(socket);
+                Runnable runnable = handler::listenForMessages;
+                new Thread(runnable).start();
             }
         } catch (IOException e) {
             e.printStackTrace();

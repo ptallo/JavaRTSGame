@@ -3,13 +3,10 @@ package gui;
 import core.GameLobby;
 import core.Player;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.util.Callback;
-import networking.client.ClientConnectionHandler;
-import networking.client.GameClient;
+import networking.GameClient;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.input.MouseEvent;
@@ -29,7 +26,6 @@ public class MultiplayerScreen extends GridPane {
     private double width;
     private double height;
     private TableView tableView;
-    private TextField searchGameTextField;
     private Player player;
 
     public MultiplayerScreen(double width, double height, GameClient client) {
@@ -46,7 +42,6 @@ public class MultiplayerScreen extends GridPane {
         setVgap(10);
 
         initCreateGameLobbyButton();
-        initBackButton();
         initRefreshButton();
         initGameTableView();
 
@@ -72,53 +67,29 @@ public class MultiplayerScreen extends GridPane {
         getRowConstraints().add(tableRow);
     }
 
-    private void initBackButton() {
-        Button backButton = new Button("Back");
-        backButton.setMaxWidth(Double.MAX_VALUE);
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                client.setScene(new StartScreen(getWidth(), getHeight(), client));
-            }
-        };
-        backButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-        add(backButton, 0, 0);
-    }
-
     private void initCreateGameLobbyButton() {
         Button createGameLobbyButton = new Button("Create Game");
         createGameLobbyButton.setMaxWidth(Double.MAX_VALUE);
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                CreateLobbyPopup lobbyPopup = new CreateLobbyPopup(player);
-                lobbyPopup.setOnHidden(hideEvent -> {
-                    GameLobby lobby = lobbyPopup.getGameLobby();
-                    if (lobby != null) {
-                        ClientConnectionHandler handler = client.getHandler();
-                        handler.createGameLobby(lobby);
-                        GameLobbyScreen lobbyScreen = new GameLobbyScreen(width, height, client, lobby, player);
-                        client.setScene(lobbyScreen);
-                    }
-                });
-                lobbyPopup.show();
-            }
+        EventHandler<MouseEvent> eventHandler = event -> {
+            CreateLobbyPopup lobbyPopup = new CreateLobbyPopup(player);
+            lobbyPopup.setOnHidden(hideEvent -> {
+                GameLobby lobby = lobbyPopup.getGameLobby();
+                if (lobby != null) {
+                    //TODO add create game lobby capability
+                }
+            });
+            lobbyPopup.show();
         };
         createGameLobbyButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-        add(createGameLobbyButton, 1, 0);
+        add(createGameLobbyButton, 0, 0);
     }
 
     private void initRefreshButton(){
         Button refreshButton = new Button("Refresh");
         refreshButton.setMaxWidth(Double.MAX_VALUE);
-        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                populateTable();
-            }
-        };
+        EventHandler<MouseEvent> handler = event -> populateTable();
         refreshButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);
-        add(refreshButton, 2, 0);
+        add(refreshButton, 1, 0);
     }
 
     private void initGameTableView() {
@@ -131,39 +102,22 @@ public class MultiplayerScreen extends GridPane {
         tableView.getColumns().addAll(nameColumn, idColumn, joinGameButtonColumn);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        nameColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<GameLobby, String> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getLobbyName());
-            }
-        });
+        nameColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getLobbyName()));
 
-        idColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<GameLobby, String> p) {
-                return new ReadOnlyObjectWrapper(p.getValue().getId());
-            }
-        });
+        idColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getId()));
 
-        joinGameButtonColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<GameLobby, Boolean>, ObservableValue<Boolean>>() {
-            @Override
-            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<GameLobby, Boolean> param) {
-                return null;
-            }
-        });
+        joinGameButtonColumn.setCellValueFactory(param -> null);
 
-        joinGameButtonColumn.setCellFactory(new Callback<TableColumn<GameLobby, Boolean>, TableCell<GameLobby, Boolean>>() {
-            @Override
-            public TableCell<GameLobby, Boolean> call(TableColumn<GameLobby, Boolean> param) {
-                return new JoinGameTableCell(width, height, client, player);
-            }
-        });
+        joinGameButtonColumn.setCellFactory(param -> new JoinGameTableCell(width, height, client, player));
 
         add(tableView, 0, 1, 3, 3);
         this.tableView = tableView;
     }
 
     private void populateTable() {
-        ArrayList<GameLobby> lobbyArrayList = client.getHandler().getGameLobbies();
-        ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbyArrayList);
+        ArrayList<GameLobby> lobbies = new ArrayList<>();
+        client.getHandler().sendMessage(new GameMessage());
+        ObservableList<GameLobby> data = FXCollections.observableArrayList(lobbies);
         tableView.setItems(data);
     }
 }
