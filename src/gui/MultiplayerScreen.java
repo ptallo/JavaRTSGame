@@ -85,6 +85,11 @@ public class MultiplayerScreen extends GridPane {
                 GameLobby lobby = lobbyPopup.getGameLobby();
                 if (lobby != null) {
                     //TODO add create game lobby capability
+                    try {
+                        client.getHandler().sendMessage(2, new GameLobby(player, lobbyPopup.getNameTextField().getText(), 2));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             lobbyPopup.show();

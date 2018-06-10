@@ -32,6 +32,10 @@ public abstract class ConnectionHandler {
         while (isConnected) {
             try {
                 int messageType = ois.read();
+                if (messageType == -1) {
+                    System.out.println("client disconnected...");
+                    throw new EOFException("-1 message received");
+                }
                 handleMessage(messageType);
             } catch (EOFException | SocketException e) {
                 isConnected = false;

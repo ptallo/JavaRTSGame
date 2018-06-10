@@ -57,6 +57,10 @@ public class CreateLobbyPopup extends Stage {
         pane.add(createGameButton, 0, 1);
     }
 
+    public TextField getNameTextField() {
+        return nameTextField;
+    }
+
     public GameLobby getGameLobby(){
         return lobby;
     }
