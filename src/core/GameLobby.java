@@ -25,7 +25,10 @@ public class GameLobby implements Serializable {
         this.lobbyName = lobby.getLobbyName();
         this.lobbyOwner = lobby.getOwner();
         this.playerLimit = lobby.getPlayerLimit();
-        players.addAll(lobby.getPlayers());
+        for (Player player : lobby.getPlayers()){
+            Player temp = new Player(player);
+            players.add(temp);
+        }
         // TODO handler concurrent mod exception to players
     }
 

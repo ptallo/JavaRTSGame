@@ -1,6 +1,8 @@
-package networking.server;
+package networking;
 
 import core.GameLobby;
+import core.Player;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,7 +20,8 @@ public class GameServer {
             while (true) {
                 Socket socket = server.accept();
                 ServerConnectionHandler handler = new ServerConnectionHandler(socket);
-                new Thread(handler).start();
+                Runnable runnable = handler::listenForMessages;
+                new Thread(runnable).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
