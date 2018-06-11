@@ -47,12 +47,7 @@ public class MultiplayerScreen extends GridPane {
         initRefreshButton();
         initGameTableView();
 
-        client.getLobbyArrayList().addListener(new ListChangeListener<GameLobby>() {
-            @Override
-            public void onChanged(Change<? extends GameLobby> c) {
-                tableView.setItems(client.getLobbyArrayList());
-            }
-        });
+        client.getLobbyArrayList().addListener((ListChangeListener<GameLobby>) c -> tableView.setItems(client.getLobbyArrayList()));
 
         populateTable();
     }
@@ -84,8 +79,7 @@ public class MultiplayerScreen extends GridPane {
             lobbyPopup.setOnHidden(hideEvent -> {
                 GameLobby lobby = lobbyPopup.getGameLobby();
                 if (lobby != null) {
-                    //TODO add create game lobby capability
-                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client, player);
+                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client, player, width, height);
                     client.setScene(lobbyScreen);
                     try {
                         client.getHandler().sendMessage(2, lobby);

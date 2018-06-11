@@ -10,7 +10,6 @@ public class GameLobby implements Serializable {
     private Player lobbyOwner;
     private int playerLimit;
     private ArrayList<Player> players = new ArrayList<>();
-    //TODO implement some way to associate a socket with a player so when a socket disconnects the player will leave the lobby
 
     public GameLobby(Player owner, String name, int playerLimit) {
         id = UUID.randomUUID().toString();
@@ -29,7 +28,6 @@ public class GameLobby implements Serializable {
             Player temp = new Player(player);
             players.add(temp);
         }
-        // TODO handler concurrent mod exception to players
     }
 
     public Boolean addPlayer(Player player) {
