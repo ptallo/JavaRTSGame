@@ -41,6 +41,16 @@ public class GameLobby implements Serializable {
         }
     }
 
+    public Boolean removePlayer(Player removePlayer) {
+        Player playerToRemove = null;
+        for (Player player : players){
+            if (player.getId().equals(removePlayer.getId())) {
+                playerToRemove = player;
+            }
+        }
+        return players.remove(playerToRemove);
+    }
+
     public String getId() {
         return id;
     }
@@ -59,15 +69,5 @@ public class GameLobby implements Serializable {
 
     public int getPlayerLimit() {
         return playerLimit;
-    }
-
-    public Boolean removePlayer(Player removePlayer) {
-        Player playerToRemove = null;
-        for (Player player : players){
-            if (player.getId().equals(removePlayer.getId())) {
-                playerToRemove = player;
-            }
-        }
-        return players.remove(playerToRemove);
     }
 }

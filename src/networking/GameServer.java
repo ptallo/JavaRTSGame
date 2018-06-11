@@ -15,6 +15,7 @@ public class GameServer {
     private static ArrayList<GameLobby> lobbies = new ArrayList<>();
 
     public static void main(String[] args) {
+        System.out.println("listening for connectings...");
         try {
             ServerSocket server = new ServerSocket(PORT);
             while (true) {

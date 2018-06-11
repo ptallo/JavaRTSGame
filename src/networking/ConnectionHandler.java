@@ -33,8 +33,7 @@ public abstract class ConnectionHandler {
             try {
                 int messageType = ois.read();
                 if (messageType == -1) {
-                    System.out.println("client disconnected...");
-                    throw new EOFException("-1 message received");
+                    throw new EOFException("-1 message received, client disconnected");
                 }
                 handleMessage(messageType);
             } catch (EOFException | SocketException e) {
@@ -57,7 +56,6 @@ public abstract class ConnectionHandler {
     }
 
     public void sendMessage(int messageType, Object... objects) throws IOException {
-        System.out.println("sending message type: " + messageType);
         oos.write(messageType);
         if (objects != null){
             for (Object object : objects){
