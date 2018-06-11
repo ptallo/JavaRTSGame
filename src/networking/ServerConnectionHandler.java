@@ -20,7 +20,6 @@ public class ServerConnectionHandler extends ConnectionHandler{
 
     @Override
     public void handleMessage(int messageType) throws IOException, ClassNotFoundException {
-        System.out.println("handling message type: " + messageType);
         if (messageType == 1){
             int size = GameServer.getLobbies().size();
             oos.write(1);

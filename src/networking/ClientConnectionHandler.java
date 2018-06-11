@@ -16,13 +16,13 @@ public class ClientConnectionHandler extends ConnectionHandler {
 
     @Override
     public void handleMessage(int messageType) throws IOException, ClassNotFoundException {
-        System.out.println("handling message type: " + messageType);
         if (messageType == 1){
             client.getLobbyArrayList().clear();
             int numClients = ois.read();
             for (int i = 0; i < numClients; i++){
                 client.getLobbyArrayList().add((GameLobby) ois.readObject());
             }
+            oos.flush();
         }
     }
 }
