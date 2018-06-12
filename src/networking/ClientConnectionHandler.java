@@ -1,6 +1,7 @@
 package networking;
 
 import core.GameLobby;
+import networking.messages.MessageType;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -15,14 +16,13 @@ public class ClientConnectionHandler extends ConnectionHandler {
     }
 
     @Override
-    public void handleMessage(int messageType) throws IOException, ClassNotFoundException {
-        if (messageType == 1){
+    public void handleMessage(MessageType type) throws IOException, ClassNotFoundException {
+        if (type == MessageType.GET_LOBBIES){
             client.getLobbyArrayList().clear();
             int numClients = ois.read();
             for (int i = 0; i < numClients; i++){
                 client.getLobbyArrayList().add((GameLobby) ois.readObject());
             }
-            oos.flush();
         }
     }
 }

@@ -15,6 +15,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import networking.messages.MessageType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class MultiplayerScreen extends GridPane {
                     GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client, player, width, height);
                     client.setScene(lobbyScreen);
                     try {
-                        client.getHandler().sendMessage(2, lobby);
+                        client.getHandler().sendMessage(MessageType.CREATE_LOBBY, lobby);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -126,7 +127,7 @@ public class MultiplayerScreen extends GridPane {
 
     private void populateTable() {
         try {
-            client.getHandler().sendMessage(1, null);
+            client.getHandler().sendMessage(MessageType.GET_LOBBIES, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

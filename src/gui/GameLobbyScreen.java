@@ -16,6 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import networking.GameClient;
+import networking.messages.MessageType;
 
 import java.io.IOException;
 
@@ -144,7 +145,7 @@ public class GameLobbyScreen extends GridPane {
 
     private void updateGameLobbyList(){
         try {
-            client.getHandler().sendMessage(1, null);
+            client.getHandler().sendMessage(MessageType.GET_LOBBIES, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
