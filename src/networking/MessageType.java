@@ -1,4 +1,4 @@
-package networking.messages;
+package networking;
 
 public enum MessageType {
     GET_LOBBIES, CREATE_LOBBY, ADD_PLAYER_TO_LOBBY, REMOVE_PLAYER_FROM_LOBBY;

@@ -25,16 +25,14 @@ public class GameLobbyScreen extends GridPane {
 
     private GameLobby lobby;
     private GameClient client;
-    private Player owner;
     private double width;
     private double height;
 
     private TableView tableView;
 
-    public GameLobbyScreen(GameLobby lobby, GameClient client, Player owner, double width, double height) {
+    public GameLobbyScreen(GameLobby lobby, GameClient client, double width, double height) {
         this.lobby = lobby;
         this.client = client;
-        this.owner = owner;
         this.width = width;
         this.height = height;
 

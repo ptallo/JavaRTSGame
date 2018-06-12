@@ -80,7 +80,7 @@ public class MultiplayerScreen extends GridPane {
             lobbyPopup.setOnHidden(hideEvent -> {
                 GameLobby lobby = lobbyPopup.getGameLobby();
                 if (lobby != null) {
-                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client, player, width, height);
+                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client, width, height);
                     client.setScene(lobbyScreen);
                     try {
                         client.getHandler().sendMessage(MessageType.CREATE_LOBBY, lobby);

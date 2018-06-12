@@ -8,6 +8,9 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
 import networking.GameClient;
+import networking.messages.MessageType;
+
+import java.io.IOException;
 
 
 public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
@@ -31,7 +34,14 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
         joinGameButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
             GameLobby lobby = (GameLobby) getTableRow().getItem();
-            // TODO add way to join game lobby
+            try {
+                client.getHandler().sendMessage(MessageType.ADD_PLAYER_TO_LOBBY, lobby, player);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            lobby.addPlayer(player);
+            GameLobbyScreen screen = new GameLobbyScreen(lobby, client, width, height);
+            client.setScene(screen);
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
     }

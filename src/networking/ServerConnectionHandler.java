@@ -1,6 +1,7 @@
 package networking;
 
 import core.GameLobby;
+import core.Player;
 import networking.messages.MessageType;
 
 import java.io.EOFException;
@@ -30,6 +31,16 @@ public class ServerConnectionHandler extends ConnectionHandler{
             GameServer.getLobbies().add(newLobby);
 
             sendGameLobbies();
+        } else if (type == MessageType.ADD_PLAYER_TO_LOBBY) {
+            int numObjects = ois.read();
+            GameLobby newLobby = (GameLobby) ois.readObject();
+            Player newPlayer = (Player) ois.readObject();
+
+            for (GameLobby lobby : GameServer.getLobbies()) {
+                if (lobby.getId().equals(newLobby.getId())) {
+                    lobby.addPlayer(newPlayer);
+                }
+            }
         }
     }
 
