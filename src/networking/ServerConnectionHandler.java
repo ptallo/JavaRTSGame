@@ -2,18 +2,11 @@ package networking;
 
 import core.GameLobby;
 import core.Player;
-import networking.messages.MessageType;
 
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 public class ServerConnectionHandler extends ConnectionHandler{
 

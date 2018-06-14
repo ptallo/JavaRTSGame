@@ -8,7 +8,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.MouseEvent;
 import networking.GameClient;
-import networking.messages.MessageType;
+import networking.MessageType;
 
 import java.io.IOException;
 

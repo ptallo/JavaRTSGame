@@ -15,7 +15,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import networking.messages.MessageType;
+import networking.MessageType;
+
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -16,7 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 import networking.GameClient;
-import networking.messages.MessageType;
+import networking.MessageType;
 
 import java.io.IOException;
 

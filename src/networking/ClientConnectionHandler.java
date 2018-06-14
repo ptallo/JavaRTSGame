@@ -1,7 +1,6 @@
 package networking;
 
 import core.GameLobby;
-import networking.messages.MessageType;
 
 import java.io.IOException;
 import java.net.Socket;
