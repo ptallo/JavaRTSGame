@@ -104,7 +104,15 @@ public class GameLobbyScreen extends GridPane {
         EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                // TODO add leave game lobby functionality
+                try {
+                    Player leavePlayer = new Player(player);
+                    client.getHandler().sendMessage(MessageType.REMOVE_PLAYER_FROM_LOBBY, lobby, leavePlayer);
+                    onScreen = false;
+                    MultiplayerScreen multiplayerScreen = new MultiplayerScreen(width, height, client);
+                    client.setScene(multiplayerScreen);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         };
         initLeaveButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);
@@ -130,8 +138,8 @@ public class GameLobbyScreen extends GridPane {
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 player.setReady(newValue);
-                Player player = new Player(this.player);
-                client.getHandler().sendMessage(MessageType.SET_PLAYER_READY, lobby, player);
+                Player readyPlayer = new Player(this.player);
+                client.getHandler().sendMessage(MessageType.SET_PLAYER_READY, lobby, readyPlayer);
             } catch (IOException e) {
                 e.printStackTrace();
             }

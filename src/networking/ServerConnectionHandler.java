@@ -39,7 +39,6 @@ public class ServerConnectionHandler extends ConnectionHandler{
             GameLobby lobby = (GameLobby) ois.readObject();
             Player player = (Player) ois.readObject();
 
-            System.out.println("SET PLAYER READY " + player.getReady());
             for (GameLobby serverLobby : GameServer.getLobbies()){
                 if (serverLobby.getId().equals(lobby.getId())){
                     for (Player lobbyPlayer : serverLobby.getPlayers()){
@@ -47,6 +46,16 @@ public class ServerConnectionHandler extends ConnectionHandler{
                             lobbyPlayer.setReady(player.getReady());
                         }
                     }
+                }
+            }
+        } else if (type == MessageType.REMOVE_PLAYER_FROM_LOBBY){
+            int numObject = ois.read();
+            GameLobby lobby = (GameLobby) ois.readObject();
+            Player player = (Player) ois.readObject();
+
+            for (GameLobby serverLobby : GameServer.getLobbies()){
+                if (serverLobby.getId().equals(lobby.getId())){
+                    serverLobby.removePlayer(player);
                 }
             }
         }
