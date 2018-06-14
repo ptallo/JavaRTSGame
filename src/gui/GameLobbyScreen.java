@@ -25,6 +25,7 @@ import static java.lang.Thread.sleep;
 public class GameLobbyScreen extends GridPane {
 
     private GameLobby lobby;
+    private Player player;
     private GameClient client;
     private double width;
     private double height;
@@ -32,9 +33,10 @@ public class GameLobbyScreen extends GridPane {
     private TableView tableView;
     private boolean onScreen;
 
-    public GameLobbyScreen(GameLobby lobby, GameClient client, double width, double height) {
+    public GameLobbyScreen(GameLobby lobby, GameClient client, Player player, double width, double height) {
         this.lobby = lobby;
         this.client = client;
+        this.player = player;
         this.width = width;
         this.height = height;
         this.onScreen = true;
@@ -126,7 +128,13 @@ public class GameLobbyScreen extends GridPane {
         CheckBox checkBox = new CheckBox("Ready");
         checkBox.setAllowIndeterminate(false);
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            // TODO add ready player functionality
+            try {
+                player.setReady(newValue);
+                Player player = new Player(this.player);
+                client.getHandler().sendMessage(MessageType.SET_PLAYER_READY, lobby, player);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
         add(checkBox, 2, 2);
     }

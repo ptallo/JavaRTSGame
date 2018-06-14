@@ -34,7 +34,21 @@ public class ServerConnectionHandler extends ConnectionHandler{
                     lobby.addPlayer(newPlayer);
                 }
             }
-            sendGameLobbies();
+        } else if (type == MessageType.SET_PLAYER_READY){
+            int numObject = ois.read();
+            GameLobby lobby = (GameLobby) ois.readObject();
+            Player player = (Player) ois.readObject();
+
+            System.out.println("SET PLAYER READY " + player.getReady());
+            for (GameLobby serverLobby : GameServer.getLobbies()){
+                if (serverLobby.getId().equals(lobby.getId())){
+                    for (Player lobbyPlayer : serverLobby.getPlayers()){
+                        if (lobbyPlayer.getId().equals(player.getId())){
+                            lobbyPlayer.setReady(player.getReady());
+                        }
+                    }
+                }
+            }
         }
     }
 

@@ -40,7 +40,7 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
                 e.printStackTrace();
             }
             lobby.addPlayer(player);
-            GameLobbyScreen screen = new GameLobbyScreen(lobby, client, width, height);
+            GameLobbyScreen screen = new GameLobbyScreen(lobby, client, player, width, height);
             client.setScene(screen);
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
