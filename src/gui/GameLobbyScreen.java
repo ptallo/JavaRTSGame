@@ -32,6 +32,7 @@ public class GameLobbyScreen extends GridPane {
 
     private TableView tableView;
     private boolean onScreen;
+    private Button startGameButton;
 
     public GameLobbyScreen(GameLobby lobby, GameClient client, Player player, double width, double height) {
         this.lobby = lobby;
@@ -61,6 +62,14 @@ public class GameLobbyScreen extends GridPane {
                     if (newLobby.getId().equals(lobby.getId())){
                         tableView.setItems(FXCollections.observableList(newLobby.getPlayers()));
                         setLobby(newLobby);
+
+                        boolean disabled = false;
+                        for (Player lobbyPlayer : newLobby.getPlayers()){
+                            if (!lobbyPlayer.getReady()){
+                                disabled = true;
+                            }
+                        }
+                        startGameButton.setDisable(disabled);
                     }
                 }
             }
@@ -130,6 +139,7 @@ public class GameLobbyScreen extends GridPane {
         };
         initStartButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);
         add(initStartButton, 1, 2);
+        this.startGameButton = initStartButton;
     }
 
     private void initCheckBox() {
