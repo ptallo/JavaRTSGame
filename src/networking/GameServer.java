@@ -1,18 +1,18 @@
 package networking;
 
 import core.GameLobby;
-import core.Player;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameServer {
 
     public static final int PORT = 8080;
 
-    private static ArrayList<GameLobby> lobbies = new ArrayList<>();
+    private static HashMap<GameLobby, ArrayList<ServerConnectionHandler>> lobbyIdToSocketMap = new HashMap<>();
 
     public static void main(String[] args) {
         System.out.println("listening for connectings...");
@@ -29,7 +29,7 @@ public class GameServer {
         }
     }
 
-    public static ArrayList<GameLobby> getLobbies() {
-        return lobbies;
+    public static HashMap<GameLobby, ArrayList<ServerConnectionHandler>> getLobbyIdToSocketMap() {
+        return lobbyIdToSocketMap;
     }
 }
