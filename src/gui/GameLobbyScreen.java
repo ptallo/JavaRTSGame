@@ -5,7 +5,6 @@ import core.Player;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -20,6 +19,8 @@ import networking.MessageType;
 
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
+
 
 public class GameLobbyScreen extends GridPane {
 
@@ -29,12 +30,14 @@ public class GameLobbyScreen extends GridPane {
     private double height;
 
     private TableView tableView;
+    private boolean onScreen;
 
     public GameLobbyScreen(GameLobby lobby, GameClient client, double width, double height) {
         this.lobby = lobby;
         this.client = client;
         this.width = width;
         this.height = height;
+        this.onScreen = true;
 
         setConstraints(10, 3);
         setPrefSize(width, height);
@@ -44,16 +47,19 @@ public class GameLobbyScreen extends GridPane {
 
         initHeaderSection();
         initLeaveButton();
+
         initStartGameButton();
         initCheckBox();
         initTableView();
 
-        client.getLobbyArrayList().addListener((ListChangeListener<GameLobby>) c -> {
-            ObservableList<GameLobby> lobbies = (ObservableList<GameLobby>) c.getList();
-            for (GameLobby listLobby : lobbies) {
-                if (listLobby.getId().equals(lobby.getId())) {
-                    this.lobby = listLobby;
-                    this.tableView.setItems(FXCollections.observableList(lobby.getPlayers()));
+        client.getLobbyArrayList().addListener(new ListChangeListener<GameLobby>() {
+            @Override
+            public void onChanged(Change<? extends GameLobby> c) {
+                for (GameLobby newLobby : c.getList()){
+                    if (newLobby.getId().equals(lobby.getId())){
+                        tableView.setItems(FXCollections.observableList(newLobby.getPlayers()));
+                        setLobby(newLobby);
+                    }
                 }
             }
         });
@@ -62,7 +68,7 @@ public class GameLobbyScreen extends GridPane {
         new Thread(runnable).start();
     }
 
-    private void setConstraints(int headerHeight, int numColumns){
+    private void setConstraints(int headerHeight, int numColumns) {
         ColumnConstraints smallColumn = new ColumnConstraints();
         smallColumn.setPercentWidth(100 / numColumns);
         smallColumn.setHgrow(Priority.ALWAYS);
@@ -83,7 +89,7 @@ public class GameLobbyScreen extends GridPane {
     }
 
     private void initHeaderSection() {
-        Label nameLabel = new Label("Name:" );
+        Label nameLabel = new Label("Name:");
         Text name = new Text(lobby.getLobbyName());
 
         add(nameLabel, 0, 0);
@@ -116,7 +122,7 @@ public class GameLobbyScreen extends GridPane {
         add(initStartButton, 1, 2);
     }
 
-    private void initCheckBox(){
+    private void initCheckBox() {
         CheckBox checkBox = new CheckBox("Ready");
         checkBox.setAllowIndeterminate(false);
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -141,11 +147,18 @@ public class GameLobbyScreen extends GridPane {
         this.tableView = tableView;
     }
 
-    private void updateGameLobbyList(){
-        try {
-            client.getHandler().sendMessage(MessageType.GET_LOBBIES, null);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void updateGameLobbyList() {
+        while (onScreen) {
+            try {
+                sleep(100);
+                client.getHandler().sendMessage(MessageType.GET_LOBBIES, null);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    public void setLobby(GameLobby lobby) {
+        this.lobby = lobby;
     }
 }

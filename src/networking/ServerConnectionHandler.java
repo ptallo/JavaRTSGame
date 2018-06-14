@@ -34,6 +34,7 @@ public class ServerConnectionHandler extends ConnectionHandler{
                     lobby.addPlayer(newPlayer);
                 }
             }
+            sendGameLobbies();
         }
     }
 
