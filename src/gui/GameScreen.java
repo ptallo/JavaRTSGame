@@ -4,11 +4,18 @@ import core.Game;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import networking.GameClient;
 
 public class GameScreen extends GridPane {
 
-    public GameScreen(double width, double height, Game game) {
-        setPrefSize(width, height);
+    private Game game;
+    private GameClient client;
+
+    public GameScreen(Game game, GameClient client) {
+        this.game = game;
+        this.client = client;
+
+        setPrefSize(GameClient.WIDTH, GameClient.HEIGHT);
         setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);

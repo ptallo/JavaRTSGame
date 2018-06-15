@@ -27,23 +27,19 @@ public class GameLobbyScreen extends GridPane {
     private GameLobby lobby;
     private Player player;
     private GameClient client;
-    private double width;
-    private double height;
 
     private TableView tableView;
     private boolean onScreen;
     private Button startGameButton;
 
-    public GameLobbyScreen(GameLobby lobby, GameClient client, Player player, double width, double height) {
+    public GameLobbyScreen(GameLobby lobby, GameClient client, Player player) {
         this.lobby = lobby;
         this.client = client;
         this.player = player;
-        this.width = width;
-        this.height = height;
         this.onScreen = true;
 
         setConstraints(10, 3);
-        setPrefSize(width, height);
+        setPrefSize(GameClient.WIDTH, GameClient.HEIGHT);
         setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);
@@ -112,7 +108,7 @@ public class GameLobbyScreen extends GridPane {
                 Player leavePlayer = new Player(player);
                 client.getHandler().sendMessage(MessageType.REMOVE_PLAYER_FROM_LOBBY, lobby, leavePlayer);
                 onScreen = false;
-                MultiplayerScreen multiplayerScreen = new MultiplayerScreen(width, height, client);
+                MultiplayerScreen multiplayerScreen = new MultiplayerScreen(client);
                 client.setScene(multiplayerScreen);
             } catch (IOException e) {
                 e.printStackTrace();

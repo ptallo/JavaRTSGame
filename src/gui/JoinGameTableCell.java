@@ -17,13 +17,9 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
 
     private Button joinGameButton;
     private GameClient client;
-    private double width;
-    private double height;
     private Player player;
 
-    public JoinGameTableCell(double width, double height, GameClient client, Player player) {
-        this.width = width;
-        this.height = height;
+    public JoinGameTableCell(GameClient client, Player player) {
         this.client = client;
         this.player = player;
         initJoinGameButton();
@@ -40,7 +36,7 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
                 e.printStackTrace();
             }
             lobby.addPlayer(player);
-            GameLobbyScreen screen = new GameLobbyScreen(lobby, client, player, width, height);
+            GameLobbyScreen screen = new GameLobbyScreen(lobby, client, player);
             client.setScene(screen);
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);

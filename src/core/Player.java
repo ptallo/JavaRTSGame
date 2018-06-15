@@ -6,6 +6,7 @@ import java.util.UUID;
 public class Player implements Serializable {
     private String id;
     private Boolean ready;
+    private Boolean loaded;
 
     public Player() {
         id = UUID.randomUUID().toString();

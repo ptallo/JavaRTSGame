@@ -43,7 +43,7 @@ public class GameClient extends Application {
             e.printStackTrace();
         }
 
-        MultiplayerScreen screen = new MultiplayerScreen(WIDTH, HEIGHT, this);
+        MultiplayerScreen screen = new MultiplayerScreen(this);
         root.getChildren().add(screen);
 
         primaryStage.show();

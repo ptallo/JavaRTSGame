@@ -29,7 +29,7 @@ public class ClientConnectionHandler extends ConnectionHandler {
             int numObject = ois.read();
             Game game = (Game) ois.readObject();
             Platform.runLater(() -> {
-                GameScreen screen = new GameScreen(GameClient.WIDTH, GameClient.HEIGHT, game);
+                GameScreen screen = new GameScreen(game, client);
                 client.setScene(screen);
             });
         }
