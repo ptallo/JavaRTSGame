@@ -15,6 +15,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import networking.MessageType;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,12 +49,7 @@ public class MultiplayerScreen extends GridPane {
         initRefreshButton();
         initGameTableView();
 
-        client.getLobbyArrayList().addListener(new ListChangeListener<GameLobby>() {
-            @Override
-            public void onChanged(Change<? extends GameLobby> c) {
-                tableView.setItems(client.getLobbyArrayList());
-            }
-        });
+        client.getLobbyArrayList().addListener((ListChangeListener<GameLobby>) c -> tableView.setItems(client.getLobbyArrayList()));
 
         populateTable();
     }
@@ -84,9 +81,10 @@ public class MultiplayerScreen extends GridPane {
             lobbyPopup.setOnHidden(hideEvent -> {
                 GameLobby lobby = lobbyPopup.getGameLobby();
                 if (lobby != null) {
-                    //TODO add create game lobby capability
+                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client, player, width, height);
+                    client.setScene(lobbyScreen);
                     try {
-                        client.getHandler().sendMessage(2, new GameLobby(player, lobbyPopup.getNameTextField().getText(), 2));
+                        client.getHandler().sendMessage(MessageType.CREATE_LOBBY, lobby);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -130,7 +128,7 @@ public class MultiplayerScreen extends GridPane {
 
     private void populateTable() {
         try {
-            client.getHandler().sendMessage(1, null);
+            client.getHandler().sendMessage(MessageType.GET_LOBBIES, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

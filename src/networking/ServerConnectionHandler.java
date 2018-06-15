@@ -1,16 +1,13 @@
 package networking;
 
+import core.Game;
 import core.GameLobby;
+import core.Player;
 
-import java.io.EOFException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
-
-import static java.lang.Thread.sleep;
+import java.util.List;
 
 public class ServerConnectionHandler extends ConnectionHandler{
 
@@ -19,30 +16,78 @@ public class ServerConnectionHandler extends ConnectionHandler{
     }
 
     @Override
-    public void handleMessage(int messageType) throws IOException, ClassNotFoundException {
-        System.out.println("handling message type: " + messageType);
-        if (messageType == 1){
-            int size = GameServer.getLobbies().size();
-            oos.write(1);
-            oos.write(size);
-            for (GameLobby lobby : GameServer.getLobbies()){
+    public void handleMessage(MessageType type) throws IOException, ClassNotFoundException {
+        if (type == MessageType.GET_LOBBIES){
+            List<Object> tempArray = new ArrayList<>();
+            for (GameLobby lobby : GameServer.getLobbyIdToSocketMap().keySet()){
                 GameLobby temp = new GameLobby(lobby);
-                oos.writeObject(temp);
+                tempArray.add(temp);
             }
-            oos.flush();
-        } else if (messageType == 2){
+            sendListMessage(MessageType.GET_LOBBIES, tempArray);
+        } else if (type == MessageType.CREATE_LOBBY){
+            int numObjects = ois.read();
             GameLobby newLobby = (GameLobby) ois.readObject();
-            GameServer.getLobbies().add(newLobby);
-            int size = GameServer.getLobbies().size();
-            oos.write(1);
-            oos.write(size);
-            for (GameLobby lobby : GameServer.getLobbies()){
-                GameLobby temp = new GameLobby(lobby);
-                oos.writeObject(temp);
+
+            ArrayList<ServerConnectionHandler> serverConnectionHandlers = new ArrayList<>();
+            serverConnectionHandlers.add(this);
+            GameServer.getLobbyIdToSocketMap().put(newLobby, serverConnectionHandlers);
+        } else if (type == MessageType.ADD_PLAYER_TO_LOBBY) {
+            int numObjects = ois.read();
+            GameLobby newLobby = (GameLobby) ois.readObject();
+            Player newPlayer = (Player) ois.readObject();
+
+            for (GameLobby lobby : GameServer.getLobbyIdToSocketMap().keySet()) {
+                if (lobby.getId().equals(newLobby.getId())) {
+                    lobby.addPlayer(newPlayer);
+                }
+                ArrayList<ServerConnectionHandler> connectionHandlers = GameServer.getLobbyIdToSocketMap().get(lobby);
+                connectionHandlers.add(this);
             }
-            oos.flush();
-        } else if (messageType == -1){
-            throw new EOFException("-1 messageType received...");
+        } else if (type == MessageType.SET_PLAYER_READY){
+            int numObject = ois.read();
+            GameLobby lobby = (GameLobby) ois.readObject();
+            Player player = (Player) ois.readObject();
+
+            for (GameLobby serverLobby : GameServer.getLobbyIdToSocketMap().keySet()){
+                if (serverLobby.getId().equals(lobby.getId())){
+                    for (Player lobbyPlayer : serverLobby.getPlayers()){
+                        if (lobbyPlayer.getId().equals(player.getId())){
+                            lobbyPlayer.setReady(player.getReady());
+                        }
+                    }
+                }
+            }
+        } else if (type == MessageType.REMOVE_PLAYER_FROM_LOBBY){
+            int numObject = ois.read();
+            GameLobby lobby = (GameLobby) ois.readObject();
+            Player player = (Player) ois.readObject();
+
+            for (GameLobby serverLobby : GameServer.getLobbyIdToSocketMap().keySet()){
+                if (serverLobby.getId().equals(lobby.getId())){
+                    serverLobby.removePlayer(player);
+                    if (serverLobby.getPlayers().size() == 0){
+                        GameServer.getLobbyIdToSocketMap().remove(serverLobby);
+                    }
+                }
+            }
+        } else if (type == MessageType.START_GAME){
+            int numObject = ois.read();
+            GameLobby lobby = (GameLobby) ois.readObject();
+
+            ArrayList<ServerConnectionHandler> connectionHandlers = null;
+            for (GameLobby serverLobby : GameServer.getLobbyIdToSocketMap().keySet()){
+                if (lobby.getId().equals(serverLobby.getId())){
+                    connectionHandlers = GameServer.getLobbyIdToSocketMap().get(serverLobby);
+                }
+            }
+
+            if (connectionHandlers != null){
+                Game game = new Game();
+                GameServer.getGameToSocketMap().put(game, connectionHandlers);
+                for (ServerConnectionHandler handler : connectionHandlers){
+                    handler.sendMessage(MessageType.START_GAME, game);
+                }
+            }
         }
     }
 }

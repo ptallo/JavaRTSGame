@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.List;
 
 public abstract class ConnectionHandler {
 
@@ -26,17 +27,17 @@ public abstract class ConnectionHandler {
         }
     }
 
-    public abstract void handleMessage(int messageType) throws IOException, ClassNotFoundException;
+    public abstract void handleMessage(MessageType type) throws IOException, ClassNotFoundException;
 
     public void listenForMessages(){
         while (isConnected) {
             try {
-                int messageType = ois.read();
-                if (messageType == -1) {
-                    System.out.println("client disconnected...");
-                    throw new EOFException("-1 message received");
+                int value = ois.read();
+                if (value == -1) {
+                    throw new EOFException("-1 message received, client disconnected");
                 }
-                handleMessage(messageType);
+                MessageType type = MessageType.getMessageType(value);
+                handleMessage(type);
             } catch (EOFException | SocketException e) {
                 isConnected = false;
                 close();
@@ -56,11 +57,22 @@ public abstract class ConnectionHandler {
         }
     }
 
-    public void sendMessage(int messageType, Object... objects) throws IOException {
-        System.out.println("sending message type: " + messageType);
-        oos.write(messageType);
+    public void sendMessage(MessageType messageType, Object... objects) throws IOException {
+        oos.write(messageType.getValue());
         if (objects != null){
+            oos.write(objects.length);
             for (Object object : objects){
+                oos.writeObject(object);
+            }
+        }
+        oos.flush();
+    }
+
+    public void sendListMessage(MessageType type, List<Object> objects) throws IOException {
+        oos.write(type.getValue());
+        if (objects != null) {
+            oos.write(objects.size());
+            for (Object object : objects) {
                 oos.writeObject(object);
             }
         }
