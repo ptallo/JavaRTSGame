@@ -1,7 +1,6 @@
 package gui;
 
 import core.GameLobby;
-import core.Player;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,14 +10,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import networking.GameClient;
 
 public class CreateLobbyPopup extends Stage {
 
     public GameLobby lobby;
     private GridPane pane;
     private TextField nameTextField;
+    private GameClient client;
 
-    public CreateLobbyPopup(Player player){
+    public CreateLobbyPopup(GameClient client){
+        this.client = client;
         pane = new GridPane();
 
         pane.setPadding(new Insets(20));
@@ -27,7 +29,7 @@ public class CreateLobbyPopup extends Stage {
 
         initTextField();
 
-        initCreateGameButton(player);
+        initCreateGameButton();
 
         Scene scene = new Scene(pane);
         setScene(scene);
@@ -41,14 +43,14 @@ public class CreateLobbyPopup extends Stage {
         pane.add(nameTextField, 1, 0);
     }
 
-    private void initCreateGameButton(Player player) {
+    private void initCreateGameButton() {
         Button createGameButton = new Button("Create Game");
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 String name = nameTextField.getText();
                 if (!name.isEmpty()){
-                    lobby = new GameLobby(player ,name, 2);
+                    lobby = new GameLobby(client.getPlayer(),name, 2);
                 }
                 close();
             }

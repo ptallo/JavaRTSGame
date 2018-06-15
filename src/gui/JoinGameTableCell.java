@@ -1,7 +1,6 @@
 package gui;
 
 import core.GameLobby;
-import core.Player;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -17,11 +16,9 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
 
     private Button joinGameButton;
     private GameClient client;
-    private Player player;
 
-    public JoinGameTableCell(GameClient client, Player player) {
+    public JoinGameTableCell(GameClient client) {
         this.client = client;
-        this.player = player;
         initJoinGameButton();
     }
 
@@ -31,12 +28,12 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
         EventHandler<MouseEvent> eventHandler = event -> {
             GameLobby lobby = (GameLobby) getTableRow().getItem();
             try {
-                client.getHandler().sendMessage(MessageType.ADD_PLAYER_TO_LOBBY, lobby, player);
+                client.getHandler().sendMessage(MessageType.ADD_PLAYER_TO_LOBBY, lobby, client.getPlayer());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            lobby.addPlayer(player);
-            GameLobbyScreen screen = new GameLobbyScreen(lobby, client, player);
+            lobby.addPlayer(client.getPlayer());
+            GameLobbyScreen screen = new GameLobbyScreen(lobby, client);
             client.setScene(screen);
         };
         joinGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);

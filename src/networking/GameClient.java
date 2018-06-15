@@ -1,6 +1,7 @@
 package networking;
 
 import core.GameLobby;
+import core.Player;
 import gui.MultiplayerScreen;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -21,7 +22,7 @@ public class GameClient extends Application {
 
     private Stage primaryStage;
     private ClientConnectionHandler handler;
-
+    private Player player = new Player();
     private ObservableList<GameLobby> lobbyArrayList = FXCollections.observableList(new ArrayList<>());
 
     @Override
@@ -60,5 +61,9 @@ public class GameClient extends Application {
 
     public ObservableList<GameLobby> getLobbyArrayList() {
         return lobbyArrayList;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
