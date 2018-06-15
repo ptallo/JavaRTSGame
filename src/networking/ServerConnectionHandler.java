@@ -75,17 +75,42 @@ public class ServerConnectionHandler extends ConnectionHandler{
             GameLobby lobby = (GameLobby) ois.readObject();
 
             ArrayList<ServerConnectionHandler> connectionHandlers = null;
+            GameLobby gameLobby = null;
             for (GameLobby serverLobby : GameServer.getLobbyIdToSocketMap().keySet()){
                 if (lobby.getId().equals(serverLobby.getId())){
                     connectionHandlers = GameServer.getLobbyIdToSocketMap().get(serverLobby);
+                    gameLobby = serverLobby;
                 }
             }
 
-            if (connectionHandlers != null){
-                Game game = new Game();
+            if (connectionHandlers != null && gameLobby != null){
+                Game game = new Game(gameLobby.getPlayers());
                 GameServer.getGameToSocketMap().put(game, connectionHandlers);
                 for (ServerConnectionHandler handler : connectionHandlers){
                     handler.sendMessage(MessageType.START_GAME, game);
+                }
+            }
+        } else if (type == MessageType.SET_PLAYER_LOADED){
+            int numObject = ois.read();
+            Game game = (Game) ois.readObject();
+            Player player = (Player) ois.readObject();
+
+            for (Game serverGame : GameServer.getGameToSocketMap().keySet()){
+                if (game.getId().equals(serverGame.getId())){
+                    boolean playersLoaded = true;
+                    for (Player gamePlayer : serverGame.getPlayers()){
+                        if (gamePlayer.getId().equals(player.getId())){
+                            gamePlayer.setLoaded(player.getLoaded());
+                        }
+                        if (!gamePlayer.getLoaded()){
+                            playersLoaded = false;
+                        }
+                    }
+                    if (playersLoaded){
+                        for (ServerConnectionHandler handler : GameServer.getGameToSocketMap().get(serverGame)){
+                            handler.sendMessage(MessageType.SET_PLAYER_LOADED, null);
+                        }
+                    }
                 }
             }
         }

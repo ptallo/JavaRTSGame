@@ -11,6 +11,7 @@ import java.net.Socket;
 public class ClientConnectionHandler extends ConnectionHandler {
 
     private final GameClient client;
+    private GameScreen gameScreen;
 
     public ClientConnectionHandler(Socket socket, GameClient client) {
         super(socket);
@@ -30,8 +31,11 @@ public class ClientConnectionHandler extends ConnectionHandler {
             Game game = (Game) ois.readObject();
             Platform.runLater(() -> {
                 GameScreen screen = new GameScreen(game, client);
+                this.gameScreen = screen;
                 client.setScene(screen);
             });
+        } else if (type == MessageType.SET_PLAYER_LOADED){
+            gameScreen.startGame();
         }
     }
 }
