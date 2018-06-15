@@ -16,6 +16,9 @@ import java.util.ArrayList;
 
 public class GameClient extends Application {
 
+    public static int HEIGHT = 512;
+    public static int WIDTH = 512;
+
     private Stage primaryStage;
     private ClientConnectionHandler handler;
 
@@ -24,8 +27,6 @@ public class GameClient extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        int HEIGHT = 512;
-        int WIDTH = 512;
 
         primaryStage.setTitle("RTS Game Client");
 

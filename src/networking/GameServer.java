@@ -1,5 +1,6 @@
 package networking;
 
+import core.Game;
 import core.GameLobby;
 
 import java.io.IOException;
@@ -13,6 +14,8 @@ public class GameServer {
     public static final int PORT = 8080;
 
     private static HashMap<GameLobby, ArrayList<ServerConnectionHandler>> lobbyIdToSocketMap = new HashMap<>();
+
+    private static HashMap<Game, ArrayList<ServerConnectionHandler>> gameToSocketMap = new HashMap<>();
 
     public static void main(String[] args) {
         System.out.println("listening for connectings...");
@@ -31,5 +34,9 @@ public class GameServer {
 
     public static HashMap<GameLobby, ArrayList<ServerConnectionHandler>> getLobbyIdToSocketMap() {
         return lobbyIdToSocketMap;
+    }
+
+    public static HashMap<Game, ArrayList<ServerConnectionHandler>> getGameToSocketMap() {
+        return gameToSocketMap;
     }
 }

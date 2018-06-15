@@ -1,7 +1,7 @@
 package networking;
 
 public enum MessageType {
-    GET_LOBBIES, CREATE_LOBBY, ADD_PLAYER_TO_LOBBY, REMOVE_PLAYER_FROM_LOBBY, SET_PLAYER_READY;
+    GET_LOBBIES, CREATE_LOBBY, ADD_PLAYER_TO_LOBBY, REMOVE_PLAYER_FROM_LOBBY, SET_PLAYER_READY, START_GAME;
 
     private int value;
 
@@ -11,6 +11,7 @@ public enum MessageType {
         ADD_PLAYER_TO_LOBBY.value = 3;
         REMOVE_PLAYER_FROM_LOBBY.value = 4;
         SET_PLAYER_READY.value = 5;
+        START_GAME.value = 6;
     }
 
     public int getValue(){

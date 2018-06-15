@@ -55,22 +55,19 @@ public class GameLobbyScreen extends GridPane {
         initCheckBox();
         initTableView();
 
-        client.getLobbyArrayList().addListener(new ListChangeListener<GameLobby>() {
-            @Override
-            public void onChanged(Change<? extends GameLobby> c) {
-                for (GameLobby newLobby : c.getList()){
-                    if (newLobby.getId().equals(lobby.getId())){
-                        tableView.setItems(FXCollections.observableList(newLobby.getPlayers()));
-                        setLobby(newLobby);
+        client.getLobbyArrayList().addListener((ListChangeListener<GameLobby>) c -> {
+            for (GameLobby newLobby : c.getList()){
+                if (newLobby.getId().equals(lobby.getId())){
+                    tableView.setItems(FXCollections.observableList(newLobby.getPlayers()));
+                    setLobby(newLobby);
 
-                        boolean disabled = false;
-                        for (Player lobbyPlayer : newLobby.getPlayers()){
-                            if (!lobbyPlayer.getReady()){
-                                disabled = true;
-                            }
+                    boolean disabled = false;
+                    for (Player lobbyPlayer : newLobby.getPlayers()){
+                        if (!lobbyPlayer.getReady()){
+                            disabled = true;
                         }
-                        startGameButton.setDisable(disabled);
                     }
+                    startGameButton.setDisable(disabled);
                 }
             }
         });
@@ -110,18 +107,15 @@ public class GameLobbyScreen extends GridPane {
     private void initLeaveButton() {
         Button initLeaveButton = new Button("Leave");
         initLeaveButton.setMaxWidth(Double.MAX_VALUE);
-        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                try {
-                    Player leavePlayer = new Player(player);
-                    client.getHandler().sendMessage(MessageType.REMOVE_PLAYER_FROM_LOBBY, lobby, leavePlayer);
-                    onScreen = false;
-                    MultiplayerScreen multiplayerScreen = new MultiplayerScreen(width, height, client);
-                    client.setScene(multiplayerScreen);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        EventHandler<MouseEvent> handler = event -> {
+            try {
+                Player leavePlayer = new Player(player);
+                client.getHandler().sendMessage(MessageType.REMOVE_PLAYER_FROM_LOBBY, lobby, leavePlayer);
+                onScreen = false;
+                MultiplayerScreen multiplayerScreen = new MultiplayerScreen(width, height, client);
+                client.setScene(multiplayerScreen);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         };
         initLeaveButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);
@@ -131,10 +125,11 @@ public class GameLobbyScreen extends GridPane {
     private void initStartGameButton() {
         Button initStartButton = new Button("Start Game");
         initStartButton.setMaxWidth(Double.MAX_VALUE);
-        EventHandler<MouseEvent> handler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // TODO add start game functionality
+        EventHandler<MouseEvent> handler = event -> {
+            try {
+                client.getHandler().sendMessage(MessageType.START_GAME, lobby);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         };
         initStartButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);

@@ -1,5 +1,6 @@
 package networking;
 
+import core.Game;
 import core.GameLobby;
 import core.Player;
 
@@ -71,6 +72,22 @@ public class ServerConnectionHandler extends ConnectionHandler{
             }
         } else if (type == MessageType.START_GAME){
             int numObject = ois.read();
+            GameLobby lobby = (GameLobby) ois.readObject();
+
+            ArrayList<ServerConnectionHandler> connectionHandlers = null;
+            for (GameLobby serverLobby : GameServer.getLobbyIdToSocketMap().keySet()){
+                if (lobby.getId().equals(serverLobby.getId())){
+                    connectionHandlers = GameServer.getLobbyIdToSocketMap().get(serverLobby);
+                }
+            }
+
+            if (connectionHandlers != null){
+                Game game = new Game();
+                GameServer.getGameToSocketMap().put(game, connectionHandlers);
+                for (ServerConnectionHandler handler : connectionHandlers){
+                    handler.sendMessage(MessageType.START_GAME, game);
+                }
+            }
         }
     }
 }
