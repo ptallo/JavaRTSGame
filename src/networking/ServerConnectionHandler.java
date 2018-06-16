@@ -5,9 +5,11 @@ import core.GameLobby;
 import core.Player;
 
 import java.io.IOException;
+import java.io.ObjectStreamConstants;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static java.lang.Thread.sleep;
 
 public class ServerConnectionHandler extends ConnectionHandler{
 
@@ -18,12 +20,12 @@ public class ServerConnectionHandler extends ConnectionHandler{
     @Override
     public void handleMessage(MessageType type) throws IOException, ClassNotFoundException {
         if (type == MessageType.GET_LOBBIES){
-            List<Object> tempArray = new ArrayList<>();
+            ArrayList<GameLobby> tempArray = new ArrayList<>();
             for (GameLobby lobby : GameServer.getLobbyIdToSocketMap().keySet()){
                 GameLobby temp = new GameLobby(lobby);
                 tempArray.add(temp);
             }
-            sendListMessage(MessageType.GET_LOBBIES, tempArray);
+            sendMessage(MessageType.GET_LOBBIES, tempArray);
         } else if (type == MessageType.CREATE_LOBBY){
             int numObjects = ois.read();
             GameLobby newLobby = (GameLobby) ois.readObject();
@@ -96,23 +98,53 @@ public class ServerConnectionHandler extends ConnectionHandler{
             Player player = (Player) ois.readObject();
 
             for (Game serverGame : GameServer.getGameToSocketMap().keySet()){
-                if (game.getId().equals(serverGame.getId())){
-                    boolean playersLoaded = true;
+                if (serverGame.getId().equals(game.getId())){
+                    boolean readyToStartGame = true;
                     for (Player gamePlayer : serverGame.getPlayers()){
                         if (gamePlayer.getId().equals(player.getId())){
                             gamePlayer.setLoaded(player.getLoaded());
                         }
                         if (!gamePlayer.getLoaded()){
-                            playersLoaded = false;
+                            readyToStartGame = false;
                         }
                     }
-                    if (playersLoaded){
+
+                    if (readyToStartGame){
                         for (ServerConnectionHandler handler : GameServer.getGameToSocketMap().get(serverGame)){
-                            handler.sendMessage(MessageType.SET_PLAYER_LOADED, null);
+                            handler.sendMessage(MessageType.SET_PLAYER_LOADED, new Game(serverGame));
                         }
+
+                        class ServerGameRunnable implements Runnable {
+                            private Game game;
+                            private ServerGameRunnable(Game game){
+                                this.game = game;
+                            }
+                            @Override
+                            public void run() {
+                                while (game.isRunning()){
+                                    try {
+                                        sleep(1000);
+                                        game.update();
+                                        sendGameToClients(game);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                        Runnable runnable = new ServerGameRunnable(serverGame);
+                        new Thread(runnable).start();
                     }
                 }
             }
+        }
+    }
+
+    private void sendGameToClients(Game game) throws IOException {
+        for (ServerConnectionHandler handler : GameServer.getGameToSocketMap().get(game)){
+            handler.sendMessage(MessageType.SEND_GAME_TO_CLIENT, new Game(game));
         }
     }
 }

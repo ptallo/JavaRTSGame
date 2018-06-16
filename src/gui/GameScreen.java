@@ -39,12 +39,20 @@ public class GameScreen extends GridPane {
     }
 
     public void startGame(){
-        text.setText("GAME STARTED");
         Runnable drawLoop = () -> {
             while (isConnected) {
-                game.draw();
+                text.setText("COUNT " + getGame().getCount());
+                getGame().draw();
             }
         };
         new Thread(drawLoop).start();
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }
