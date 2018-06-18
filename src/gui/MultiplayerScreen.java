@@ -76,11 +76,7 @@ public class MultiplayerScreen extends GridPane {
                 if (lobby != null) {
                     GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client);
                     client.setScene(lobbyScreen);
-                    try {
-                        client.getHandler().sendMessage(MessageType.CREATE_LOBBY, lobby);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    // TODO add create game with netty
                 }
             });
             lobbyPopup.show();
@@ -120,10 +116,6 @@ public class MultiplayerScreen extends GridPane {
     }
 
     private void populateTable() {
-        try {
-            client.getHandler().sendMessage(MessageType.GET_LOBBIES, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // TODO add netty get lobbies
     }
 }

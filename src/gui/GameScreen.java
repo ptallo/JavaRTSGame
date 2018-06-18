@@ -31,11 +31,7 @@ public class GameScreen extends GridPane {
         add(text, 0, 0);
 
         client.getPlayer().setLoaded(true);
-        try {
-            client.getHandler().sendMessage(MessageType.SET_PLAYER_LOADED, new Game(game), new Player(client.getPlayer()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // TODO add netty set player loaded
     }
 
     public void startGame(){

@@ -27,11 +27,7 @@ public class JoinGameTableCell extends TableCell<GameLobby, Boolean> {
         joinGameButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
             GameLobby lobby = (GameLobby) getTableRow().getItem();
-            try {
-                client.getHandler().sendMessage(MessageType.ADD_PLAYER_TO_LOBBY, lobby, client.getPlayer());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // TODO add netty join lobby
             lobby.addPlayer(client.getPlayer());
             GameLobbyScreen screen = new GameLobbyScreen(lobby, client);
             client.setScene(screen);

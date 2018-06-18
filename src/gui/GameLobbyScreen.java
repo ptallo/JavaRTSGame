@@ -102,15 +102,11 @@ public class GameLobbyScreen extends GridPane {
         Button initLeaveButton = new Button("Leave");
         initLeaveButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> handler = event -> {
-            try {
-                Player leavePlayer = new Player(client.getPlayer());
-                client.getHandler().sendMessage(MessageType.REMOVE_PLAYER_FROM_LOBBY, lobby, leavePlayer);
-                onScreen = false;
-                MultiplayerScreen multiplayerScreen = new MultiplayerScreen(client);
-                client.setScene(multiplayerScreen);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Player leavePlayer = new Player(client.getPlayer());
+            // TODO add netty remove player from lobby
+            onScreen = false;
+            MultiplayerScreen multiplayerScreen = new MultiplayerScreen(client);
+            client.setScene(multiplayerScreen);
         };
         initLeaveButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);
         add(initLeaveButton, 0, 2);
@@ -120,11 +116,7 @@ public class GameLobbyScreen extends GridPane {
         Button initStartButton = new Button("Start Game");
         initStartButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> handler = event -> {
-            try {
-                client.getHandler().sendMessage(MessageType.START_GAME, lobby);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // TODO add netty start game
         };
         initStartButton.addEventFilter(MouseEvent.MOUSE_CLICKED, handler);
         add(initStartButton, 1, 2);
@@ -135,13 +127,9 @@ public class GameLobbyScreen extends GridPane {
         CheckBox checkBox = new CheckBox("Ready");
         checkBox.setAllowIndeterminate(false);
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                client.getPlayer().setReady(newValue);
-                Player readyPlayer = new Player(client.getPlayer());
-                client.getHandler().sendMessage(MessageType.SET_PLAYER_READY, lobby, readyPlayer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            client.getPlayer().setReady(newValue);
+            Player readyPlayer = new Player(client.getPlayer());
+            // TODO add netty ready player
         });
         add(checkBox, 2, 2);
     }
@@ -164,12 +152,7 @@ public class GameLobbyScreen extends GridPane {
 
     private void updateGameLobbyList() {
         while (onScreen) {
-            try {
-                sleep(100);
-                client.getHandler().sendMessage(MessageType.GET_LOBBIES, null);
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            // TODO add netty update game lobby
         }
     }
 
