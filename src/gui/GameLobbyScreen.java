@@ -25,25 +25,19 @@ import static java.lang.Thread.sleep;
 public class GameLobbyScreen extends GridPane {
 
     private GameLobby lobby;
-    private Player player;
     private GameClient client;
-    private double width;
-    private double height;
 
     private TableView tableView;
     private boolean onScreen;
     private Button startGameButton;
 
-    public GameLobbyScreen(GameLobby lobby, GameClient client, Player player, double width, double height) {
+    public GameLobbyScreen(GameLobby lobby, GameClient client) {
         this.lobby = lobby;
         this.client = client;
-        this.player = player;
-        this.width = width;
-        this.height = height;
         this.onScreen = true;
 
         setConstraints(10, 3);
-        setPrefSize(width, height);
+        setPrefSize(GameClient.WIDTH, GameClient.HEIGHT);
         setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);
@@ -109,10 +103,10 @@ public class GameLobbyScreen extends GridPane {
         initLeaveButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> handler = event -> {
             try {
-                Player leavePlayer = new Player(player);
+                Player leavePlayer = new Player(client.getPlayer());
                 client.getHandler().sendMessage(MessageType.REMOVE_PLAYER_FROM_LOBBY, lobby, leavePlayer);
                 onScreen = false;
-                MultiplayerScreen multiplayerScreen = new MultiplayerScreen(width, height, client);
+                MultiplayerScreen multiplayerScreen = new MultiplayerScreen(client);
                 client.setScene(multiplayerScreen);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -142,8 +136,8 @@ public class GameLobbyScreen extends GridPane {
         checkBox.setAllowIndeterminate(false);
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                player.setReady(newValue);
-                Player readyPlayer = new Player(this.player);
+                client.getPlayer().setReady(newValue);
+                Player readyPlayer = new Player(client.getPlayer());
                 client.getHandler().sendMessage(MessageType.SET_PLAYER_READY, lobby, readyPlayer);
             } catch (IOException e) {
                 e.printStackTrace();

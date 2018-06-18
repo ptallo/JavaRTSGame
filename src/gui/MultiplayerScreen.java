@@ -27,20 +27,13 @@ import static java.lang.Thread.sleep;
 public class MultiplayerScreen extends GridPane {
 
     private GameClient client;
-    private double width;
-    private double height;
     private TableView tableView;
-    private Player player;
 
-    public MultiplayerScreen(double width, double height, GameClient client) {
+    public MultiplayerScreen(GameClient client) {
         this.client = client;
-        this.width = width;
-        this.height = height;
-
-        player = new Player();
 
         setConstraints(10, 33);
-        setPrefSize(width, height);
+        setPrefSize(GameClient.WIDTH, GameClient.HEIGHT);
         setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);
@@ -77,11 +70,11 @@ public class MultiplayerScreen extends GridPane {
         Button createGameLobbyButton = new Button("Create Game");
         createGameLobbyButton.setMaxWidth(Double.MAX_VALUE);
         EventHandler<MouseEvent> eventHandler = event -> {
-            CreateLobbyPopup lobbyPopup = new CreateLobbyPopup(player);
+            CreateLobbyPopup lobbyPopup = new CreateLobbyPopup(client);
             lobbyPopup.setOnHidden(hideEvent -> {
                 GameLobby lobby = lobbyPopup.getGameLobby();
                 if (lobby != null) {
-                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client, player, width, height);
+                    GameLobbyScreen lobbyScreen = new GameLobbyScreen(lobby, client);
                     client.setScene(lobbyScreen);
                     try {
                         client.getHandler().sendMessage(MessageType.CREATE_LOBBY, lobby);
@@ -120,7 +113,7 @@ public class MultiplayerScreen extends GridPane {
 
         joinGameButtonColumn.setCellValueFactory(param -> null);
 
-        joinGameButtonColumn.setCellFactory(param -> new JoinGameTableCell(width, height, client, player));
+        joinGameButtonColumn.setCellFactory(param -> new JoinGameTableCell(client));
 
         add(tableView, 0, 1, 3, 3);
         this.tableView = tableView;

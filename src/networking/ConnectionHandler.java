@@ -67,15 +67,4 @@ public abstract class ConnectionHandler {
         }
         oos.flush();
     }
-
-    public void sendListMessage(MessageType type, List<Object> objects) throws IOException {
-        oos.write(type.getValue());
-        if (objects != null) {
-            oos.write(objects.size());
-            for (Object object : objects) {
-                oos.writeObject(object);
-            }
-        }
-        oos.flush();
-    }
 }
