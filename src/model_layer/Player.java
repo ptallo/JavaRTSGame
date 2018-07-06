@@ -1,4 +1,4 @@
-package core;
+package model_layer;
 
 import java.io.Serializable;
 import java.util.UUID;

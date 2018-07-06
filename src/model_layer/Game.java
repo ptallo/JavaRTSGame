@@ -1,4 +1,4 @@
-package core;
+package model_layer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,17 +15,6 @@ public class Game implements Serializable {
         this.players = players;
         this.id = UUID.randomUUID().toString();
         running = true;
-    }
-
-    public Game(Game game){
-        players = new ArrayList<>();
-        for (Player player : game.getPlayers()){
-            Player temp = new Player(player);
-            players.add(temp);
-        }
-        this.id = game.id;
-        this.running = game.running;
-        this.count = game.count;
     }
 
     public void update(){
