@@ -10,6 +10,8 @@ import view_layer.GameScreen;
 
 import java.util.ArrayList;
 
+import static java.lang.Thread.sleep;
+
 public class GameApplication extends Application {
 
     public static int HEIGHT = 512;
@@ -33,22 +35,27 @@ public class GameApplication extends Application {
         GameScreen view = new GameScreen(WIDTH, HEIGHT, game);
         root.getChildren().add(view);
         primaryStage.show();
-        
+
         startGameLoop();
         view.drawGame();
-    }
-
-    private void startGameLoop() {
-        new Thread(() -> {
-            if (game.isRunning()){
-                game.update();
-            }
-        }).start();
     }
 
     private void initModel() {
         ArrayList<Player> players = new ArrayList<>();
         players.add(user);
         game = new Game(players);
+    }
+
+    private void startGameLoop() {
+        new Thread(() -> {
+            while (game.getRunning() && !game.getPaused()){
+                try {
+                    sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                game.update();
+            }
+        }).start();
     }
 }

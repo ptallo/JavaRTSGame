@@ -2,38 +2,30 @@ package model_layer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Game implements Serializable {
 
     private ArrayList<Player> players;
-    private String id;
-    private boolean running;
-    private int count;
+    private Boolean running;
+    private Boolean paused;
+    private Integer count;
 
     public Game(ArrayList<Player> players) {
         this.players = players;
-        this.id = UUID.randomUUID().toString();
         running = true;
+        paused = false;
     }
 
     public void update(){
+        System.out.println("updating" + count);
         count += 1;
     }
 
-    public void draw(){
-
+    public Boolean getPaused() {
+        return paused;
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public boolean isRunning() {
+    public Boolean getRunning() {
         return running;
     }
 
