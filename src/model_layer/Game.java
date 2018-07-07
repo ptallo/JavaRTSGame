@@ -9,14 +9,12 @@ public class Game implements Serializable, GameObjectInterface {
 
     private Boolean running;
     private Boolean paused;
-    private Integer count;
 
     private ArrayList<Player> players;
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     public Game(ArrayList<Player> players) {
         this.players = players;
-        count = 0;
         running = true;
         paused = false;
 
@@ -25,7 +23,9 @@ public class Game implements Serializable, GameObjectInterface {
     }
 
     public void update(){
-        count += 1;
+        for (GameObject object : gameObjects){
+            object.update();
+        }
     }
 
     public void draw(GraphicsContext gc) {
@@ -40,9 +40,5 @@ public class Game implements Serializable, GameObjectInterface {
 
     public Boolean getRunning() {
         return running;
-    }
-
-    public Integer getCount() {
-        return count;
     }
 }

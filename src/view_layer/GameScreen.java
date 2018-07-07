@@ -3,50 +3,59 @@ package view_layer;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import model_layer.Game;
+import model_layer.InputItem;
 
-public class GameScreen extends GridPane {
+public class GameScreen extends VBox {
 
     private Game game;
-    private Text text;
 
-    private GraphicsContext gc;
     private Canvas canvas;
+    private GraphicsContext gc;
+    private double canvasPercentage = 0.7;
 
-    private Integer width;
-    private Integer height;
-
-    public GameScreen(int width, int height, Game game) {
-        this.width = width;
-        this.height = height;
+    public GameScreen(Game game) {
         this.game = game;
 
-        setPrefSize(width, height);
-        setHgap(10);
-        setVgap(10);
-
-        canvas = new Canvas(width, height * 0.8);
-        add(canvas, 0, 0);
-
-        gc = canvas.getGraphicsContext2D();
-        gc.setLineWidth(2);
-        gc.setFont(Font.font("Times New Roman", FontWeight.BOLD, 48));
+        initEventHandlers();
     }
 
-    public void drawGame() {
+    public void drawGame(double width, double height) {
+        initCanvas(width, height);
+
         new AnimationTimer() {
             @Override
             public void handle(long now) {
-                gc.setFill(Color.LIGHTGRAY);
-                gc.fillRect(0, 0, width, height);
+                if (game.getRunning() && !game.getPaused()){
+                    gc.setFill(Color.LIGHTGRAY);
+                    gc.fillRect(0, 0, width, height);
 
-                game.draw(gc);
+                    game.draw(gc);
+                }
             }
         }.start();
+    }
+
+    private void initEventHandlers() {
+        setOnMouseClicked(event -> {
+            InputItem item = new InputItem(event);
+        });
+
+        setOnKeyPressed(event -> {
+            InputItem item = new InputItem(event);
+        });
+    }
+
+    private void initCanvas(double width, double height) {
+        canvas = new Canvas(width, height);
+        getChildren().add(canvas);
+        gc = canvas.getGraphicsContext2D();
+    }
+
+    private void initGUI(){
+        HBox guiHBox = new HBox();
     }
 }

@@ -10,8 +10,6 @@ import view_layer.GameScreen;
 
 import java.util.ArrayList;
 
-import static java.lang.Thread.sleep;
-
 public class GameApplication extends Application {
 
     public static int HEIGHT = 512;
@@ -24,20 +22,21 @@ public class GameApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        primaryStage.setFullScreen(true);
         primaryStage.setTitle("RTS Game Client");
 
         Group root = new Group();
-        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
         primaryStage.setScene(scene);
 
         initModel();
 
-        GameScreen view = new GameScreen(WIDTH, HEIGHT, game);
+        GameScreen view = new GameScreen(game);
         root.getChildren().add(view);
         primaryStage.show();
 
         startGameLoop();
-        view.drawGame();
+        view.drawGame(primaryStage.getWidth(), primaryStage.getHeight());
     }
 
     private void initModel() {
@@ -48,13 +47,10 @@ public class GameApplication extends Application {
 
     private void startGameLoop() {
         new Thread(() -> {
-            while (game.getRunning() && !game.getPaused()){
-                try {
-                    sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            while (game.getRunning()){
+                if (!game.getPaused()){
+                    game.update();
                 }
-                game.update();
             }
         }).start();
     }
