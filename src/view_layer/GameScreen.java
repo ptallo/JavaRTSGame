@@ -45,8 +45,7 @@ public class GameScreen extends GridPane {
                 gc.setFill(Color.LIGHTGRAY);
                 gc.fillRect(0, 0, width, height);
 
-                gc.setFill(Color.RED);
-                gc.fillText(game.getCount().toString(), 50, 50);
+                game.draw(gc);
             }
         }.start();
     }

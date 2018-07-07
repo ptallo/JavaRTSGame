@@ -1,25 +1,37 @@
 package model_layer;
 
+import javafx.scene.canvas.GraphicsContext;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Game implements Serializable {
+public class Game implements Serializable, GameObjectInterface {
 
-    private ArrayList<Player> players;
     private Boolean running;
     private Boolean paused;
     private Integer count;
+
+    private ArrayList<Player> players;
+    private ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     public Game(ArrayList<Player> players) {
         this.players = players;
         count = 0;
         running = true;
         paused = false;
+
+        gameObjects.add(new GameObject(20, 20, 50, 50));
+        gameObjects.add(new GameObject(100, 20, 50, 50));
     }
 
     public void update(){
-        System.out.println("count: " + count);
         count += 1;
+    }
+
+    public void draw(GraphicsContext gc) {
+        for (GameObject object : gameObjects){
+            object.draw(gc);
+        }
     }
 
     public Boolean getPaused() {
