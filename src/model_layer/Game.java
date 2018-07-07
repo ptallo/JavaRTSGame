@@ -12,12 +12,13 @@ public class Game implements Serializable {
 
     public Game(ArrayList<Player> players) {
         this.players = players;
+        count = 0;
         running = true;
         paused = false;
     }
 
     public void update(){
-        System.out.println("updating" + count);
+        System.out.println("count: " + count);
         count += 1;
     }
 
@@ -29,7 +30,7 @@ public class Game implements Serializable {
         return running;
     }
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 }

@@ -37,7 +37,6 @@ public class Player implements Serializable {
     }
 
     public void setLoaded(Boolean loaded) {
-
         this.loaded = loaded;
     }
 }

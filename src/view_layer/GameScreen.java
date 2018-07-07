@@ -1,6 +1,6 @@
 package view_layer;
 
-import javafx.geometry.Insets;
+import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
@@ -18,11 +18,15 @@ public class GameScreen extends GridPane {
     private GraphicsContext gc;
     private Canvas canvas;
 
+    private Integer width;
+    private Integer height;
+
     public GameScreen(int width, int height, Game game) {
+        this.width = width;
+        this.height = height;
         this.game = game;
 
         setPrefSize(width, height);
-        setPadding(new Insets(20));
         setHgap(10);
         setVgap(10);
 
@@ -30,18 +34,20 @@ public class GameScreen extends GridPane {
         add(canvas, 0, 0);
 
         gc = canvas.getGraphicsContext2D();
-        gc.setFill( Color.RED );
         gc.setLineWidth(2);
-        Font font = Font.font( "Times New Roman", FontWeight.BOLD, 48 );
-        gc.setFont( font );
+        gc.setFont(Font.font("Times New Roman", FontWeight.BOLD, 48));
     }
 
     public void drawGame() {
-        new Thread(() -> {
-            while (game.getRunning() && !game.getPaused()){
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                gc.setFill(Color.LIGHTGRAY);
+                gc.fillRect(0, 0, width, height);
+
+                gc.setFill(Color.RED);
+                gc.fillText(game.getCount().toString(), 50, 50);
             }
-        }).start();
+        }.start();
     }
 }
