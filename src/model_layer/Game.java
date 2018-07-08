@@ -10,9 +10,11 @@ public class Game implements Serializable, GameObjectInterface {
     private Boolean running;
     private Boolean paused;
 
-    private ArrayList<Player> players;
-    private ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private Player user;
 
+    private ArrayList<Player> players;
+
+    private ArrayList<GameObject> gameObjects = new ArrayList<>();
     public Game(ArrayList<Player> players) {
         this.players = players;
         running = true;
@@ -40,5 +42,9 @@ public class Game implements Serializable, GameObjectInterface {
 
     public Boolean getRunning() {
         return running;
+    }
+
+    public void setUser(Player user) {
+        this.user = user;
     }
 }

@@ -8,10 +8,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.InputItem;
+import model_layer.Player;
 
 public class GameScreen extends VBox {
 
     private Game game;
+    private Player user;
 
     private Canvas canvas;
     private GraphicsContext gc;
@@ -23,8 +25,9 @@ public class GameScreen extends VBox {
         initEventHandlers();
     }
 
-    public void drawGame(double width, double height) {
+    public void drawGame(double width, double height, Player player) {
         initCanvas(width, height);
+        user = player;
 
         new AnimationTimer() {
             @Override
@@ -33,6 +36,7 @@ public class GameScreen extends VBox {
                     gc.setFill(Color.LIGHTGRAY);
                     gc.fillRect(0, 0, width, height);
 
+                    game.setUser(user);
                     game.draw(gc);
                 }
             }
