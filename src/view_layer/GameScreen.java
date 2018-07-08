@@ -56,7 +56,7 @@ public class GameScreen extends VBox {
             }
         });
 
-        setOnMouseMoved(event -> {
+        setOnMouseDragged(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);

@@ -32,10 +32,10 @@ public class Game implements Serializable, GameObjectInterface {
     }
 
     public void draw(GraphicsContext gc) {
-        user.draw(gc);
         for (GameObject object : gameObjects){
             object.draw(gc);
         }
+        user.draw(gc);
     }
 
     public Boolean getPaused() {

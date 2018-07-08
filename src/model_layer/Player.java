@@ -37,16 +37,14 @@ public class Player implements Serializable, GameObjectInterface {
         return inputs;
     }
 
-    public void updateRect(Event event){
-        event = (MouseEvent) event;
-        System.out.println("update rect");
+    public void updateRect(MouseEvent event){
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED){
-            selectionPoint = new Point(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+            selectionPoint = new Point(event.getX(), event.getY());
         } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
             selectionPoint = null;
             rect = null;
-        } else if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-            Point endPoint = new Point(((MouseEvent) event).getX(), ((MouseEvent) event).getY());
+        } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+            Point endPoint = new Point(event.getX(), event.getY());
             if (selectionPoint != null) {
                 rect = new Rect(selectionPoint, endPoint);
             }
@@ -61,7 +59,7 @@ public class Player implements Serializable, GameObjectInterface {
     @Override
     public void draw(GraphicsContext gc) {
         if (rect != null){
-            gc.setStroke(Color.GOLD);
+            gc.setStroke(Color.BLACK);
             gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
         }
     }
