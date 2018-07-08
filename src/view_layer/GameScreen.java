@@ -20,6 +20,7 @@ public class GameScreen extends VBox {
 
     public GameScreen(Game game, Player user) {
         this.game = game;
+        this.user = user;
 
         initEventHandlers();
     }
@@ -41,7 +42,21 @@ public class GameScreen extends VBox {
     }
 
     private void initEventHandlers() {
-        setOnMouseClicked(event -> {
+        setOnMousePressed(event -> {
+            InputItem item = new InputItem(event);
+            if (user != null) {
+                user.addInput(item);
+            }
+        });
+
+        setOnMouseReleased(event -> {
+            InputItem item = new InputItem(event);
+            if (user != null) {
+                user.addInput(item);
+            }
+        });
+
+        setOnMouseMoved(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);
@@ -49,13 +64,6 @@ public class GameScreen extends VBox {
         });
 
         setOnKeyPressed(event -> {
-            InputItem item = new InputItem(event);
-            if (user != null) {
-                user.addInput(item);
-            }
-        });
-
-        setOnKeyReleased(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);

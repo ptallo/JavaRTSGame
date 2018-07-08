@@ -7,9 +7,6 @@ import model_layer.Player;
 
 public class GameApplication extends Application {
 
-    public static int HEIGHT = 512;
-    public static int WIDTH = 512;
-
     private Stage primaryStage;
     private Player user = new Player();
 

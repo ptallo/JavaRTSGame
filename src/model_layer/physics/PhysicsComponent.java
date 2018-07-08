@@ -1,9 +1,9 @@
-package model_layer;
+package model_layer.physics;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import model_layer.GameObjectInterface;
 
-import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 public class PhysicsComponent implements Serializable, GameObjectInterface {
@@ -12,8 +12,6 @@ public class PhysicsComponent implements Serializable, GameObjectInterface {
     private Double y;
     private Integer width;
     private Integer height;
-
-    private Rectangle2D rect;
 
     public PhysicsComponent(Double x, Double y, Integer width, Integer height) {
         this.x = x;

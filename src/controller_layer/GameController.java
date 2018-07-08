@@ -1,6 +1,8 @@
 package controller_layer;
 
 import javafx.collections.ListChangeListener;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import model_layer.Game;
 import model_layer.InputItem;
 import model_layer.Player;
@@ -24,8 +26,10 @@ public class GameController {
     }
 
     private void initInputHandling() {
+        System.out.println("init input handling");
         for (Player player : game.getPlayers()){
             player.getInputs().addListener((ListChangeListener<InputItem>) c -> {
+                System.out.println("handling");
                 if (c.getAddedSize() > 0){
                     List<? extends InputItem> items = c.getAddedSubList();
                     for (InputItem item : items) {
@@ -37,7 +41,16 @@ public class GameController {
     }
 
     public void handleInput(InputItem item){
+        System.out.println("handling input");
+        if (item.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED){
+            user.updateRect(item.getEvent());
+        } else if (item.getEvent().getEventType() == MouseEvent.MOUSE_RELEASED) {
+            user.updateRect(item.getEvent());
+        } else if (item.getEvent().getEventType() == MouseEvent.MOUSE_MOVED) {
+            user.updateRect(item.getEvent());
+        } else if (item.getEvent().getEventType() == KeyEvent.KEY_PRESSED) {
 
+        }
     }
 
     private void initModel() {

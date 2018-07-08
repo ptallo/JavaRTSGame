@@ -1,6 +1,7 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
+import model_layer.physics.PhysicsComponent;
 
 import java.io.Serializable;
 
