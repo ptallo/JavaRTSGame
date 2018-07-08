@@ -9,7 +9,7 @@ public class GameObject implements Serializable, GameObjectInterface {
 
     private PhysicsComponent physicsComponent;
 
-    public GameObject(double x, double y, int height, int width){
+    public GameObject(double x, double y, double height, double width){
         physicsComponent = new PhysicsComponent(x, y, height, width);
     }
 
@@ -19,5 +19,9 @@ public class GameObject implements Serializable, GameObjectInterface {
 
     public void draw(GraphicsContext gc){
         physicsComponent.draw(gc);
+    }
+
+    public PhysicsComponent getPhysicsComponent() {
+        return physicsComponent;
     }
 }

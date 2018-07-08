@@ -1,9 +1,11 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
+import model_layer.physics.Rect;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Game implements Serializable, GameObjectInterface {
 
@@ -13,10 +15,12 @@ public class Game implements Serializable, GameObjectInterface {
     private Player user;
 
     private ArrayList<Player> players;
+    private HashMap<Player, ArrayList<GameObject>> playerToSelectedObjectMap = new HashMap<>();
 
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     public Game(ArrayList<Player> players, Player user) {
         this.players = players;
+        players.forEach(player -> player.setGame(this));
         this.user = user;
         running = true;
         paused = false;
@@ -48,5 +52,16 @@ public class Game implements Serializable, GameObjectInterface {
 
     public ArrayList<Player> getPlayers() {
         return players;
+    }
+
+    public void selectUnits(Player player, Rect selectionRect) {
+        ArrayList<GameObject> selectedObjects = new ArrayList<>();
+        for (GameObject object : gameObjects){
+            if (object.getPhysicsComponent().getRect().contains(selectionRect)){
+                selectedObjects.add(object);
+            }
+        }
+        System.out.println("This many units selected: " + selectedObjects.size());
+        playerToSelectedObjectMap.put(player, selectedObjects);
     }
 }

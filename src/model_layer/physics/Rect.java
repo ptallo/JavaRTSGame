@@ -22,7 +22,8 @@ public class Rect {
     }
 
     public Boolean contains(Rect rect){
-        return false;
+        return (Math.abs(this.x - rect.x) * 2 < (this.width + rect.width)) &&
+                (Math.abs(this.y - rect.y) * 2 < (this.height + rect.height));
     }
 
     public Double getX() {
