@@ -15,8 +15,9 @@ public class Game implements Serializable, GameObjectInterface {
     private ArrayList<Player> players;
 
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
-    public Game(ArrayList<Player> players) {
+    public Game(ArrayList<Player> players, Player user) {
         this.players = players;
+        this.user = user;
         running = true;
         paused = false;
 
@@ -44,7 +45,7 @@ public class Game implements Serializable, GameObjectInterface {
         return running;
     }
 
-    public void setUser(Player user) {
-        this.user = user;
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 }

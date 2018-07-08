@@ -15,4 +15,8 @@ public class InputItem {
     public Event getEvent() {
         return event;
     }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
 }

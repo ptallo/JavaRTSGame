@@ -17,17 +17,15 @@ public class GameScreen extends VBox {
 
     private Canvas canvas;
     private GraphicsContext gc;
-    private double canvasPercentage = 0.7;
 
-    public GameScreen(Game game) {
+    public GameScreen(Game game, Player user) {
         this.game = game;
 
         initEventHandlers();
     }
 
-    public void drawGame(double width, double height, Player player) {
+    public void drawGame(double width, double height) {
         initCanvas(width, height);
-        user = player;
 
         new AnimationTimer() {
             @Override
@@ -36,7 +34,6 @@ public class GameScreen extends VBox {
                     gc.setFill(Color.LIGHTGRAY);
                     gc.fillRect(0, 0, width, height);
 
-                    game.setUser(user);
                     game.draw(gc);
                 }
             }
@@ -46,10 +43,23 @@ public class GameScreen extends VBox {
     private void initEventHandlers() {
         setOnMouseClicked(event -> {
             InputItem item = new InputItem(event);
+            if (user != null) {
+                user.addInput(item);
+            }
         });
 
         setOnKeyPressed(event -> {
             InputItem item = new InputItem(event);
+            if (user != null) {
+                user.addInput(item);
+            }
+        });
+
+        setOnKeyReleased(event -> {
+            InputItem item = new InputItem(event);
+            if (user != null) {
+                user.addInput(item);
+            }
         });
     }
 

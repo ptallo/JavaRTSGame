@@ -1,14 +1,9 @@
-package controller_layer;
-
+import controller_layer.GameController;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model_layer.Game;
 import model_layer.Player;
-import view_layer.GameScreen;
-
-import java.util.ArrayList;
 
 public class GameApplication extends Application {
 
@@ -17,7 +12,6 @@ public class GameApplication extends Application {
 
     private Stage primaryStage;
     private Player user = new Player();
-    private Game game;
 
     @Override
     public void start(Stage primaryStage) {
@@ -29,29 +23,12 @@ public class GameApplication extends Application {
         Scene scene = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
         primaryStage.setScene(scene);
 
-        initModel();
+        GameController controller = new GameController(user);
 
-        GameScreen view = new GameScreen(game);
-        root.getChildren().add(view);
+        root.getChildren().add(controller.getView());
         primaryStage.show();
 
-        startGameLoop();
-        view.drawGame(primaryStage.getWidth(), primaryStage.getHeight());
-    }
-
-    private void initModel() {
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(user);
-        game = new Game(players);
-    }
-
-    private void startGameLoop() {
-        new Thread(() -> {
-            while (game.getRunning()){
-                if (!game.getPaused()){
-                    game.update();
-                }
-            }
-        }).start();
+        controller.startGameLoop();
+        controller.getView().drawGame(primaryStage.getWidth(), primaryStage.getHeight());
     }
 }
