@@ -20,9 +20,21 @@ public class PhysicsComponent implements Serializable {
         this.rectangle = new Rectangle(x, y, width, height);
     }
 
-    public void update(ArrayList<GameObject> gameobjects) {
+    public void update(ArrayList<GameObject> gameObjects) {
         if (destination != null) {
-            rectangle = getNewPosition();
+            Rectangle tempRect = getNewPosition();
+            if (tempRect != null){
+                Boolean updateRect = true;
+                for (GameObject object : gameObjects){
+                    if (object.getPhysicsComponent().getRectangle().contains(tempRect)){
+                        updateRect = false;
+                    }
+                }
+
+                if (updateRect){
+                    rectangle = tempRect;
+                }
+            }
         }
     }
 
@@ -34,29 +46,33 @@ public class PhysicsComponent implements Serializable {
     public Rectangle getNewPosition(){
         Double xDistance = destination.getX() - rectangle.getX();
         Double yDistance = destination.getY() - rectangle.getY();
+        Double hypotenuse = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 
-        Double theta = Math.atan(yDistance / xDistance);
+        if (hypotenuse == 0) {
+            destination = null;
+            return null;
+        }
 
-        Double deltax = Math.abs(velocity * Math.cos(theta) * GameController.GAME_PERIOD) * (destination.getX() > rectangle.getX() ? 1 : -1);
-        Double deltay = Math.abs(velocity * Math.sin(theta) * GameController.GAME_PERIOD) * (destination.getY() > rectangle.getY() ? 1 : -1);
+        Double theta = Math.asin(yDistance / hypotenuse);
 
-        System.out.println(deltax + ", " + deltay);
+        Double deltaX = Math.abs(velocity * Math.cos(theta) * GameController.GAME_PERIOD) * (destination.getX() > rectangle.getX() ? 1 : -1);
+        Double deltaY = Math.abs(velocity * Math.sin(theta) * GameController.GAME_PERIOD) * (destination.getY() > rectangle.getY() ? 1 : -1);
 
         boolean finalPos = true;
 
         Double newX;
-        if (Math.abs(destination.getX() - rectangle.getX()) < deltax) {
+        if (Math.abs(destination.getX() - rectangle.getX()) < deltaX) {
             newX = destination.getX();
         } else {
-            newX = rectangle.getX() + deltax;
+            newX = rectangle.getX() + deltaX;
             finalPos = false;
         }
 
         Double newY;
-        if (Math.abs(destination.getY() - rectangle.getY()) < deltay){
+        if (Math.abs(destination.getY() - rectangle.getY()) < deltaY){
             newY = destination.getY();
         } else {
-            newY = rectangle.getY() + deltay;
+            newY = rectangle.getY() + deltaY;
             finalPos = false;
         }
 

@@ -22,8 +22,8 @@ public class Rectangle {
     }
 
     public Boolean contains(Rectangle rectangle){
-        return (Math.abs(this.x - rectangle.x) * 2 < (this.width + rectangle.width)) &&
-                (Math.abs(this.y - rectangle.y) * 2 < (this.height + rectangle.height));
+        return rectangle.getX() < this.x + this.width && rectangle.getX() + rectangle.getWidth() > this.x &&
+                rectangle.getY() < this.y + this.height && rectangle.getHeight() + rectangle.getY() > this.y;
     }
 
     public Double getX() {
