@@ -8,10 +8,11 @@ import model_layer.InputItem;
 import model_layer.Player;
 import view_layer.GameScreen;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GameController {
+
+    public static final long GAME_PERIOD = 1000/60;
 
     private GameScreen view;
     private Game game;
@@ -58,13 +59,15 @@ public class GameController {
     }
 
     public void startGameLoop() {
-        new Thread(() -> {
-            while (game.getRunning()){
-                if (!game.getPaused()){
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (game.getRunning() && !game.getPaused()){
                     game.update();
                 }
             }
-        }).start();
+        }, new Date(), 1000/60);
     }
 
     public GameScreen getView() {

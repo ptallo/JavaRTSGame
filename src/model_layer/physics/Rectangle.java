@@ -1,29 +1,29 @@
 package model_layer.physics;
 
-public class Rect {
+public class Rectangle {
 
     private Double x;
     private Double y;
     private Double width;
     private Double height;
 
-    public Rect(Double x, Double y, Double width, Double height) {
+    public Rectangle(Double x, Double y, Double width, Double height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
 
-    public Rect(Point start, Point end) {
+    public Rectangle(Point start, Point end) {
         x = Math.min(start.getX(), end.getX());
         y = Math.min(start.getY(), end.getY());
         width = Math.abs(start.getX() - end.getX());
         height = Math.abs(start.getY() - end.getY());
     }
 
-    public Boolean contains(Rect rect){
-        return (Math.abs(this.x - rect.x) * 2 < (this.width + rect.width)) &&
-                (Math.abs(this.y - rect.y) * 2 < (this.height + rect.height));
+    public Boolean contains(Rectangle rectangle){
+        return (Math.abs(this.x - rectangle.x) * 2 < (this.width + rectangle.width)) &&
+                (Math.abs(this.y - rectangle.y) * 2 < (this.height + rectangle.height));
     }
 
     public Double getX() {

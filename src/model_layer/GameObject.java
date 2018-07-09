@@ -4,8 +4,9 @@ import javafx.scene.canvas.GraphicsContext;
 import model_layer.physics.PhysicsComponent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
-public class GameObject implements Serializable, GameObjectInterface {
+public class GameObject implements Serializable {
 
     private PhysicsComponent physicsComponent;
 
@@ -13,8 +14,8 @@ public class GameObject implements Serializable, GameObjectInterface {
         physicsComponent = new PhysicsComponent(x, y, height, width);
     }
 
-    public void update() {
-
+    public void update(ArrayList<GameObject> objects) {
+        physicsComponent.update(objects);
     }
 
     public void draw(GraphicsContext gc){

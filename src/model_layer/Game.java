@@ -1,13 +1,14 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
-import model_layer.physics.Rect;
+import model_layer.physics.Point;
+import model_layer.physics.Rectangle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Game implements Serializable, GameObjectInterface {
+public class Game implements Serializable {
 
     private Boolean running;
     private Boolean paused;
@@ -16,8 +17,8 @@ public class Game implements Serializable, GameObjectInterface {
 
     private ArrayList<Player> players;
     private HashMap<Player, ArrayList<GameObject>> playerToSelectedObjectMap = new HashMap<>();
-
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
+
     public Game(ArrayList<Player> players, Player user) {
         this.players = players;
         players.forEach(player -> player.setGame(this));
@@ -31,7 +32,9 @@ public class Game implements Serializable, GameObjectInterface {
 
     public void update(){
         for (GameObject object : gameObjects){
-            object.update();
+            ArrayList<GameObject> objects = new ArrayList<>(gameObjects);
+            objects.remove(object);
+            object.update(objects);
         }
     }
 
@@ -54,14 +57,22 @@ public class Game implements Serializable, GameObjectInterface {
         return players;
     }
 
-    public void selectUnits(Player player, Rect selectionRect) {
+    public void selectUnits(Player player, Rectangle selectionRectangle) {
         ArrayList<GameObject> selectedObjects = new ArrayList<>();
         for (GameObject object : gameObjects){
-            if (object.getPhysicsComponent().getRect().contains(selectionRect)){
+            if (object.getPhysicsComponent().getRectangle().contains(selectionRectangle)){
                 selectedObjects.add(object);
             }
         }
         System.out.println("This many units selected: " + selectedObjects.size());
         playerToSelectedObjectMap.put(player, selectedObjects);
+    }
+
+    public void setObjectDestination(Player player, Point destination){
+        System.out.println("setting destination");
+        ArrayList<GameObject> objects = playerToSelectedObjectMap.get(player);
+        if (objects != null && !objects.isEmpty()){
+            objects.forEach(object -> object.getPhysicsComponent().setDestination(destination));
+        }
     }
 }

@@ -2,24 +2,23 @@ package model_layer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import model_layer.physics.Point;
-import model_layer.physics.Rect;
+import model_layer.physics.Rectangle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Player implements Serializable, GameObjectInterface {
+public class Player implements Serializable {
 
     private String id;
     private Game game;
     private ObservableList<InputItem> inputs = FXCollections.observableList(new ArrayList<>());
 
-    private Rect rect;
+    private Rectangle selectionRectangle;
     private Point selectionPoint;
 
     public Player() {
@@ -29,28 +28,31 @@ public class Player implements Serializable, GameObjectInterface {
     public void updateRect(MouseEvent event){
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED){
             selectionPoint = new Point(event.getX(), event.getY());
+            if (event.isSecondaryButtonDown()){
+                game.setObjectDestination(this, selectionPoint);
+            }
         } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-            game.selectUnits(this, rect);
+            if (selectionRectangle != null){
+                game.selectUnits(this, selectionRectangle);
+            }
             selectionPoint = null;
-            rect = null;
+            selectionRectangle = null;
         } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
             Point endPoint = new Point(event.getX(), event.getY());
             if (selectionPoint != null) {
-                rect = new Rect(selectionPoint, endPoint);
+                selectionRectangle = new Rectangle(selectionPoint, endPoint);
             }
         }
     }
 
-    @Override
     public void update() {
 
     }
 
-    @Override
     public void draw(GraphicsContext gc) {
-        if (rect != null){
+        if (selectionRectangle != null){
             gc.setStroke(Color.BLACK);
-            gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+            gc.strokeRect(selectionRectangle.getX(), selectionRectangle.getY(), selectionRectangle.getWidth(), selectionRectangle.getHeight());
         }
     }
 
