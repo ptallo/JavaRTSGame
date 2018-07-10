@@ -15,7 +15,7 @@ public class RenderComponent {
     public RenderComponent(String path, double xOffset, double yOffset){
         this.xOffset = xOffset;
         this.yOffset = yOffset;
-        image = new Image(new File("resources/example-sprite.png").toURI().toString());
+        image = new Image(new File("resources/" + path).toURI().toString());
     }
 
     public void draw(GraphicsContext gc, Rectangle rectangle){
