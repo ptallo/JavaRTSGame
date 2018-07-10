@@ -1,4 +1,4 @@
-package model_layer.physics;
+package model_layer.components.physics;
 
 import controller_layer.GameController;
 import javafx.scene.canvas.GraphicsContext;

@@ -1,4 +1,4 @@
-package model_layer.physics;
+package model_layer.components.physics;
 
 public class Rectangle {
 
