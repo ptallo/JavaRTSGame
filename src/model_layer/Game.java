@@ -1,8 +1,8 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
-import model_layer.physics.Point;
-import model_layer.physics.Rectangle;
+import model_layer.components.physics.Point;
+import model_layer.components.physics.Rectangle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,8 +26,8 @@ public class Game implements Serializable {
         running = true;
         paused = false;
 
-        gameObjects.add(new GameObject(20, 20, 50, 50));
-        gameObjects.add(new GameObject(100, 20, 50, 50));
+        gameObjects.add(new GameObject(20, 20));
+        gameObjects.add(new GameObject(100, 20));
     }
 
     public void update(){

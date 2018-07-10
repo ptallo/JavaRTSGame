@@ -5,8 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import model_layer.physics.Point;
-import model_layer.physics.Rectangle;
+import model_layer.components.physics.Point;
+import model_layer.components.physics.Rectangle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
