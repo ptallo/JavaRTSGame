@@ -39,8 +39,8 @@ public class PhysicsComponent implements Serializable {
     }
 
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.DARKBLUE);
-        gc.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+        gc.setStroke(Color.DARKBLUE);
+        gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
     }
 
     public Rectangle getNewPosition(){
