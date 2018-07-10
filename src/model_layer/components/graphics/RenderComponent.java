@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import model_layer.components.physics.Rectangle;
 
+import java.io.File;
+
 public class RenderComponent {
 
     private Image image;
@@ -13,7 +15,7 @@ public class RenderComponent {
     public RenderComponent(String path, double xOffset, double yOffset){
         this.xOffset = xOffset;
         this.yOffset = yOffset;
-        image = new Image(getClass().getResourceAsStream("../../../resources/" + path));
+        image = new Image(new File("resources/example-sprite.png").toURI().toString());
     }
 
     public void draw(GraphicsContext gc, Rectangle rectangle){
