@@ -14,7 +14,7 @@ public class GameObject implements Serializable {
 
     public GameObject(double x, double y, double height, double width){
         physicsComponent = new PhysicsComponent(x, y, height, width);
-        renderComponent = new RenderComponent("../../resources/example-sprite.png");
+        renderComponent = new RenderComponent("example-sprite.png");
     }
 
     public void update(ArrayList<GameObject> objects) {

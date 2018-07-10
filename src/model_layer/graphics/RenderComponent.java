@@ -9,7 +9,7 @@ public class RenderComponent {
     private Image image;
 
     public RenderComponent(String path){
-        image = new Image(getClass().getResourceAsStream(path));
+        image = new Image(getClass().getResourceAsStream("../../resources/" + path));
     }
 
     public void draw(GraphicsContext gc, Rectangle rectangle){
