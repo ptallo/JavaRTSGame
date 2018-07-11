@@ -18,17 +18,12 @@ public class GameObject implements Serializable {
     private RenderComponent renderComponent;
     private SelectionComponent selectionComponent;
 
-    private final double xOffsetPhys = 8;
-    private final double yOffsetPhys = 20;
-    private final double xOffsetSelect = 8;
-    private final double yOffsetSelect = 0;
-
     public GameObject(double x, double y){
         renderComponent = new RenderComponent("character.png", new Point(x, y), 32, 32);
         renderComponent.addAnimation("idle", 0, 4);
         renderComponent.addAnimation("moving", 5, 8);
-        physicsComponent = new PhysicsComponent(new Rectangle(x + xOffsetPhys, y + yOffsetPhys, 16.0, 16.0), xOffsetPhys, yOffsetPhys);
-        selectionComponent = new SelectionComponent(new Rectangle(x + xOffsetSelect, y + yOffsetSelect, 16.0, 32.0), xOffsetSelect, yOffsetSelect);
+        physicsComponent = new PhysicsComponent(new Rectangle(x + 8, y + 20, 16.0, 16.0), 8.0, 20.0);
+        selectionComponent = new SelectionComponent(new Rectangle(x + 8, y + 0, 16.0, 32.0), 8.0, 0.0);
     }
 
     public void update(ArrayList<GameObject> objects) {
