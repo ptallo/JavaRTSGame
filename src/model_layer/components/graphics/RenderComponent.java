@@ -28,7 +28,11 @@ public class RenderComponent {
     }
 
     public void draw(GraphicsContext gc) {
-        currentAnimation.draw(gc, drawPoint);
+        if (currentAnimation != null){
+            currentAnimation.draw(gc, drawPoint);
+        } else {
+            gc.drawImage(image, drawPoint.getX(), drawPoint.getY(), image.getWidth(), image.getHeight());
+        }
     }
 
     public void addAnimation(String key, int startFrame, int endFrame) {
@@ -41,7 +45,7 @@ public class RenderComponent {
     }
 
     public void setCurrentAnimation(String key) {
-        if (!currentAnimKey.equalsIgnoreCase(key)) {
+        if (currentAnimKey != null && !currentAnimKey.equalsIgnoreCase(key)) {
             Animation animation = animations.get(key);
             if (animation != null) {
                 currentAnimation.reset();
