@@ -49,6 +49,6 @@ public class GameObject implements Serializable {
     }
 
     public boolean checkSelected(Rectangle selectionRect){
-        return selectionRect.contains(selectionComponent.getRect());
+        return selectionComponent.checkSelected(selectionRect);
     }
 }

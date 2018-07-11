@@ -23,11 +23,21 @@ public class SelectionComponent {
         gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
     }
 
+    public Boolean checkSelected(Rectangle selectedRect){
+        Boolean selected = selectedRect.contains(rect);
+        isSelected = selected;
+        return selected;
+    }
+
     public Rectangle getRect() {
         return rect;
     }
 
     public void setRect(Rectangle rect) {
         this.rect = new Rectangle(rect.getX() + xOffset, rect.getY() + yOffset, this.rect.getWidth(), this.rect.getHeight());
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
     }
 }
