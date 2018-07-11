@@ -13,17 +13,42 @@ public class RenderComponent {
     private Image image;
     private Point drawPoint;
 
+    private Double frameWidth;
+    private Double frameHeight;
+
     private HashMap<String, Animation> animations = new HashMap<>();
     private Animation currentAnimation;
+    private String currentAnimKey;
 
-    public RenderComponent(String path, Point drawPoint){
+    public RenderComponent(String path, Point drawPoint, double frameWidth, double frameHeight) {
         this.drawPoint = drawPoint;
+        this.frameHeight = frameHeight;
+        this.frameWidth = frameWidth;
         image = new Image(new File("resources/" + path).toURI().toString());
-        currentAnimation = new Animation(image, 0, 4, 32, 32, 250);
     }
 
-    public void draw(GraphicsContext gc){
+    public void draw(GraphicsContext gc) {
         currentAnimation.draw(gc, drawPoint);
+    }
+
+    public void addAnimation(String key, int startFrame, int endFrame) {
+        Animation newAnim = new Animation(image, startFrame, endFrame, frameWidth, frameHeight, 250);
+        animations.put(key, newAnim);
+        if (currentAnimation == null) {
+            currentAnimation = newAnim;
+            currentAnimKey = key;
+        }
+    }
+
+    public void setCurrentAnimation(String key) {
+        if (!currentAnimKey.equalsIgnoreCase(key)) {
+            Animation animation = animations.get(key);
+            if (animation != null) {
+                currentAnimation.reset();
+                currentAnimation = animation;
+                currentAnimKey = key;
+            }
+        }
     }
 
     public void setDrawPoint(Point drawPoint) {

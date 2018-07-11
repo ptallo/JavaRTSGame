@@ -24,7 +24,9 @@ public class GameObject implements Serializable {
     private final double yOffsetSelect = 0;
 
     public GameObject(double x, double y){
-        renderComponent = new RenderComponent("character.png", new Point(x, y));
+        renderComponent = new RenderComponent("character.png", new Point(x, y), 32, 32);
+        renderComponent.addAnimation("idle", 0, 4);
+        renderComponent.addAnimation("moving", 5, 8);
         physicsComponent = new PhysicsComponent(new Rectangle(x + xOffsetPhys, y + yOffsetPhys, 16.0, 16.0), xOffsetPhys, yOffsetPhys);
         selectionComponent = new SelectionComponent(new Rectangle(x + xOffsetSelect, y + yOffsetSelect, 16.0, 32.0), xOffsetSelect, yOffsetSelect);
     }
@@ -32,9 +34,12 @@ public class GameObject implements Serializable {
     public void update(ArrayList<GameObject> objects) {
         Boolean updated = physicsComponent.update(objects);
         if (updated) {
+            renderComponent.setCurrentAnimation("moving");
             Rectangle defaultRect = physicsComponent.getNormalizedRect();
             selectionComponent.setRect(defaultRect);
             renderComponent.setDrawPoint(new Point(defaultRect.getX(), defaultRect.getY()));
+        } else {
+            renderComponent.setCurrentAnimation("idle");
         }
     }
 

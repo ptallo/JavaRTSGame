@@ -14,7 +14,7 @@ public class PhysicsComponent implements Serializable {
     private Double xOffset;
     private Double yOffset;
     private Point destination;
-    private Double velocity = 0.5;
+    private Double velocity = 0.25;
     private long lastUpdate;
 
     public PhysicsComponent(Rectangle rectangle, Double xOffset, Double yOffset) {

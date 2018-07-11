@@ -29,7 +29,6 @@ public class Animation {
 
     public void animate() {
         long currentTime = System.currentTimeMillis();
-        System.out.format("%d\n", lastUpdated - currentTime);
         if (lastUpdated != 0 && (Math.abs(currentTime - lastUpdated) > animationDuration)){
             if (currentFrame < endFrame){
                 currentFrame++;
@@ -59,5 +58,9 @@ public class Animation {
         double xCoord = unmodifiedX > image.getWidth() ? unmodifiedX % image.getWidth() : unmodifiedX;
         int yCoord = unmodifiedX > image.getWidth() ? (int) (unmodifiedX / image.getWidth()) : 0;
         return new Point(xCoord, (double) yCoord);
+    }
+
+    public void reset(){
+        currentFrame = startFrame;
     }
 }
