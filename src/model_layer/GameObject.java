@@ -24,7 +24,7 @@ public class GameObject implements Serializable {
     private final double yOffsetSelect = 0;
 
     public GameObject(double x, double y){
-        renderComponent = new RenderComponent("example-sprite.png", new Point(x, y));
+        renderComponent = new RenderComponent("character.png", new Point(x, y));
         physicsComponent = new PhysicsComponent(new Rectangle(x + xOffsetPhys, y + yOffsetPhys, 16.0, 16.0), xOffsetPhys, yOffsetPhys);
         selectionComponent = new SelectionComponent(new Rectangle(x + xOffsetSelect, y + yOffsetSelect, 16.0, 32.0), xOffsetSelect, yOffsetSelect);
     }
