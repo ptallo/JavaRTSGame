@@ -11,18 +11,21 @@ import java.util.ArrayList;
 public class PhysicsComponent implements Serializable {
 
     private Rectangle rectangle;
+    private Double xOffset;
+    private Double yOffset;
     private Point destination;
-
     private Double velocity = 0.5;
     private long lastUpdate;
 
-    public PhysicsComponent(Double x, Double y, Double width, Double height) {
-        this.rectangle = new Rectangle(x, y, width, height);
+    public PhysicsComponent(Rectangle rectangle, Double xOffset, Double yOffset) {
+        this.rectangle = rectangle;
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
     }
 
-    public void update(ArrayList<GameObject> gameObjects) {
+    public Boolean update(ArrayList<GameObject> gameObjects) {
         if (destination != null) {
-            Rectangle tempRect = getNewPosition();
+            Rectangle tempRect = getNewPosition(destination, rectangle);
             if (tempRect != null){
                 Boolean updateRect = true;
                 for (GameObject object : gameObjects){
@@ -33,9 +36,11 @@ public class PhysicsComponent implements Serializable {
 
                 if (updateRect){
                     rectangle = tempRect;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     public void draw(GraphicsContext gc) {
@@ -43,9 +48,9 @@ public class PhysicsComponent implements Serializable {
         gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
     }
 
-    public Rectangle getNewPosition(){
-        Double xDistance = destination.getX() - rectangle.getX();
-        Double yDistance = destination.getY() - rectangle.getY();
+    public Rectangle getNewPosition(Point destination, Rectangle currentPosition){
+        Double xDistance = destination.getX() - currentPosition.getX();
+        Double yDistance = destination.getY() - currentPosition.getY();
         Double hypotenuse = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 
         if (hypotenuse == 0) {
@@ -55,24 +60,24 @@ public class PhysicsComponent implements Serializable {
 
         Double theta = Math.asin(yDistance / hypotenuse);
 
-        Double deltaX = Math.abs(velocity * Math.cos(theta) * GameController.GAME_PERIOD) * (destination.getX() > rectangle.getX() ? 1 : -1);
-        Double deltaY = Math.abs(velocity * Math.sin(theta) * GameController.GAME_PERIOD) * (destination.getY() > rectangle.getY() ? 1 : -1);
+        Double deltaX = Math.abs(velocity * Math.cos(theta) * GameController.GAME_PERIOD) * (destination.getX() > currentPosition.getX() ? 1 : -1);
+        Double deltaY = Math.abs(velocity * Math.sin(theta) * GameController.GAME_PERIOD) * (destination.getY() > currentPosition.getY() ? 1 : -1);
 
         boolean finalPos = true;
 
         Double newX;
-        if (Math.abs(destination.getX() - rectangle.getX()) < deltaX) {
+        if (Math.abs(destination.getX() - currentPosition.getX()) < deltaX) {
             newX = destination.getX();
         } else {
-            newX = rectangle.getX() + deltaX;
+            newX = currentPosition.getX() + deltaX;
             finalPos = false;
         }
 
         Double newY;
-        if (Math.abs(destination.getY() - rectangle.getY()) < deltaY){
+        if (Math.abs(destination.getY() - currentPosition.getY()) < deltaY){
             newY = destination.getY();
         } else {
-            newY = rectangle.getY() + deltaY;
+            newY = currentPosition.getY() + deltaY;
             finalPos = false;
         }
 
@@ -80,7 +85,7 @@ public class PhysicsComponent implements Serializable {
             destination = null;
         }
 
-        return new Rectangle(newX, newY, rectangle.getWidth(), rectangle.getHeight());
+        return new Rectangle(newX, newY, currentPosition.getWidth(), currentPosition.getHeight());
     }
 
     public Rectangle getRectangle() {
@@ -89,5 +94,9 @@ public class PhysicsComponent implements Serializable {
 
     public void setDestination(Point destination) {
         this.destination = destination;
+    }
+
+    public Rectangle getNormalizedRect(){
+        return new Rectangle(rectangle.getX() - xOffset, rectangle.getY() - yOffset, rectangle.getWidth(), rectangle.getHeight());
     }
 }

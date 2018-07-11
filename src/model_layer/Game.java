@@ -27,7 +27,7 @@ public class Game implements Serializable {
         paused = false;
 
         gameObjects.add(new GameObject(20, 20));
-        gameObjects.add(new GameObject(100, 20));
+        gameObjects.add(new GameObject(100, 100));
     }
 
     public void update(){
@@ -60,7 +60,7 @@ public class Game implements Serializable {
     public void selectUnits(Player player, Rectangle selectionRectangle) {
         ArrayList<GameObject> selectedObjects = new ArrayList<>();
         for (GameObject object : gameObjects){
-            if (object.getPhysicsComponent().getRectangle().contains(selectionRectangle)){
+            if (object.checkSelected(selectionRectangle)){
                 selectedObjects.add(object);
             }
         }
