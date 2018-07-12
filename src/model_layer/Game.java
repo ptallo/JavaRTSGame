@@ -1,12 +1,16 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
+import model_layer.components.physics.PhysicsComponent;
+import model_layer.components.physics.PhysicsSystem;
 import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Game implements Serializable {
 
@@ -19,12 +23,16 @@ public class Game implements Serializable {
     private HashMap<Player, ArrayList<GameObject>> playerToSelectedObjectMap = new HashMap<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
 
+    private PhysicsSystem physicsSystem;
+
     public Game(ArrayList<Player> players, Player user) {
         this.players = players;
-        players.forEach(player -> player.setGame(this));
         this.user = user;
+        players.forEach(player -> player.setGame(this));
         running = true;
         paused = false;
+
+        physicsSystem = new PhysicsSystem();
 
         gameObjects.add(new GameObject(20, 20));
         gameObjects.add(new GameObject(100, 100));
@@ -34,13 +42,15 @@ public class Game implements Serializable {
         for (GameObject object : gameObjects){
             ArrayList<GameObject> objects = new ArrayList<>(gameObjects);
             objects.remove(object);
-            object.update(objects);
+
+            List<PhysicsComponent> physicsComponents = objects.stream().map(gameObject -> gameObject.getPhysicsComponent()).collect(Collectors.toList());
+            physicsSystem.update(object.getPhysicsComponent(), new ArrayList<>(physicsComponents));
         }
     }
 
     public void draw(GraphicsContext gc) {
         for (GameObject object : gameObjects){
-            object.draw(gc);
+            physicsSystem.draw(gc, object.getPhysicsComponent());
         }
         user.draw(gc);
     }

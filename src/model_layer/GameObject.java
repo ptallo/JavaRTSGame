@@ -26,24 +26,6 @@ public class GameObject implements Serializable {
         selectionComponent = new SelectionComponent(new Rectangle(x + 8, y + 0, 16.0, 32.0), 8.0, 0.0);
     }
 
-    public void update(ArrayList<GameObject> objects) {
-        Boolean updated = physicsComponent.update(objects);
-        if (updated) {
-            renderComponent.setCurrentAnimation("moving");
-            Rectangle defaultRect = physicsComponent.getNormalizedRect();
-            selectionComponent.setRect(defaultRect);
-            renderComponent.setDrawPoint(new Point(defaultRect.getX(), defaultRect.getY()));
-        } else {
-            renderComponent.setCurrentAnimation("idle");
-        }
-    }
-
-    public void draw(GraphicsContext gc){
-        physicsComponent.draw(gc);
-        renderComponent.draw(gc);
-        selectionComponent.draw(gc);
-    }
-
     public PhysicsComponent getPhysicsComponent() {
         return physicsComponent;
     }
