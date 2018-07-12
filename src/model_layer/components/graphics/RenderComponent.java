@@ -13,6 +13,9 @@ public class RenderComponent {
     private Image image;
     private Point drawPoint;
 
+    private Double xOffset;
+    private Double yOffset;
+
     private Double frameWidth;
     private Double frameHeight;
 
@@ -20,26 +23,20 @@ public class RenderComponent {
     private Animation currentAnimation;
     private String currentAnimKey;
 
-    public RenderComponent(String path, Point drawPoint, double frameWidth, double frameHeight) {
+    public RenderComponent(String path, Point drawPoint, double frameWidth, double frameHeight, double xOffset, double yOffset) {
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
         this.drawPoint = drawPoint;
         this.frameHeight = frameHeight;
         this.frameWidth = frameWidth;
         image = new Image(new File("resources/" + path).toURI().toString());
     }
 
-    public void draw(GraphicsContext gc) {
-        if (currentAnimation != null){
-            currentAnimation.draw(gc, drawPoint);
-        } else {
-            gc.drawImage(image, drawPoint.getX(), drawPoint.getY(), image.getWidth(), image.getHeight());
-        }
-    }
-
-    public void addAnimation(String key, int startFrame, int endFrame) {
-        Animation newAnim = new Animation(image, startFrame, endFrame, frameWidth, frameHeight, 250);
-        animations.put(key, newAnim);
+    public void addAnimation(String key, int startFrame, int endFrame, long animationDuration){
+        Animation animation = new Animation(image, startFrame, endFrame, frameWidth, frameHeight, animationDuration);
+        animations.put(key, animation);
         if (currentAnimation == null) {
-            currentAnimation = newAnim;
+            currentAnimation = animation;
             currentAnimKey = key;
         }
     }
@@ -55,8 +52,24 @@ public class RenderComponent {
         }
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public Double getFrameWidth() {
+        return frameWidth;
+    }
+
+    public Double getFrameHeight() {
+        return frameHeight;
+    }
+
+    public Animation getCurrentAnimation() {
+        return currentAnimation;
+    }
+
     public void setDrawPoint(Point drawPoint) {
-        this.drawPoint = drawPoint;
+        this.drawPoint = new Point(drawPoint.getX() + xOffset, drawPoint.getY() + yOffset);
     }
 
     public Point getDrawPoint() {

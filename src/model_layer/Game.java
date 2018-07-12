@@ -3,6 +3,7 @@ package model_layer;
 import javafx.scene.canvas.GraphicsContext;
 import model_layer.components.SelectionComponent;
 import model_layer.components.SelectionSystem;
+import model_layer.components.graphics.RenderSystem;
 import model_layer.components.physics.PhysicsComponent;
 import model_layer.components.physics.PhysicsSystem;
 import model_layer.components.physics.Point;
@@ -27,6 +28,7 @@ public class Game implements Serializable {
 
     private PhysicsSystem physicsSystem;
     private SelectionSystem selectionSystem;
+    private RenderSystem renderSystem;
 
     public Game(ArrayList<Player> players, Player user) {
         this.players = players;
@@ -37,6 +39,7 @@ public class Game implements Serializable {
 
         physicsSystem = new PhysicsSystem();
         selectionSystem = new SelectionSystem();
+        renderSystem = new RenderSystem();
 
         gameObjects.add(new GameObject(20, 20));
         gameObjects.add(new GameObject(100, 100));
@@ -48,9 +51,16 @@ public class Game implements Serializable {
             objects.remove(object);
 
             List<PhysicsComponent> physicsComponents = objects.stream().map(GameObject::getPhysicsComponent).collect(Collectors.toList());
-            physicsSystem.update(object.getPhysicsComponent(), new ArrayList<>(physicsComponents));
+            Boolean updated = physicsSystem.update(object.getPhysicsComponent(), new ArrayList<>(physicsComponents));
 
-            object.getSelectionComponent().setRect(object.getPhysicsComponent().getRectangle());
+            if (updated) {
+                Rectangle newRect = object.getPhysicsComponent().getRectangle();
+                object.getSelectionComponent().setRect(newRect);
+                object.getRenderComponent().setDrawPoint(new Point(newRect.getX(), newRect.getY()));
+                object.getRenderComponent().setCurrentAnimation("moving");
+            } else {
+                object.getRenderComponent().setCurrentAnimation("idle");
+            }
         }
     }
 
@@ -58,6 +68,7 @@ public class Game implements Serializable {
         for (GameObject object : gameObjects){
             physicsSystem.draw(gc, object.getPhysicsComponent());
             selectionSystem.draw(gc, object.getSelectionComponent());
+            renderSystem.draw(gc, object.getRenderComponent());
         }
         user.draw(gc);
     }

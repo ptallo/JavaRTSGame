@@ -19,11 +19,14 @@ public class GameObject implements Serializable {
     private SelectionComponent selectionComponent;
 
     public GameObject(double x, double y){
-        renderComponent = new RenderComponent("character.png", new Point(x, y), 32, 32);
-        renderComponent.addAnimation("idle", 0, 4);
-        renderComponent.addAnimation("moving", 5, 8);
-        physicsComponent = new PhysicsComponent(new Rectangle(x + 8, y + 20, 16.0, 16.0), 8.0, 20.0);
-        selectionComponent = new SelectionComponent(new Rectangle(x + 8, y + 0, 16.0, 32.0), 8.0, 0.0);
+        physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0));
+        Rectangle rectangle = physicsComponent.getRectangle();
+        renderComponent = new RenderComponent("character.png", new Point(x, y), 32, 32, -8, -20);
+        renderComponent.setDrawPoint(new Point(rectangle.getX(), rectangle.getY()));
+        renderComponent.addAnimation("idle", 0, 4, 250);
+        renderComponent.addAnimation("moving", 5, 8, 250);
+        selectionComponent = new SelectionComponent(new Rectangle(x, y, 16.0, 32.0), 0, -20);
+        selectionComponent.setRect(rectangle);
     }
 
     public PhysicsComponent getPhysicsComponent() {

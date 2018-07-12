@@ -5,15 +5,11 @@ import java.io.Serializable;
 public class PhysicsComponent implements Serializable {
 
     private Rectangle rectangle;
-    private Double xOffset;
-    private Double yOffset;
     private Point destination;
     private Double velocity = 0.25;
 
-    public PhysicsComponent(Rectangle rectangle, Double xOffset, Double yOffset) {
+    public PhysicsComponent(Rectangle rectangle) {
         this.rectangle = rectangle;
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
     }
 
     public Rectangle getRectangle() {

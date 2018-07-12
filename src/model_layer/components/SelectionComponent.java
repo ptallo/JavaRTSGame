@@ -1,7 +1,5 @@
 package model_layer.components;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import model_layer.components.physics.Rectangle;
 
 public class SelectionComponent {
@@ -12,7 +10,7 @@ public class SelectionComponent {
 
     private Boolean isSelected;
 
-    public SelectionComponent(Rectangle rect, Double xOffset, Double yOffset) {
+    public SelectionComponent(Rectangle rect, double xOffset, double yOffset) {
         this.rect = rect;
         this.xOffset = xOffset;
         this.yOffset = yOffset;
