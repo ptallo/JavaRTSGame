@@ -30,7 +30,11 @@ public class GameObject implements Serializable {
         return physicsComponent;
     }
 
-    public boolean checkSelected(Rectangle selectionRect){
-        return selectionComponent.checkSelected(selectionRect);
+    public RenderComponent getRenderComponent() {
+        return renderComponent;
+    }
+
+    public SelectionComponent getSelectionComponent() {
+        return selectionComponent;
     }
 }

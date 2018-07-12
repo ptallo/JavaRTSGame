@@ -3,7 +3,6 @@ package model_layer.components.physics;
 import controller_layer.GameController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import model_layer.GameObject;
 
 import java.util.ArrayList;
 

@@ -1,12 +1,6 @@
 package model_layer.components.physics;
 
-import controller_layer.GameController;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import model_layer.GameObject;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class PhysicsComponent implements Serializable {
 
@@ -36,10 +30,6 @@ public class PhysicsComponent implements Serializable {
 
     public void setDestination(Point destination) {
         this.destination = destination;
-    }
-
-    public Rectangle getNormalizedRect(){
-        return new Rectangle(rectangle.getX() - xOffset, rectangle.getY() - yOffset, rectangle.getWidth(), rectangle.getHeight());
     }
 
     public Double getVelocity() {

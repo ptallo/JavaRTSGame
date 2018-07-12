@@ -18,17 +18,6 @@ public class SelectionComponent {
         this.yOffset = yOffset;
     }
 
-    public void draw(GraphicsContext gc){
-        gc.setStroke(Color.AQUAMARINE);
-        gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-    }
-
-    public Boolean checkSelected(Rectangle selectedRect){
-        Boolean selected = selectedRect.contains(rect);
-        isSelected = selected;
-        return selected;
-    }
-
     public Rectangle getRect() {
         return rect;
     }
@@ -39,5 +28,9 @@ public class SelectionComponent {
 
     public Boolean getSelected() {
         return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
     }
 }
