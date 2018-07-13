@@ -3,17 +3,22 @@ package model_layer.components.physics;
 import controller_layer.GameController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import model_layer.GameObject;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PhysicsSystem {
 
-    public Boolean update(PhysicsComponent component, ArrayList<PhysicsComponent> componentArrayList){
+    public Boolean update(PhysicsComponent component, ArrayList<GameObject> gameObjects){
+        List<PhysicsComponent> physicsComponents = gameObjects.stream().map(GameObject::getPhysicsComponent).filter(
+                PhysicsComponent::isCollidable).collect(Collectors.toList());
         if (component.getDestination() != null) {
             Rectangle tempRect = getNewPosition(component);
             if (tempRect != null){
-                for (PhysicsComponent arrayComponent : componentArrayList){
-                    if (component.isCollidable() && arrayComponent.isCollidable() && tempRect.contains(arrayComponent.getRectangle())){
+                for (PhysicsComponent arrayComponent : physicsComponents){
+                    if (tempRect.contains(arrayComponent.getRectangle())){
                         return false;
                     }
                 }

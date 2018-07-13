@@ -52,8 +52,7 @@ public class Game implements Serializable {
             ArrayList<GameObject> objects = new ArrayList<>(gameObjects);
             objects.remove(object);
 
-            List<PhysicsComponent> physicsComponents = objects.stream().map(GameObject::getPhysicsComponent).collect(Collectors.toList());
-            Boolean updated = physicsSystem.update(object.getPhysicsComponent(), new ArrayList<>(physicsComponents));
+            Boolean updated = physicsSystem.update(object.getPhysicsComponent(), objects);
 
             if (updated) {
                 Rectangle newRect = object.getPhysicsComponent().getRectangle();
