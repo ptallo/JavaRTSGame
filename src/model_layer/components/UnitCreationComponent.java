@@ -3,10 +3,11 @@ package model_layer.components;
 import model_layer.components.physics.Point;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UnitCreationComponent {
     private ArrayList<ObjectInterface> entityCreationQueue = new ArrayList<>();
-    private Point creationDestination;
+    private HashMap<ObjectInterface, Point> creationPoints = new HashMap<>(); //place object will be created relative to this object
     private long creationDuration;
     private long creationStarted;
 
@@ -22,20 +23,17 @@ public class UnitCreationComponent {
         return creationStarted;
     }
 
-    public void addEntityToList(ObjectInterface entity){
+    public void addEntityToList(ObjectInterface entity, Point point){
         entityCreationQueue.add(entity);
+        creationPoints.put(entity, point);
         creationStarted = System.currentTimeMillis();
     }
 
-    public ObjectInterface getObjectFromQueue(){
+    public ObjectInterface getEntityFromQueue(){
         return entityCreationQueue.remove(0);
     }
 
-    public Point getCreationDestination() {
-        return creationDestination;
-    }
-
-    public void setCreationDestination(Point creationDestination) {
-        this.creationDestination = creationDestination;
+    public HashMap<ObjectInterface, Point> getCreationPoints() {
+        return creationPoints;
     }
 }

@@ -1,6 +1,8 @@
 package model_layer.components;
 
 import model_layer.components.physics.PhysicsComponent;
+import model_layer.components.physics.Point;
+import model_layer.components.physics.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ public class UnitCreationSystem {
     public ObjectInterface getEntity(UnitCreationComponent component) {
         long currentTime = System.currentTimeMillis();
         if (currentTime - component.getCreationStarted() > component.getCreationDuration()) {
-            return component.getObjectFromQueue();
+            return component.getEntityFromQueue();
         }
         return null;
     }
@@ -21,27 +23,18 @@ public class UnitCreationSystem {
 
         ObjectInterface entity = getEntity(component);
         if (entity != null) {
-            entity.getPhysicsComponent().setDestination(component.getCreationDestination());
-            while (isCollided(entity, collidableComponents)) {
-                resolveCollision(entity, collidableComponents);
-            }
+            Point creationPoint = component.getCreationPoints().get(entity);
+            placeObject(creationPoint, entity, collidableComponents);
         }
     }
 
-    public void resolveCollision(ObjectInterface entity, List<PhysicsComponent> collidableObjects) {
+    public void placeObject(Point creationPoint, ObjectInterface object, List<PhysicsComponent> collidableComponents){
+        object.getPhysicsComponent().getRectangle().setOrigin(creationPoint);
 
-    }
-
-    public Boolean isCollided(ObjectInterface entity, List<PhysicsComponent> collidableComponents){
-        if (entity.getPhysicsComponent() != null) {
-            boolean collided = false;
-            for (PhysicsComponent component : collidableComponents){
-                if (entity.getPhysicsComponent().getRectangle().contains(component.getRectangle())) {
-                    collided = true;
-                }
-            }
-            return collided;
+        List<Rectangle> rectangles = collidableComponents.stream().map(PhysicsComponent::getRectangle).collect(Collectors.toList());
+        ArrayList<Rectangle> collidedRectangles = object.getPhysicsComponent().getRectangle().contains(rectangles);
+        if (collidedRectangles.size() > 0){
+            object.getPhysicsComponent().getRectangle().resolveCollision(collidedRectangles);
         }
-        return false;
     }
 }
