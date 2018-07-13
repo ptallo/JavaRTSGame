@@ -1,6 +1,7 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
+import model_layer.components.ObjectInterface;
 import model_layer.components.SelectionComponent;
 import model_layer.components.SelectionSystem;
 import model_layer.components.graphics.RenderSystem;
@@ -23,7 +24,7 @@ public class Game implements Serializable {
     private Player user;
 
     private ArrayList<Player> players;
-    private HashMap<Player, ArrayList<GameObject>> playerToSelectedObjectMap = new HashMap<>();
+    private HashMap<Player, ArrayList<? extends ObjectInterface>> playerToSelectedObjectMap = new HashMap<>();
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     private PhysicsSystem physicsSystem;
@@ -99,7 +100,7 @@ public class Game implements Serializable {
 
     void setObjectDestination(Player player, Point destination){
         System.out.println("setting destination");
-        ArrayList<GameObject> objects = playerToSelectedObjectMap.get(player);
+        ArrayList<? extends ObjectInterface> objects = playerToSelectedObjectMap.get(player);
         if (objects != null && !objects.isEmpty()){
             objects.forEach(object -> object.getPhysicsComponent().setDestination(destination));
         }

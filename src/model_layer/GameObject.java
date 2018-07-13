@@ -1,6 +1,7 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
+import model_layer.components.ObjectInterface;
 import model_layer.components.SelectionComponent;
 import model_layer.components.graphics.RenderComponent;
 import model_layer.components.physics.PhysicsComponent;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class GameObject implements Serializable {
+public class GameObject implements Serializable, ObjectInterface {
 
     private PhysicsComponent physicsComponent;
     private RenderComponent renderComponent;
