@@ -1,6 +1,5 @@
 package model_layer.components.physics;
 
-import controller_layer.GameController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model_layer.GameObject;
@@ -41,42 +40,32 @@ public class PhysicsSystem {
     }
 
     private Rectangle getNewPosition(PhysicsComponent component){
-        Double xDistance = component.getDestination().getX() - component.getRectangle().getX();
-        Double yDistance = component.getDestination().getY() - component.getRectangle().getY();
-        Double hypotenuse = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+        if (component.getDestination() != null){
 
-        if (hypotenuse == 0) {
-            component.setDestination(null);
-            return null;
+            double newX;
+            boolean atXDestination = false;
+            if (Math.abs(component.getDestination().getX() - component.getRectangle().getX()) < Math.abs(component.getXVelocity())){
+                newX = component.getDestination().getX();
+                atXDestination = true;
+            } else {
+                newX = component.getRectangle().getX() + component.getXVelocity();
+            }
+
+            double newY;
+            boolean atYDestination = false;
+            if (Math.abs(component.getDestination().getY() - component.getRectangle().getY()) < Math.abs(component.getYVelocity())){
+                newY = component.getDestination().getY();
+                atYDestination = true;
+            } else {
+                newY = component.getRectangle().getY() + component.getYVelocity();
+            }
+
+            if (atXDestination && atYDestination){
+                component.setDestination(null);
+            }
+
+            return new Rectangle(newX, newY, component.getRectangle().getWidth(), component.getRectangle().getHeight());
         }
-
-        Double theta = Math.asin(yDistance / hypotenuse);
-
-        Double deltaX = Math.abs(component.getVelocity() * Math.cos(theta) * GameController.GAME_PERIOD) * (component.getDestination().getX() > component.getRectangle().getX() ? 1 : -1);
-        Double deltaY = Math.abs(component.getVelocity() * Math.sin(theta) * GameController.GAME_PERIOD) * (component.getDestination().getY() > component.getRectangle().getY() ? 1 : -1);
-
-        boolean finalPos = true;
-
-        Double newX;
-        if (Math.abs(component.getDestination().getX() - component.getRectangle().getX()) < deltaX) {
-            newX = component.getDestination().getX();
-        } else {
-            newX = component.getRectangle().getX() + deltaX;
-            finalPos = false;
-        }
-
-        Double newY;
-        if (Math.abs(component.getDestination().getY() - component.getRectangle().getY()) < deltaY){
-            newY = component.getDestination().getY();
-        } else {
-            newY = component.getRectangle().getY() + deltaY;
-            finalPos = false;
-        }
-
-        if (finalPos) {
-            component.setDestination(null);
-        }
-
-        return new Rectangle(newX, newY, component.getRectangle().getWidth(), component.getRectangle().getHeight());
+        return null;
     }
 }
