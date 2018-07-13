@@ -41,8 +41,10 @@ public class Game implements Serializable {
         selectionSystem = new SelectionSystem();
         renderSystem = new RenderSystem();
 
-        gameObjects.add(new GameObject(20, 20));
-        gameObjects.add(new GameObject(100, 100));
+        gameObjects.add(new GameObject(20, 20, true));
+        gameObjects.add(new GameObject(20, 100, true));
+        gameObjects.add(new GameObject(100, 20, false));
+        gameObjects.add(new GameObject(100, 100, false));
     }
 
     public void update(){

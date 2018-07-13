@@ -13,7 +13,7 @@ public class PhysicsSystem {
             Rectangle tempRect = getNewPosition(component);
             if (tempRect != null){
                 for (PhysicsComponent arrayComponent : componentArrayList){
-                    if (tempRect.contains(arrayComponent.getRectangle())){
+                    if (component.isCollidable() && arrayComponent.isCollidable() && tempRect.contains(arrayComponent.getRectangle())){
                         return false;
                     }
                 }
@@ -26,7 +26,11 @@ public class PhysicsSystem {
     }
 
     public void draw(GraphicsContext gc, PhysicsComponent component) {
-        gc.setStroke(Color.DARKBLUE);
+        if (component.isCollidable()){
+            gc.setStroke(Color.DARKBLUE);
+        } else {
+            gc.setStroke(Color.DARKGREEN);
+        }
         Rectangle rectangle = component.getRectangle();
         gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
     }

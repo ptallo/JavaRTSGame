@@ -18,8 +18,8 @@ public class GameObject implements Serializable {
     private RenderComponent renderComponent;
     private SelectionComponent selectionComponent;
 
-    public GameObject(double x, double y){
-        physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0));
+    public GameObject(double x, double y, boolean collidable){
+        physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0), collidable);
         Rectangle rectangle = physicsComponent.getRectangle();
         renderComponent = new RenderComponent("character.png", new Point(x, y), 32, 32, -8, -20);
         renderComponent.setDrawPoint(new Point(rectangle.getX(), rectangle.getY()));

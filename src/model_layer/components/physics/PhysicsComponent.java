@@ -6,10 +6,17 @@ public class PhysicsComponent implements Serializable {
 
     private Rectangle rectangle;
     private Point destination;
+    private boolean collidable;
     private Double velocity = 0.25;
 
     public PhysicsComponent(Rectangle rectangle) {
+        collidable = true;
         this.rectangle = rectangle;
+    }
+
+    public PhysicsComponent(Rectangle rectangle, boolean collidable) {
+        this.rectangle = rectangle;
+        this.collidable = collidable;
     }
 
     public Rectangle getRectangle() {
@@ -30,5 +37,9 @@ public class PhysicsComponent implements Serializable {
 
     public Double getVelocity() {
         return velocity;
+    }
+
+    public boolean isCollidable() {
+        return collidable;
     }
 }
