@@ -10,19 +10,17 @@ import java.util.stream.Collectors;
 
 public class PhysicsSystem {
 
-    public Boolean update(PhysicsComponent component, ArrayList<GameObject> gameObjects){
+    public Boolean update(PhysicsComponent component, ArrayList<GameObject> gameObjects) {
         List<PhysicsComponent> physicsComponents = gameObjects.stream().map(GameObject::getPhysicsComponent).filter(
                 PhysicsComponent::isCollidable).collect(Collectors.toList());
-        if (component.getDestination() != null) {
-            Rectangle tempRect = getNewPosition(component);
-            if (tempRect != null){
-                for (PhysicsComponent arrayComponent : physicsComponents){
-                    if (tempRect.contains(arrayComponent.getRectangle())){
-                        return false;
-                    }
-                }
 
-                component.setRectangle(tempRect);
+        Rectangle newRect = getNewPosition(component);
+        if (newRect != null) {
+            ArrayList<PhysicsComponent> collidedComponents = component.isCollidable() ?
+                    getCollidedComponents(newRect, physicsComponents) : new ArrayList<>();
+
+            if (collidedComponents.size() == 0){
+                component.setRectangle(newRect);
                 return true;
             }
         }
@@ -39,12 +37,21 @@ public class PhysicsSystem {
         gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
     }
 
-    private Rectangle getNewPosition(PhysicsComponent component){
-        if (component.getDestination() != null){
+    private ArrayList<PhysicsComponent> getCollidedComponents(Rectangle rectangle, List<PhysicsComponent> collidableComponents) {
+        ArrayList<PhysicsComponent> collidedComponents = new ArrayList<>();
+        for (PhysicsComponent collidableComponent : collidableComponents) {
+            if (collidableComponent.getRectangle().contains(rectangle)) {
+                collidedComponents.add(collidableComponent);
+            }
+        }
+        return collidedComponents;
+    }
 
+    private Rectangle getNewPosition(PhysicsComponent component) {
+        if (component.getDestination() != null) {
             double newX;
             boolean atXDestination = false;
-            if (Math.abs(component.getDestination().getX() - component.getRectangle().getX()) < Math.abs(component.getXVelocity())){
+            if (Math.abs(component.getDestination().getX() - component.getRectangle().getX()) < Math.abs(component.getXVelocity())) {
                 newX = component.getDestination().getX();
                 atXDestination = true;
             } else {
