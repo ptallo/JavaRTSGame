@@ -24,41 +24,27 @@ public class Rectangle {
         height = Math.abs(start.getY() - end.getY());
     }
 
-    public Boolean contains(Rectangle rectangle){
+    public Boolean contains(Rectangle rectangle) {
         return rectangle.getX() < this.x + this.width && rectangle.getX() + rectangle.getWidth() > this.x &&
                 rectangle.getY() < this.y + this.height && rectangle.getHeight() + rectangle.getY() > this.y;
     }
-
-
+    
     /**
      * @param rectangleList : a list of rectangles this object could collide with
      * @return a list of rectangle containing any rectangles it is colliding with
      */
-    public ArrayList<Rectangle> contains(List<Rectangle> rectangleList){
+    public ArrayList<Rectangle> contains(List<Rectangle> rectangleList) {
         ArrayList<Rectangle> collided = new ArrayList<>();
-        for (Rectangle rectangle : rectangleList){
-            if (rectangle.contains(this)){
+        for (Rectangle rectangle : rectangleList) {
+            if (rectangle.contains(this)) {
                 collided.add(rectangle);
             }
         }
         return collided;
     }
 
-
-    /**
-     * will resolve a collision between this rectangle and one or more rectangles in collidedRects
-     * @param collidedRects : a list of rectangles this object is colliding with currently
-     */
-    public void resolveCollision(List<Rectangle> collidedRects){
-        
-    }
-
-    public void resolveCollision(Rectangle rectangle){
-
-    }
-
-    public Point getCenter(){
-        return new Point(x + (width/2), y + width/2);
+    public Point getCenter() {
+        return new Point(x + (width / 2), y + width / 2);
     }
 
     public Double getX() {
@@ -69,7 +55,7 @@ public class Rectangle {
         return y;
     }
 
-    public void setOrigin(Point point){
+    public void setOrigin(Point point) {
         this.x = point.getX();
         this.y = point.getY();
     }
