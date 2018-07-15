@@ -1,6 +1,7 @@
 package model_layer.components;
 
 import model_layer.components.physics.Point;
+import model_layer.object_interface.ObjectInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,15 +1,22 @@
 package model_layer.components;
 
+import controller_layer.GameController;
 import model_layer.components.physics.PhysicsComponent;
 import model_layer.components.physics.Point;
-import model_layer.components.physics.Rectangle;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import model_layer.object_interface.ObjectInterface;
 
 public class UnitCreationSystem {
-    public ObjectInterface getEntity(UnitCreationComponent component) {
+    public ObjectInterface update(ObjectInterface object) {
+        ObjectInterface entity = getEntity(object.getUnitCreationComponent());
+        if (entity != null) {
+            System.out.println("new entity");
+            Point creationPoint = object.getUnitCreationComponent().getCreationPoints().get(entity);
+            tryToPlaceObject(creationPoint, entity, object);
+        }
+        return entity;
+    }
+
+    private ObjectInterface getEntity(UnitCreationComponent component) {
         long currentTime = System.currentTimeMillis();
         if (currentTime - component.getCreationStarted() > component.getCreationDuration()) {
             return component.getEntityFromQueue();
@@ -17,24 +24,47 @@ public class UnitCreationSystem {
         return null;
     }
 
-    public void update(UnitCreationComponent component, ArrayList<ObjectInterface> gameObjects) {
-        List<PhysicsComponent> collidableComponents = gameObjects.stream().map(ObjectInterface::getPhysicsComponent)
-                .filter(PhysicsComponent::isCollidable).collect(Collectors.toList());
-
-        ObjectInterface entity = getEntity(component);
-        if (entity != null) {
-            Point creationPoint = component.getCreationPoints().get(entity);
-            placeObject(creationPoint, entity, collidableComponents);
+    private void tryToPlaceObject(Point creationPoint, ObjectInterface newEntity, ObjectInterface creationEntity) {
+        if (newEntity.getPhysicsComponent() != null && creationEntity.getPhysicsComponent() != null) {
+            if (newEntity.getPhysicsComponent().isCollidable() && creationEntity.getPhysicsComponent().isCollidable()) {
+                placeObject(creationPoint, newEntity, creationEntity);
+            }
         }
     }
 
-    public void placeObject(Point creationPoint, ObjectInterface object, List<PhysicsComponent> collidableComponents){
-        object.getPhysicsComponent().getRectangle().setOrigin(creationPoint);
+    private void placeObject(Point creationPoint, ObjectInterface newEntity, ObjectInterface creationEntity) {
+        PhysicsComponent entityComponent = newEntity.getPhysicsComponent();
+        PhysicsComponent creationComponent = creationEntity.getPhysicsComponent();
 
-        List<Rectangle> rectangles = collidableComponents.stream().map(PhysicsComponent::getRectangle).collect(Collectors.toList());
-        ArrayList<Rectangle> collidedRectangles = object.getPhysicsComponent().getRectangle().contains(rectangles);
-        if (collidedRectangles.size() > 0){
-            object.getPhysicsComponent().getRectangle().resolveCollision(collidedRectangles);
+        if (creationPoint == null){
+            creationPoint = new Point(
+                    creationComponent.getRectangle().getX() + creationComponent.getRectangle().getWidth(),
+                    creationComponent.getRectangle().getY() + creationComponent.getRectangle().getHeight()
+            );
+        }
+
+        Double xDistance = creationPoint.getX() - entityComponent.getRectangle().getX();
+        Double yDistance = creationPoint.getY() - entityComponent.getRectangle().getY();
+        Double hypotenuse = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+
+        if (hypotenuse == 0) {
+            return;
+        }
+
+        Double theta = Math.asin(yDistance / hypotenuse);
+
+        double percentage = 0;
+
+        entityComponent.setRectangle(creationComponent.getRectangle());
+        while (creationComponent.getRectangle().contains(entityComponent.getRectangle())) {
+            percentage += 0.01;
+            Double deltaX = Math.acos(theta) * percentage * GameController.GAME_PERIOD *
+                    (entityComponent.getRectangle().getX() > creationPoint.getX() ? -1 : 1);
+            Double deltaY = Math.asin(theta) * percentage * GameController.GAME_PERIOD *
+                    (entityComponent.getRectangle().getY() > creationPoint.getY() ? -1 : 1);
+
+            entityComponent.getRectangle().setX(entityComponent.getRectangle().getX() + deltaX);
+            entityComponent.getRectangle().setY(entityComponent.getRectangle().getY() + deltaY);
         }
     }
 }
