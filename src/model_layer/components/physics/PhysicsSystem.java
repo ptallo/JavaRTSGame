@@ -2,7 +2,7 @@ package model_layer.components.physics;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import model_layer.GameObject;
+import model_layer.object_interface.ObjectInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 public class PhysicsSystem {
 
-    public Boolean update(PhysicsComponent component, ArrayList<GameObject> gameObjects) {
-        List<PhysicsComponent> physicsComponents = gameObjects.stream().map(GameObject::getPhysicsComponent).filter(
+    public Boolean update(PhysicsComponent component, ArrayList<ObjectInterface> gameObjects) {
+        List<PhysicsComponent> physicsComponents = gameObjects.stream().map(ObjectInterface::getPhysicsComponent).filter(
                 PhysicsComponent::isCollidable).collect(Collectors.toList());
 
         Rectangle newRect = getNewPosition(component);

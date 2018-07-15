@@ -10,7 +10,7 @@ public class Rectangle {
     private Double width;
     private Double height;
 
-    public Rectangle(Double x, Double y, Double width, Double height) {
+    public Rectangle(double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -28,7 +28,7 @@ public class Rectangle {
         return rectangle.getX() < this.x + this.width && rectangle.getX() + rectangle.getWidth() > this.x &&
                 rectangle.getY() < this.y + this.height && rectangle.getHeight() + rectangle.getY() > this.y;
     }
-    
+
     /**
      * @param rectangleList : a list of rectangles this object could collide with
      * @return a list of rectangle containing any rectangles it is colliding with
@@ -51,13 +51,25 @@ public class Rectangle {
         return x;
     }
 
+    public void setX(Double x) {
+        this.x = x;
+    }
+
     public Double getY() {
         return y;
+    }
+
+    public void setY(Double y) {
+        this.y = y;
     }
 
     public void setOrigin(Point point) {
         this.x = point.getX();
         this.y = point.getY();
+    }
+
+    public Point getOrigin(){
+        return new Point(x, y);
     }
 
     public Double getWidth() {
