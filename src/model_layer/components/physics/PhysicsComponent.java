@@ -53,12 +53,20 @@ public class PhysicsComponent implements Serializable {
         }
     }
 
-    public Double getXVelocity() {
+    public Double getxVelocity() {
         return xVelocity;
     }
 
-    public Double getYVelocity() {
+    public void setxVelocity(Double xVelocity) {
+        this.xVelocity = xVelocity;
+    }
+
+    public Double getyVelocity() {
         return yVelocity;
+    }
+
+    public void setyVelocity(Double yVelocity) {
+        this.yVelocity = yVelocity;
     }
 
     public boolean isCollidable() {

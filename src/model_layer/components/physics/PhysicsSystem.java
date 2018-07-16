@@ -10,31 +10,52 @@ import java.util.stream.Collectors;
 
 public class PhysicsSystem {
 
-    public Boolean update(PhysicsComponent component, ArrayList<ObjectInterface> gameObjects) {
+    public void update(PhysicsComponent component, ArrayList<ObjectInterface> gameObjects) {
         List<PhysicsComponent> physicsComponents = gameObjects.stream().map(ObjectInterface::getPhysicsComponent).filter(
                 PhysicsComponent::isCollidable).collect(Collectors.toList());
 
-        Rectangle newRect = getNewPosition(component);
-        if (newRect != null) {
-            ArrayList<PhysicsComponent> collidedComponents = component.isCollidable() ?
-                    getCollidedComponents(newRect, physicsComponents) : new ArrayList<>();
+        if (component.isCollidable()) {
+            ArrayList<PhysicsComponent> collidedComponents = getCollidedComponents(component.getRectangle(), physicsComponents);
 
-            if (collidedComponents.size() == 0){
-                component.setRectangle(newRect);
-                return true;
+            if (collidedComponents.size() != 0) {
+                double uDir = collidedComponents.get(0).getRectangle().getX() - component.getRectangle().getX() > 0  ? -1.0 : 1.0;
+                component.setDestination(new Point(
+                        component.getRectangle().getX() + (uDir * component.getRectangle().getWidth()),
+                        component.getRectangle().getY()
+                ));
             }
         }
-        return false;
+
+        Rectangle newRect = getNewPosition(component);
+
+        if (newRect != null) {
+            component.setRectangle(newRect);
+        }
     }
 
-    public void draw(GraphicsContext gc, PhysicsComponent component) {
-        if (component.isCollidable()){
-            gc.setStroke(Color.DARKBLUE);
-        } else {
-            gc.setStroke(Color.DARKGREEN);
+    private Rectangle getNewPosition(PhysicsComponent component) {
+        if (component.getDestination() != null) {
+            double newX;
+            if (Math.abs(component.getDestination().getX() - component.getRectangle().getX()) < Math.abs(component.getxVelocity())) {
+                newX = component.getDestination().getX();
+            } else {
+                newX = component.getRectangle().getX() + component.getxVelocity();
+            }
+
+            double newY;
+            if (Math.abs(component.getDestination().getY() - component.getRectangle().getY()) < Math.abs(component.getyVelocity())){
+                newY = component.getDestination().getY();
+            } else {
+                newY = component.getRectangle().getY() + component.getyVelocity();
+            }
+
+            if (newX == component.getDestination().getX() && newY == component.getDestination().getY()){
+                component.setDestination(null);
+            }
+
+            return new Rectangle(newX, newY, component.getRectangle().getWidth(), component.getRectangle().getHeight());
         }
-        Rectangle rectangle = component.getRectangle();
-        gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+        return null;
     }
 
     private ArrayList<PhysicsComponent> getCollidedComponents(Rectangle rectangle, List<PhysicsComponent> collidableComponents) {
@@ -47,32 +68,13 @@ public class PhysicsSystem {
         return collidedComponents;
     }
 
-    private Rectangle getNewPosition(PhysicsComponent component) {
-        if (component.getDestination() != null) {
-            double newX;
-            boolean atXDestination = false;
-            if (Math.abs(component.getDestination().getX() - component.getRectangle().getX()) < Math.abs(component.getXVelocity())) {
-                newX = component.getDestination().getX();
-                atXDestination = true;
-            } else {
-                newX = component.getRectangle().getX() + component.getXVelocity();
-            }
-
-            double newY;
-            boolean atYDestination = false;
-            if (Math.abs(component.getDestination().getY() - component.getRectangle().getY()) < Math.abs(component.getYVelocity())){
-                newY = component.getDestination().getY();
-                atYDestination = true;
-            } else {
-                newY = component.getRectangle().getY() + component.getYVelocity();
-            }
-
-            if (atXDestination && atYDestination){
-                component.setDestination(null);
-            }
-
-            return new Rectangle(newX, newY, component.getRectangle().getWidth(), component.getRectangle().getHeight());
+    public void draw(GraphicsContext gc, PhysicsComponent component) {
+        if (component.isCollidable()){
+            gc.setStroke(Color.DARKBLUE);
+        } else {
+            gc.setStroke(Color.DARKGREEN);
         }
-        return null;
+        Rectangle rectangle = component.getRectangle();
+        gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
     }
 }

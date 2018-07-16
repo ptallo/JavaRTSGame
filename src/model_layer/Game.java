@@ -44,13 +44,11 @@ public class Game implements Serializable {
 
         GameObject object = new GameObject(100, 100, true);
         object.getUnitCreationComponent().addEntityToList(
-                new GameObject(0, 0, true),
-                new Point(
-                        object.getPhysicsComponent().getRectangle().getX() + 1000,
-                        object.getPhysicsComponent().getRectangle().getY() + 1000
-                )
+                new GameObject(108, 100, true),
+                new Point(0, 0)
         );
         gameObjects.add(object);
+        gameObjects.add(new GameObject(100, 200, true));
     }
 
     public void update(){
@@ -67,10 +65,11 @@ public class Game implements Serializable {
                 }
             }
 
-            Boolean updated = physicsSystem.update(object.getPhysicsComponent(), objects);
+            Rectangle previousRect = object.getPhysicsComponent().getRectangle();
+            physicsSystem.update(object.getPhysicsComponent(), objects);
+            Rectangle newRect = object.getPhysicsComponent().getRectangle();
 
-            if (updated) {
-                Rectangle newRect = object.getPhysicsComponent().getRectangle();
+            if (previousRect != newRect) { // object's position was updated
                 object.getSelectionComponent().setRect(newRect);
                 if (object.getRenderComponent() != null) {
                     object.getRenderComponent().setDrawPoint(new Point(newRect.getX(), newRect.getY()));
@@ -86,7 +85,9 @@ public class Game implements Serializable {
     }
 
     public void draw(GraphicsContext gc) {
-        for (ObjectInterface object : gameObjects){
+        ArrayList<ObjectInterface> drawObjects = new ArrayList<>();
+        drawObjects.addAll(gameObjects);
+        for (ObjectInterface object : drawObjects){
             physicsSystem.draw(gc, object.getPhysicsComponent());
             selectionSystem.draw(gc, object.getSelectionComponent());
             if (object.getRenderComponent() != null) {
