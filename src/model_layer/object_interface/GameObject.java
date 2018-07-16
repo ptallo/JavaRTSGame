@@ -14,6 +14,7 @@ public class GameObject implements Serializable, ObjectInterface {
     private PhysicsComponent physicsComponent;
     private RenderComponent renderComponent;
     private SelectionComponent selectionComponent;
+    private UnitCreationComponent unitCreationComponent;
 
     public GameObject(double x, double y, boolean collidable){
         physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0), collidable);
@@ -26,6 +27,8 @@ public class GameObject implements Serializable, ObjectInterface {
 
         selectionComponent = new SelectionComponent(new Rectangle(x, y, 16.0, 32.0), 0, -20);
         selectionComponent.setRect(rectangle);
+
+        unitCreationComponent = new UnitCreationComponent(100);
     }
 
     @Override
@@ -45,6 +48,13 @@ public class GameObject implements Serializable, ObjectInterface {
 
     @Override
     public UnitCreationComponent getUnitCreationComponent() {
-        return null;
+        return unitCreationComponent;
+    }
+
+    @Override
+    public void setAnchor(Point point) {
+        physicsComponent.getRectangle().setOrigin(point);
+        selectionComponent.getRect().setOrigin(point);
+        renderComponent.setDrawPoint(point);
     }
 }

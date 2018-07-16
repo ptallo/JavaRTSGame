@@ -9,9 +9,10 @@ public class UnitCreationSystem {
     public ObjectInterface update(ObjectInterface object) {
         ObjectInterface entity = getEntity(object.getUnitCreationComponent());
         if (entity != null) {
-            System.out.println("new entity");
-            Point creationPoint = object.getUnitCreationComponent().getCreationPoints().get(entity);
-            tryToPlaceObject(creationPoint, entity, object);
+            entity.setAnchor(new Point(
+                    object.getPhysicsComponent().getRectangle().getX(),
+                    object.getPhysicsComponent().getRectangle().getY() + 100
+            ));
         }
         return entity;
     }

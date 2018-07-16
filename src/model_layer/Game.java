@@ -1,20 +1,18 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
-import model_layer.components.ObjectInterface;
-import model_layer.components.SelectionComponent;
 import model_layer.components.SelectionSystem;
+import model_layer.components.UnitCreationSystem;
 import model_layer.components.graphics.RenderSystem;
-import model_layer.components.physics.PhysicsComponent;
 import model_layer.components.physics.PhysicsSystem;
 import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
+import model_layer.object_interface.GameObject;
+import model_layer.object_interface.ObjectInterface;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Game implements Serializable {
 
@@ -24,12 +22,13 @@ public class Game implements Serializable {
     private Player user;
 
     private ArrayList<Player> players;
-    private HashMap<Player, ArrayList<? extends ObjectInterface>> playerToSelectedObjectMap = new HashMap<>();
-    private ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private HashMap<Player, ArrayList<ObjectInterface>> playerToSelectedObjectMap = new HashMap<>();
+    private ArrayList<ObjectInterface> gameObjects = new ArrayList<>();
 
     private PhysicsSystem physicsSystem;
     private SelectionSystem selectionSystem;
     private RenderSystem renderSystem;
+    private UnitCreationSystem unitCreationSystem;
 
     public Game(ArrayList<Player> players, Player user) {
         this.players = players;
@@ -41,36 +40,63 @@ public class Game implements Serializable {
         physicsSystem = new PhysicsSystem();
         selectionSystem = new SelectionSystem();
         renderSystem = new RenderSystem();
+        unitCreationSystem = new UnitCreationSystem();
 
-        gameObjects.add(new GameObject(20, 20, true));
-        gameObjects.add(new GameObject(20, 100, true));
-        gameObjects.add(new GameObject(100, 20, false));
-        gameObjects.add(new GameObject(100, 100, false));
+        GameObject object = new GameObject(100, 100, true);
+        object.getUnitCreationComponent().addEntityToList(
+                new GameObject(0, 0, true),
+                new Point(
+                        object.getPhysicsComponent().getRectangle().getX() + 1000,
+                        object.getPhysicsComponent().getRectangle().getY() + 1000
+                )
+        );
+        gameObjects.add(object);
     }
 
     public void update(){
-        for (GameObject object : gameObjects){
-            ArrayList<GameObject> objects = new ArrayList<>(gameObjects);
+        ArrayList<ObjectInterface> newObjects = new ArrayList<>();
+        for (ObjectInterface object : gameObjects){
+            // get list of gameobjects that doesn't have the current object
+            ArrayList<ObjectInterface> objects = new ArrayList<>(gameObjects);
             objects.remove(object);
+
+            if (object.getUnitCreationComponent() != null) {
+                ObjectInterface newObject = unitCreationSystem.update(object);
+                if (newObject != null) {
+                    newObjects.add(newObject);
+                }
+            }
 
             Boolean updated = physicsSystem.update(object.getPhysicsComponent(), objects);
 
             if (updated) {
                 Rectangle newRect = object.getPhysicsComponent().getRectangle();
                 object.getSelectionComponent().setRect(newRect);
-                object.getRenderComponent().setDrawPoint(new Point(newRect.getX(), newRect.getY()));
-                object.getRenderComponent().setCurrentAnimation("moving");
+                if (object.getRenderComponent() != null) {
+                    object.getRenderComponent().setDrawPoint(new Point(newRect.getX(), newRect.getY()));
+                    object.getRenderComponent().setCurrentAnimation("moving");
+                }
             } else {
-                object.getRenderComponent().setCurrentAnimation("idle");
+                if (object.getRenderComponent() != null) {
+                    object.getRenderComponent().setCurrentAnimation("idle");
+                }
             }
+        }
+        System.out.println("size: " + gameObjects.size());
+        System.out.println("size: " + newObjects.size());
+        for (ObjectInterface object : newObjects){
+            gameObjects.add(object);
+            System.out.println("added");
         }
     }
 
     public void draw(GraphicsContext gc) {
-        for (GameObject object : gameObjects){
+        for (ObjectInterface object : gameObjects){
             physicsSystem.draw(gc, object.getPhysicsComponent());
             selectionSystem.draw(gc, object.getSelectionComponent());
-            renderSystem.draw(gc, object.getRenderComponent());
+            if (object.getRenderComponent() != null) {
+                renderSystem.draw(gc, object.getRenderComponent());
+            }
         }
         user.draw(gc);
     }
@@ -88,8 +114,8 @@ public class Game implements Serializable {
     }
 
     void selectUnits(Player player, Rectangle selectionRectangle) {
-        ArrayList<GameObject> selectedObjects = new ArrayList<>();
-        for (GameObject object : gameObjects){
+        ArrayList<ObjectInterface> selectedObjects = new ArrayList<>();
+        for (ObjectInterface object : gameObjects){
             if (selectionSystem.checkSelected(selectionRectangle, object.getSelectionComponent())) {
                 selectedObjects.add(object);
             }
