@@ -31,7 +31,10 @@ public class UnitCreationComponent {
     }
 
     public ObjectInterface getEntityFromQueue(){
-        return entityCreationQueue.remove(0);
+        if (entityCreationQueue.size() > 0){
+            return entityCreationQueue.remove(0);
+        }
+        return null;
     }
 
     public HashMap<ObjectInterface, Point> getCreationPoints() {

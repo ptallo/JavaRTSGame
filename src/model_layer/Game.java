@@ -82,12 +82,7 @@ public class Game implements Serializable {
                 }
             }
         }
-        System.out.println("size: " + gameObjects.size());
-        System.out.println("size: " + newObjects.size());
-        for (ObjectInterface object : newObjects){
-            gameObjects.add(object);
-            System.out.println("added");
-        }
+        gameObjects.addAll(newObjects);
     }
 
     public void draw(GraphicsContext gc) {

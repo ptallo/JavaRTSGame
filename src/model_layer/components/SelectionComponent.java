@@ -1,5 +1,6 @@
 package model_layer.components;
 
+import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
 
 public class SelectionComponent {
@@ -30,5 +31,14 @@ public class SelectionComponent {
 
     public void setSelected(Boolean selected) {
         isSelected = selected;
+    }
+
+    public void setAnchor(Point point){
+        rect = new Rectangle(
+                point.getX() + xOffset,
+                point.getY() + yOffset,
+                rect.getWidth(),
+                rect.getHeight()
+        );
     }
 }
