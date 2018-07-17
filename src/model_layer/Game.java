@@ -44,8 +44,8 @@ public class Game implements Serializable {
 
         GameObject object = new GameObject(100, 100, true);
         object.getUnitCreationComponent().addEntityToList(
-                new GameObject(108, 100, true),
-                new Point(0, 0)
+                new GameObject(100, 100, true),
+                new Point(1000, 100)
         );
         gameObjects.add(object);
         gameObjects.add(new GameObject(100, 200, true));
@@ -59,7 +59,11 @@ public class Game implements Serializable {
             objects.remove(object);
 
             if (object.getUnitCreationComponent() != null) {
-                ObjectInterface newObject = unitCreationSystem.update(object);
+                Rectangle rectangle = object.getPhysicsComponent().getRectangle();
+                ObjectInterface newObject = unitCreationSystem.update(
+                        object,
+                        new Point(rectangle.getX(), rectangle.getY() + rectangle.getHeight())
+                );
                 if (newObject != null) {
                     newObjects.add(newObject);
                 }

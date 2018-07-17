@@ -6,13 +6,13 @@ import model_layer.components.physics.Point;
 import model_layer.object_interface.ObjectInterface;
 
 public class UnitCreationSystem {
-    public ObjectInterface update(ObjectInterface object) {
+    public ObjectInterface update(ObjectInterface object, Point point) {
         ObjectInterface entity = getEntity(object.getUnitCreationComponent());
         if (entity != null) {
-            entity.setAnchor(new Point(
-                    object.getPhysicsComponent().getRectangle().getX(),
-                    object.getPhysicsComponent().getRectangle().getY() + 100
-            ));
+            entity.setAnchor(point);
+            if (entity.getPhysicsComponent() != null) {
+                entity.getPhysicsComponent().setDestination(object.getUnitCreationComponent().getCreationPoints().get(entity));
+            }
         }
         return entity;
     }
