@@ -19,7 +19,7 @@ public class PhysicsSystem {
 
             if (collidedComponents.size() != 0) {
                 double uDir = collidedComponents.get(0).getRectangle().getX() - component.getRectangle().getX() > 0  ? -1.0 : 1.0;
-                component.setDestination(new Point(
+                component.addDestination(new Point(
                         component.getRectangle().getX() + (uDir * component.getRectangle().getWidth()),
                         component.getRectangle().getY()
                 ));
@@ -34,23 +34,23 @@ public class PhysicsSystem {
     }
 
     private Rectangle getNewPosition(PhysicsComponent component) {
-        if (component.getDestination() != null) {
+        if (component.getDestinations().size() > 0 && component.getDestinations().get(0) != null) {
             double newX;
-            if (Math.abs(component.getDestination().getX() - component.getRectangle().getX()) < Math.abs(component.getxVelocity())) {
-                newX = component.getDestination().getX();
+            if (Math.abs(component.getCurrentDestination().getX() - component.getRectangle().getX()) < Math.abs(component.getxVelocity())) {
+                newX = component.getCurrentDestination().getX();
             } else {
                 newX = component.getRectangle().getX() + component.getxVelocity();
             }
 
             double newY;
-            if (Math.abs(component.getDestination().getY() - component.getRectangle().getY()) < Math.abs(component.getyVelocity())){
-                newY = component.getDestination().getY();
+            if (Math.abs(component.getCurrentDestination().getY() - component.getRectangle().getY()) < Math.abs(component.getyVelocity())){
+                newY = component.getCurrentDestination().getY();
             } else {
                 newY = component.getRectangle().getY() + component.getyVelocity();
             }
 
-            if (newX == component.getDestination().getX() && newY == component.getDestination().getY()){
-                component.setDestination(null);
+            if (newX == component.getCurrentDestination().getX() && newY == component.getCurrentDestination().getY()){
+                component.removeCurrentDestination();
             }
 
             return new Rectangle(newX, newY, component.getRectangle().getWidth(), component.getRectangle().getHeight());

@@ -3,24 +3,25 @@ package model_layer.components.physics;
 import controller_layer.GameController;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class PhysicsComponent implements Serializable {
 
     private Rectangle rectangle;
-    private Point destination;
+    private ArrayList<Point> destinations;
     private Double xVelocity;
     private Double yVelocity;
     private boolean collidable;
     private Double velocity = 0.25;
 
     public PhysicsComponent(Rectangle rectangle) {
-        collidable = true;
-        this.rectangle = rectangle;
+        this(rectangle, true);
     }
 
     public PhysicsComponent(Rectangle rectangle, boolean collidable) {
         this.rectangle = rectangle;
         this.collidable = collidable;
+        destinations = new ArrayList<>();
     }
 
     public Rectangle getRectangle() {
@@ -31,25 +32,52 @@ public class PhysicsComponent implements Serializable {
         this.rectangle = rectangle;
     }
 
-    public Point getDestination() {
-        return destination;
+    public ArrayList<Point> getDestinations() {
+        return destinations;
     }
 
-    public void setDestination(Point destination) {
-        this.destination = destination;
-        if (destination != null){
+    public Point getCurrentDestination() {
+        return destinations.get(0);
+    }
 
-            Double xDistance = destination.getX() - rectangle.getX();
-            Double yDistance = destination.getY() - rectangle.getY();
+    public void insertDestination(Point destination, Integer index){
+        if (destination == null) {
+            return;
+        }
+
+        if (index > destinations.size() - 1){
+            destinations.add(destination);
+        } else if (index < 0){
+            destinations.add(0, destination);
+        } else {
+            destinations.add(index, destination);
+        }
+
+        recalculateVelocities();
+    }
+
+    public void addDestination(Point destination) {
+        insertDestination(destination, destinations.size() - 1);
+    }
+
+    public void removeCurrentDestination(){
+        destinations.remove(0);
+        recalculateVelocities();
+    }
+
+    private void recalculateVelocities() {
+        if (destinations.size() == 0){
+            xVelocity = 0.0;
+            yVelocity = 0.0;
+        } else {
+            Double xDistance = destinations.get(0).getX() - rectangle.getX();
+            Double yDistance = destinations.get(0).getY() - rectangle.getY();
             Double hypotenuse = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
 
             Double theta = Math.asin(yDistance / hypotenuse);
 
-            xVelocity = Math.abs(velocity * Math.cos(theta) * GameController.GAME_PERIOD) * (destination.getX() > rectangle.getX() ? 1 : -1);
-            yVelocity = Math.abs(velocity * Math.sin(theta) * GameController.GAME_PERIOD) * (destination.getY() > rectangle.getY() ? 1 : -1);
-        } else {
-            xVelocity = 0.0;
-            yVelocity = 0.0;
+            xVelocity = Math.abs(velocity * Math.cos(theta) * GameController.GAME_PERIOD) * (destinations.get(0).getX() > rectangle.getX() ? 1 : -1);
+            yVelocity = Math.abs(velocity * Math.sin(theta) * GameController.GAME_PERIOD) * (destinations.get(0).getY() > rectangle.getY() ? 1 : -1);
         }
     }
 
@@ -57,16 +85,8 @@ public class PhysicsComponent implements Serializable {
         return xVelocity;
     }
 
-    public void setxVelocity(Double xVelocity) {
-        this.xVelocity = xVelocity;
-    }
-
     public Double getyVelocity() {
         return yVelocity;
-    }
-
-    public void setyVelocity(Double yVelocity) {
-        this.yVelocity = yVelocity;
     }
 
     public boolean isCollidable() {

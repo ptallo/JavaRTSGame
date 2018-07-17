@@ -45,7 +45,7 @@ public class Game implements Serializable {
         GameObject object = new GameObject(100, 100, true);
         object.getUnitCreationComponent().addEntityToList(
                 new GameObject(100, 100, true),
-                new Point(1000, 100)
+                new Point(200, 100)
         );
         gameObjects.add(object);
         gameObjects.add(new GameObject(100, 200, true));
@@ -120,15 +120,13 @@ public class Game implements Serializable {
                 selectedObjects.add(object);
             }
         }
-        System.out.println("This many units selected: " + selectedObjects.size());
         playerToSelectedObjectMap.put(player, selectedObjects);
     }
 
     void setObjectDestination(Player player, Point destination){
-        System.out.println("setting destination");
         ArrayList<? extends ObjectInterface> objects = playerToSelectedObjectMap.get(player);
         if (objects != null && !objects.isEmpty()){
-            objects.forEach(object -> object.getPhysicsComponent().setDestination(destination));
+            objects.forEach(object -> object.getPhysicsComponent().addDestination(destination));
         }
     }
 }
