@@ -12,15 +12,16 @@ public class PhysicsComponent implements Serializable {
     private Double xVelocity;
     private Double yVelocity;
     private boolean collidable;
-    private Double velocity = 0.25;
+    private Double velocity;
 
     public PhysicsComponent(Rectangle rectangle) {
-        this(rectangle, true);
+        this(rectangle, true, 0.25);
     }
 
-    public PhysicsComponent(Rectangle rectangle, boolean collidable) {
+    public PhysicsComponent(Rectangle rectangle, boolean collidable, double velocity) {
         this.rectangle = rectangle;
         this.collidable = collidable;
+        this.velocity = velocity;
         destinations = new ArrayList<>();
     }
 
@@ -76,6 +77,11 @@ public class PhysicsComponent implements Serializable {
 
             Double theta = Math.asin(yDistance / hypotenuse);
 
+            if (hypotenuse == 0){
+                removeCurrentDestination();
+                return;
+            }
+
             xVelocity = Math.abs(velocity * Math.cos(theta) * GameController.GAME_PERIOD) * (destinations.get(0).getX() > rectangle.getX() ? 1 : -1);
             yVelocity = Math.abs(velocity * Math.sin(theta) * GameController.GAME_PERIOD) * (destinations.get(0).getY() > rectangle.getY() ? 1 : -1);
         }
@@ -87,6 +93,10 @@ public class PhysicsComponent implements Serializable {
 
     public Double getyVelocity() {
         return yVelocity;
+    }
+
+    public Double getVelocity() {
+        return velocity;
     }
 
     public boolean isCollidable() {

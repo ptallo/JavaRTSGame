@@ -16,8 +16,8 @@ public class GameObject implements Serializable, ObjectInterface {
     private SelectionComponent selectionComponent;
     private UnitCreationComponent unitCreationComponent;
 
-    public GameObject(double x, double y, boolean collidable){
-        physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0), collidable);
+    public GameObject(double x, double y, boolean collidable, double velocity){
+        physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0), collidable, velocity);
         Rectangle rectangle = physicsComponent.getRectangle();
 
         renderComponent = new RenderComponent("character.png", new Point(x, y), 32, 32, -8, -20);

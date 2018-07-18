@@ -42,13 +42,13 @@ public class Game implements Serializable {
         renderSystem = new RenderSystem();
         unitCreationSystem = new UnitCreationSystem();
 
-        GameObject object = new GameObject(100, 100, true);
+        GameObject object = new GameObject(100, 100, true, 0);
         object.getUnitCreationComponent().addEntityToList(
-                new GameObject(100, 100, true),
+                new GameObject(100, 100, true, 0.25),
                 new Point(200, 100)
         );
         gameObjects.add(object);
-        gameObjects.add(new GameObject(100, 200, true));
+        gameObjects.add(new GameObject(100, 200, true, 0.25));
     }
 
     public void update(){
