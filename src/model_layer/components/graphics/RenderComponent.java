@@ -1,6 +1,5 @@
 package model_layer.components.graphics;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
@@ -23,6 +22,10 @@ public class RenderComponent {
     private Animation currentAnimation;
     private String currentAnimKey;
 
+    public RenderComponent(String path, Point drawPoint){
+        this(path, drawPoint, -1, -1, 0, 0);
+    }
+
     public RenderComponent(String path, Point drawPoint, double frameWidth, double frameHeight, double xOffset, double yOffset) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
@@ -30,6 +33,10 @@ public class RenderComponent {
         this.frameHeight = frameHeight;
         this.frameWidth = frameWidth;
         image = new Image(new File("resources/" + path).toURI().toString());
+        if (frameWidth == -1 || frameHeight == -1){
+            this.frameWidth = image.getWidth();
+            this.frameHeight = image.getHeight();
+        }
     }
 
     public void addAnimation(String key, int startFrame, int endFrame, long animationDuration){
@@ -74,5 +81,9 @@ public class RenderComponent {
 
     public Point getDrawPoint() {
         return drawPoint;
+    }
+
+    public Rectangle getDrawRect(){
+        return new Rectangle(drawPoint.getX(), drawPoint.getY(), frameWidth, frameHeight);
     }
 }

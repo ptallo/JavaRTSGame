@@ -1,12 +1,14 @@
 package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import model_layer.components.SelectionSystem;
 import model_layer.components.UnitCreationSystem;
 import model_layer.components.graphics.RenderSystem;
 import model_layer.components.physics.PhysicsSystem;
 import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
+import model_layer.object_interface.map.Map;
 import model_layer.object_interface.GameObject;
 import model_layer.object_interface.ObjectInterface;
 
@@ -25,6 +27,8 @@ public class Game implements Serializable {
     private HashMap<Player, ArrayList<ObjectInterface>> playerToSelectedObjectMap = new HashMap<>();
     private ArrayList<ObjectInterface> gameObjects = new ArrayList<>();
 
+    private Map map;
+
     private PhysicsSystem physicsSystem;
     private SelectionSystem selectionSystem;
     private RenderSystem renderSystem;
@@ -41,6 +45,8 @@ public class Game implements Serializable {
         selectionSystem = new SelectionSystem();
         renderSystem = new RenderSystem();
         unitCreationSystem = new UnitCreationSystem();
+
+        map = new Map();
 
         GameObject object = new GameObject(100, 100, true, 0);
         object.getUnitCreationComponent().addEntityToList(
@@ -89,8 +95,15 @@ public class Game implements Serializable {
     }
 
     public void draw(GraphicsContext gc) {
-        ArrayList<ObjectInterface> drawObjects = new ArrayList<>();
-        drawObjects.addAll(gameObjects);
+        map.draw();
+        map.getMapTiles().forEach(mapTile -> renderSystem.draw(gc, mapTile.getRenderComponent()));
+        map.getMapTiles().forEach(mapTile -> {
+            Rectangle rectangle = mapTile.getRenderComponent().getDrawRect();
+            gc.setStroke(Color.BLACK);
+            gc.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+        });
+
+        ArrayList<ObjectInterface> drawObjects = new ArrayList<>(gameObjects);
         for (ObjectInterface object : drawObjects){
             physicsSystem.draw(gc, object.getPhysicsComponent());
             selectionSystem.draw(gc, object.getSelectionComponent());
