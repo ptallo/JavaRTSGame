@@ -12,7 +12,7 @@ import java.util.*;
 
 public class GameController {
 
-    public static final long GAME_PERIOD = 1000/60;
+    public static final long GAME_PERIOD = 1000 / 60;
 
     private GameScreen view;
     private Game game;
@@ -27,10 +27,10 @@ public class GameController {
     }
 
     private void initInputHandling() {
-        for (Player player : game.getPlayers()){
+        for (Player player : game.getPlayers()) {
             player.getInputs().addListener((ListChangeListener<InputItem>) c -> {
                 c.next();
-                if (c.getAddedSize() > 0){
+                if (c.getAddedSize() > 0) {
                     List<? extends InputItem> items = c.getAddedSubList();
                     for (InputItem item : items) {
                         handleInput(item);
@@ -40,15 +40,18 @@ public class GameController {
         }
     }
 
-    public void handleInput(InputItem item){
-        if (item.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED){
+    public void handleInput(InputItem item) {
+        if (item.getEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
             user.updateRect((MouseEvent) item.getEvent());
         } else if (item.getEvent().getEventType() == MouseEvent.MOUSE_RELEASED) {
             user.updateRect((MouseEvent) item.getEvent());
         } else if (item.getEvent().getEventType() == MouseEvent.MOUSE_DRAGGED) {
             user.updateRect((MouseEvent) item.getEvent());
+            user.updateTransformDirection((MouseEvent) item.getEvent());
         } else if (item.getEvent().getEventType() == KeyEvent.KEY_PRESSED) {
 
+        } else if (item.getEvent().getEventType() == MouseEvent.MOUSE_MOVED) {
+            user.updateTransformDirection((MouseEvent) item.getEvent());
         }
     }
 
@@ -63,11 +66,11 @@ public class GameController {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (game.getRunning() && !game.getPaused()){
+                if (game.getRunning() && !game.getPaused()) {
                     game.update();
                 }
             }
-        }, new Date(), 1000/60);
+        }, new Date(), 1000 / 60);
     }
 
     public GameScreen getView() {

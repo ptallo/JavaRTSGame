@@ -21,13 +21,23 @@ public class Player implements Serializable {
     private Rectangle selectionRectangle;
     private Point selectionPoint;
 
+    private Double screenWidth;
+    private Double screenHeight;
+
+    private Double xTransform = 0.0;
+    private Double yTransform = 0.0;
+
+    // Values -1, 0, 1 mean updateTransform negatively, don't updateTransform and updateTransform positively
+    private Integer updateXTransform = 0;
+    private Integer updateYTransform = 0;
+
     public Player() {
         id = UUID.randomUUID().toString();
     }
 
     public void updateRect(MouseEvent event){
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED){
-            selectionPoint = new Point(event.getX(), event.getY());
+            selectionPoint = new Point(event.getScreenX() - xTransform, event.getScreenY() - yTransform);
             if (event.isSecondaryButtonDown()){
                 game.setObjectDestination(this, selectionPoint);
             }
@@ -38,15 +48,29 @@ public class Player implements Serializable {
             selectionPoint = null;
             selectionRectangle = null;
         } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-            Point endPoint = new Point(event.getX(), event.getY());
+            Point endPoint = new Point(event.getScreenX() - xTransform, event.getScreenY() - yTransform);
             if (selectionPoint != null) {
                 selectionRectangle = new Rectangle(selectionPoint, endPoint);
             }
         }
     }
 
-    public void update() {
+    public void updateTransform(GraphicsContext gc) {
+        if (updateXTransform > 0) {
+            xTransform += 1;
+        } else if (updateXTransform < 0) {
+            xTransform += -1;
+        }
 
+        if (updateYTransform > 0) {
+            yTransform += 1;
+        } else if (updateYTransform < 0) {
+            yTransform += -1;
+        }
+
+        gc.setTransform(1, 0, 0, 1, xTransform, yTransform);
+        gc.setFill(Color.LIGHTGRAY);
+        gc.fillRect(-xTransform, -yTransform, screenWidth, screenHeight);
     }
 
     public void draw(GraphicsContext gc) {
@@ -54,6 +78,29 @@ public class Player implements Serializable {
             gc.setStroke(Color.BLACK);
             gc.strokeRect(selectionRectangle.getX(), selectionRectangle.getY(), selectionRectangle.getWidth(), selectionRectangle.getHeight());
         }
+    }
+
+    public void updateTransformDirection(MouseEvent event){
+        if (event.getX() < screenWidth * 0.05){
+            updateXTransform = 1;
+        } else if (event.getX() > screenWidth * 0.95) {
+            updateXTransform = -1;
+        } else {
+            updateXTransform = 0;
+        }
+
+        if (event.getY() < screenHeight * 0.05){
+            updateYTransform = 1;
+        } else if (event.getY() > screenHeight * 0.95) {
+            updateYTransform = -1;
+        } else {
+            updateYTransform = 0;
+        }
+    }
+
+    public void updateDimensions(double width, double height) {
+        screenWidth = width;
+        screenHeight = height;
     }
 
     public void setGame(Game game) {

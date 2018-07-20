@@ -95,6 +95,8 @@ public class Game implements Serializable {
     }
 
     public void draw(GraphicsContext gc) {
+        user.updateTransform(gc);
+
         map.draw();
         map.getMapTiles().forEach(mapTile -> renderSystem.draw(gc, mapTile.getRenderComponent()));
         map.getMapTiles().forEach(mapTile -> {
@@ -111,6 +113,7 @@ public class Game implements Serializable {
                 renderSystem.draw(gc, object.getRenderComponent());
             }
         }
+
         user.draw(gc);
     }
 
