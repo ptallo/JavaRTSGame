@@ -24,6 +24,7 @@ public class Player implements Serializable {
     private Double screenWidth;
     private Double screenHeight;
 
+    private Double transformSpeed = 5.0;
     private Double xTransform = 0.0;
     private Double yTransform = 0.0;
 
@@ -57,15 +58,15 @@ public class Player implements Serializable {
 
     public void updateTransform(GraphicsContext gc) {
         if (updateXTransform > 0) {
-            xTransform += 1;
+            xTransform += transformSpeed;
         } else if (updateXTransform < 0) {
-            xTransform += -1;
+            xTransform += -transformSpeed;
         }
 
         if (updateYTransform > 0) {
-            yTransform += 1;
+            yTransform += transformSpeed;
         } else if (updateYTransform < 0) {
-            yTransform += -1;
+            yTransform += -transformSpeed;
         }
 
         gc.setTransform(1, 0, 0, 1, xTransform, yTransform);
