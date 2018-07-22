@@ -15,7 +15,7 @@ public class MapTile implements Serializable, ObjectInterface {
     public static final int WIDTH = 32;
     public static final int HEIGHT = 32;
 
-    public MapTile(double x, double y, String path) {
+    public MapTile(double x, double y, String path, double speedMultiplier) {
         renderComponent = new RenderComponent(path, new Point(x, y));
     }
 

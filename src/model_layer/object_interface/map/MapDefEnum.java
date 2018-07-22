@@ -1,31 +1,37 @@
 package model_layer.object_interface.map;
 
 public enum MapDefEnum {
-    GRASSTILE("1", "grasstile.png"),
-    SANDTILE("2", "sandtile.png");
+    GRASSTILE('1', "grasstile.png", 1),
+    SANDTILE('2', "sandtile.png", 0.25);
 
-    private String id;
+    private char id;
     private String tilePath;
+    private Double speedMultiplier;
 
-    MapDefEnum(String identifier, String path) {
-        id = identifier;
-        tilePath = path;
+    MapDefEnum(char id, String tilePath, double speedMultiplier) {
+        this.id = id;
+        this.tilePath = tilePath;
+        this.speedMultiplier = speedMultiplier;
     }
 
-    public static String getPathForID(char c){
+    public static MapTile getInstanceForId(char c){
         for (MapDefEnum value : MapDefEnum.values()){
-            if (value.getId().equalsIgnoreCase(String.valueOf(c))){
-                return value.getTilePath();
+            if (value.getId() == c){
+                return new MapTile(0, 0, value.getTilePath(), value.getSpeedMultiplier());
             }
         }
         return null;
     }
 
-    public String getId() {
+    public char getId() {
         return id;
     }
 
     public String getTilePath() {
         return tilePath;
+    }
+
+    public Double getSpeedMultiplier() {
+        return speedMultiplier;
     }
 }

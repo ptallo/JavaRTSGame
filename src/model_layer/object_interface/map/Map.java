@@ -21,9 +21,10 @@ public class Map {
         for (String rowDef : mapDef){
             ArrayList<MapTile> row = new ArrayList<>();
             for (char c : rowDef.toCharArray()){
-                String path = MapDefEnum.getPathForID(c);
-                MapTile tile = new MapTile(0, 0, path);
-                row.add(tile);
+                MapTile tile = MapDefEnum.getInstanceForId(c);
+                if (tile != null) {
+                    row.add(tile);
+                }
             }
             mapTiles.add(row);
         }
