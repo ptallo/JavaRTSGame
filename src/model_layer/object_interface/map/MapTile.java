@@ -41,6 +41,6 @@ public class MapTile implements Serializable, ObjectInterface {
 
     @Override
     public void setAnchor(Point point) {
-
+        renderComponent.setDrawPoint(point);
     }
 }

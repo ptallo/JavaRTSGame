@@ -11,8 +11,10 @@ public class PhysicsComponent implements Serializable {
     private ArrayList<Point> destinations;
     private Double xVelocity;
     private Double yVelocity;
-    private boolean collidable;
     private Double velocity;
+
+    private boolean collidable;
+    private boolean separating;
 
     public PhysicsComponent(Rectangle rectangle) {
         this(rectangle, true, 0.25);
@@ -22,6 +24,7 @@ public class PhysicsComponent implements Serializable {
         this.rectangle = rectangle;
         this.collidable = collidable;
         this.velocity = velocity;
+        this.separating = false;
         destinations = new ArrayList<>();
     }
 
@@ -58,12 +61,24 @@ public class PhysicsComponent implements Serializable {
     }
 
     public void addDestination(Point destination) {
+        destinations = new ArrayList<>();
         insertDestination(destination, destinations.size() - 1);
     }
 
     public void removeCurrentDestination(){
         destinations.remove(0);
         recalculateVelocities();
+    }
+
+    public void separateComponent (PhysicsComponent collidedComponent) {
+        if (!separating) {
+            separating = true;
+            double uDir = collidedComponent.getRectangle().getX() - getRectangle().getX() > 0  ? -1.0 : 1.0;
+            insertDestination(new Point(
+                    rectangle.getX() + (uDir * rectangle.getWidth()),
+                    rectangle.getY()
+            ),  -1);
+        }
     }
 
     private void recalculateVelocities() {

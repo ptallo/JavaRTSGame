@@ -18,11 +18,7 @@ public class PhysicsSystem {
             ArrayList<PhysicsComponent> collidedComponents = getCollidedComponents(component.getRectangle(), physicsComponents);
 
             if (collidedComponents.size() != 0 && component.getVelocity() != 0) {
-                double uDir = collidedComponents.get(0).getRectangle().getX() - component.getRectangle().getX() > 0  ? -1.0 : 1.0;
-                component.addDestination(new Point(
-                        component.getRectangle().getX() + (uDir * component.getRectangle().getWidth()),
-                        component.getRectangle().getY()
-                ));
+                component.separateComponent(collidedComponents.get(0));
             }
         }
 

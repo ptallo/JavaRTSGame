@@ -142,7 +142,11 @@ public class Game implements Serializable {
     void setObjectDestination(Player player, Point destination){
         ArrayList<? extends ObjectInterface> objects = playerToSelectedObjectMap.get(player);
         if (objects != null && !objects.isEmpty()){
-            objects.forEach(object -> object.getPhysicsComponent().addDestination(destination));
+            objects.forEach(object -> {
+                if (object.getPhysicsComponent() != null) {
+                    object.getPhysicsComponent().addDestination(destination);
+                }
+            });
         }
     }
 }
