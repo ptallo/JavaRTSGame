@@ -12,16 +12,18 @@ import java.io.Serializable;
 public class MapTile implements Serializable, ObjectInterface {
 
     private RenderComponent renderComponent;
+    private PhysicsComponent physicsComponent;
     public static final int WIDTH = 32;
     public static final int HEIGHT = 32;
 
     public MapTile(double x, double y, String path, double speedMultiplier) {
         renderComponent = new RenderComponent(path, new Point(x, y));
+        physicsComponent = new PhysicsComponent(renderComponent.getDrawRect(), false, 0, speedMultiplier);
     }
 
     @Override
     public PhysicsComponent getPhysicsComponent() {
-        return null;
+        return physicsComponent;
     }
 
     @Override

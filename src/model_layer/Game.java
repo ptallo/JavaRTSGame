@@ -8,9 +8,9 @@ import model_layer.components.graphics.RenderSystem;
 import model_layer.components.physics.PhysicsSystem;
 import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
-import model_layer.object_interface.map.Map;
 import model_layer.object_interface.GameObject;
 import model_layer.object_interface.ObjectInterface;
+import model_layer.object_interface.map.Map;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -60,10 +60,11 @@ public class Game implements Serializable {
     public void update(){
         ArrayList<ObjectInterface> newObjects = new ArrayList<>();
         for (ObjectInterface object : gameObjects){
-            // get list of gameobjects that doesn't have the current object
+            // get list of gameObjects except the current object we are operating on
             ArrayList<ObjectInterface> objects = new ArrayList<>(gameObjects);
             objects.remove(object);
 
+            // handle unit creationComponent
             if (object.getUnitCreationComponent() != null) {
                 Rectangle rectangle = object.getPhysicsComponent().getRectangle();
                 ObjectInterface newObject = unitCreationSystem.update(
@@ -76,7 +77,7 @@ public class Game implements Serializable {
             }
 
             Rectangle previousRect = object.getPhysicsComponent().getRectangle();
-            physicsSystem.update(object.getPhysicsComponent(), objects);
+            physicsSystem.update(object.getPhysicsComponent(), objects, map.getMapTiles());
             Rectangle newRect = object.getPhysicsComponent().getRectangle();
 
             if (previousRect != newRect) { // object's position was updated
