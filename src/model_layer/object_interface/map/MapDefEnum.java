@@ -1,23 +1,23 @@
 package model_layer.object_interface.map;
 
 public enum MapDefEnum {
-    GRASSTILE('1', "grasstile.png", 1),
-    SANDTILE('2', "sandtile.png", 0.25);
+    GRASSTILE('1', "grasstile.png", false),
+    SANDTILE('2', "sandtile.png", true);
 
     private char id;
     private String tilePath;
-    private Double speedMultiplier;
+    private Boolean isCollidable;
 
-    MapDefEnum(char id, String tilePath, double speedMultiplier) {
+    MapDefEnum(char id, String tilePath, Boolean isCollidable) {
         this.id = id;
         this.tilePath = tilePath;
-        this.speedMultiplier = speedMultiplier;
+        this.isCollidable = isCollidable;
     }
 
     public static MapTile getInstanceForId(char c){
         for (MapDefEnum value : MapDefEnum.values()){
             if (value.getId() == c){
-                return new MapTile(0, 0, value.getTilePath(), value.getSpeedMultiplier());
+                return new MapTile(0, 0, value.getTilePath(), value.getCollidable());
             }
         }
         return null;
@@ -31,7 +31,7 @@ public enum MapDefEnum {
         return tilePath;
     }
 
-    public Double getSpeedMultiplier() {
-        return speedMultiplier;
+    public Boolean getCollidable() {
+        return isCollidable;
     }
 }
