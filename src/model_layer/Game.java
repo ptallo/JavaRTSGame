@@ -48,7 +48,7 @@ public class Game implements Serializable {
 
         map = new Map();
 
-        GameObject object = new GameObject(100, 100, true, 0);
+        GameObject object = new GameObject(100, 100, true, 0.25);
         object.getUnitCreationComponent().addEntityToList(
                 new GameObject(100, 100, true, 0.25),
                 new Point(200, 100)
@@ -77,7 +77,7 @@ public class Game implements Serializable {
             }
 
             Rectangle previousRect = object.getPhysicsComponent().getRectangle();
-            physicsSystem.update(object.getPhysicsComponent(), objects, map.getMapTiles());
+            physicsSystem.update(object.getPhysicsComponent(), objects, map.getMapTiles(), map.getMapRectangle());
             Rectangle newRect = object.getPhysicsComponent().getRectangle();
 
             if (previousRect != newRect) { // object's position was updated

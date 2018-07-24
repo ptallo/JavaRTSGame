@@ -37,6 +37,10 @@ public class PhysicsComponent implements Serializable {
         this.rectangle = rectangle;
     }
 
+    public void setRectangleOrigin(Point point){
+        rectangle = new Rectangle(point.getX(), point.getY(), rectangle.getWidth(), rectangle.getHeight());
+    }
+
     public ArrayList<Point> getDestinations() {
         return destinations;
     }

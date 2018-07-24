@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 public class PhysicsSystem {
 
-    public void update(PhysicsComponent component, ArrayList<ObjectInterface> gameObjects, ArrayList<MapTile> tiles) {
-        List<PhysicsComponent> physicsComponents = gameObjects.stream().map(ObjectInterface::getPhysicsComponent).filter(
-                PhysicsComponent::isCollidable).collect(Collectors.toList());
-
-        List<PhysicsComponent> mapComponents = tiles.stream().map(MapTile::getPhysicsComponent).collect(Collectors.toList());
+    public void update(PhysicsComponent component, ArrayList<ObjectInterface> gameObjects, ArrayList<MapTile> tiles, Rectangle mapRect) {
+        List<PhysicsComponent> physicsComponents = gameObjects.stream()
+                .map(ObjectInterface::getPhysicsComponent)
+                .filter(PhysicsComponent::isCollidable)
+                .collect(Collectors.toList());
 
         if (component.isCollidable()) {
             ArrayList<PhysicsComponent> collidedComponents = getCollidedComponents(component.getRectangle(), physicsComponents);
@@ -25,13 +25,15 @@ public class PhysicsSystem {
             }
         }
 
-        ArrayList<PhysicsComponent> collidedMapComponents = getCollidedComponents(component.getRectangle(), mapComponents);
-        System.out.println(collidedMapComponents.size());
+        List<PhysicsComponent> mapComponents = tiles.stream()
+                .map(MapTile::getPhysicsComponent)
+                .filter(PhysicsComponent::isCollidable)
+                .collect(Collectors.toList());
 
-        if (collidedMapComponents.size() == 0) {
-            Rectangle newRect = getNewPosition(component);
+        Rectangle newRect = getNewPosition(component);
 
-            if (newRect != null) {
+        if (newRect != null) {
+            if (getCollidedComponents(newRect, mapComponents).size() == 0 && mapRect.containsFully(newRect)) {
                 component.setRectangle(newRect);
             }
         }
