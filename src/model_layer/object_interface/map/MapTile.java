@@ -13,8 +13,8 @@ public class MapTile implements Serializable, ObjectInterface {
 
     private RenderComponent renderComponent;
     private PhysicsComponent physicsComponent;
-    public static final int WIDTH = 32;
-    public static final int HEIGHT = 32;
+    public static final int WIDTH = 64;
+    public static final int HEIGHT = 64;
 
     public MapTile(double x, double y, String path, Boolean isCollidable) {
         renderComponent = new RenderComponent(path, new Point(x, y));
