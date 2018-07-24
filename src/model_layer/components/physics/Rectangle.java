@@ -29,6 +29,11 @@ public class Rectangle {
                 rectangle.getY() < this.y + this.height && rectangle.getHeight() + rectangle.getY() > this.y;
     }
 
+    public Boolean containsFully(Rectangle rectangle) {
+        return rectangle.getX() > x && rectangle.getX() + rectangle.getWidth() < x + width &&
+                rectangle.getY() > y && rectangle.getY() + rectangle.getHeight() < y + height;
+    }
+
     /**
      * @param rectangleList : a list of rectangles this object could collide with
      * @return a list of rectangle containing any rectangles it is colliding with
