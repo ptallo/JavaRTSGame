@@ -20,6 +20,12 @@ public class GameScreen extends VBox {
     private Double width;
     private Double height;
 
+    private HBox guiHBox;
+
+    private ActionPane actionPane;
+    private SelectedUnitsPane selectedUnitsPane;
+    private MinimapPane minimapPane;
+
     public GameScreen(Game game, Player user) {
         this.game = game;
         this.user = user;
@@ -29,6 +35,7 @@ public class GameScreen extends VBox {
 
     public void drawGame(double width, double height) {
         initCanvas(width, height);
+        initGUI();
         updateDimensions(width, height);
 
         new AnimationTimer() {
@@ -36,6 +43,9 @@ public class GameScreen extends VBox {
             public void handle(long now) {
                 if (game.getRunning() && !game.getPaused()){
                     game.draw(gc);
+                    actionPane.update(game);
+                    selectedUnitsPane.update(game);
+                    minimapPane.update(game);
                 }
             }
         }.start();
@@ -85,12 +95,19 @@ public class GameScreen extends VBox {
     }
 
     private void initCanvas(double width, double height) {
-        canvas = new Canvas(width, height);
+        canvas = new Canvas(width, height * 0.7);
         getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
     }
 
     private void initGUI(){
-        HBox guiHBox = new HBox();
+        guiHBox = new HBox();
+        actionPane = new ActionPane();
+        guiHBox.getChildren().add(actionPane);
+        selectedUnitsPane = new SelectedUnitsPane();
+        guiHBox.getChildren().add(selectedUnitsPane);
+        minimapPane = new MinimapPane();
+        guiHBox.getChildren().add(minimapPane);
+        getChildren().add(guiHBox);
     }
 }
