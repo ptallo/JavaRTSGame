@@ -5,6 +5,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import model_layer.Game;
 import model_layer.InputItem;
 import model_layer.Player;
@@ -35,17 +36,17 @@ public class GameScreen extends VBox {
 
     public void drawGame(double width, double height) {
         initCanvas(width, height);
-        initGUI();
         updateDimensions(width, height);
+        initGUI();
 
         new AnimationTimer() {
             @Override
             public void handle(long now) {
                 if (game.getRunning() && !game.getPaused()){
                     game.draw(gc);
-                    actionPane.update(game);
-                    selectedUnitsPane.update(game);
-                    minimapPane.update(game);
+                    actionPane.update(game, user);
+                    selectedUnitsPane.update(game, user);
+                    minimapPane.update(game, user);
                 }
             }
         }.start();
@@ -102,6 +103,8 @@ public class GameScreen extends VBox {
 
     private void initGUI(){
         guiHBox = new HBox();
+        guiHBox.setFillHeight(true);
+        guiHBox.getChildren().add(new Text("HERE"));
         actionPane = new ActionPane();
         guiHBox.getChildren().add(actionPane);
         selectedUnitsPane = new SelectedUnitsPane();

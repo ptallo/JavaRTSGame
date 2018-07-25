@@ -150,4 +150,12 @@ public class Game implements Serializable {
             });
         }
     }
+
+    public HashMap<Player, ArrayList<ObjectInterface>> getPlayerToSelectedObjectMap() {
+        return playerToSelectedObjectMap;
+    }
+
+    public ArrayList<ObjectInterface> getGameObjects() {
+        return gameObjects;
+    }
 }
