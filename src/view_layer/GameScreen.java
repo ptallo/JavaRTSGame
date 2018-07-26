@@ -104,13 +104,12 @@ public class GameScreen extends VBox {
     private void initGUI(){
         guiHBox = new HBox();
         guiHBox.setFillHeight(true);
-        guiHBox.getChildren().add(new Text("HERE"));
-        actionPane = new ActionPane();
-        guiHBox.getChildren().add(actionPane);
-        selectedUnitsPane = new SelectedUnitsPane();
-        guiHBox.getChildren().add(selectedUnitsPane);
-        minimapPane = new MinimapPane();
-        guiHBox.getChildren().add(minimapPane);
+        guiHBox.setSpacing(width * 0.0125);
+
+        actionPane = new ActionPane(width, height);
+        selectedUnitsPane = new SelectedUnitsPane(width, height);
+        minimapPane = new MinimapPane(width, height);
+        guiHBox.getChildren().addAll(actionPane, selectedUnitsPane, minimapPane);
         getChildren().add(guiHBox);
     }
 }
