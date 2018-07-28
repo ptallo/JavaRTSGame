@@ -11,37 +11,40 @@ import java.util.ArrayList;
 
 public class SelectedUnitsPane extends GuiPane {
 
-    private final int maxItemsPerRow = 10;
+    private final int maxItemsPerRow = 20;
+    private final int maxItemsPerColumn = 5;
 
     public SelectedUnitsPane(Double width, Double height) {
         super(width, height);
     }
 
     @Override
-    public void update(Game game, Player user) {
-        resetUI();
-        populateColumns();
+    protected void populateUI(Game game, Player user) {
         ArrayList<ObjectInterface> selectedObjects = game.getPlayerToSelectedObjectMap().get(user);
         if (selectedObjects != null) {
             for (int i = 0; i < selectedObjects.size(); i++) {
-                if (i % maxItemsPerRow == 0) {
-                    addRow();
-                }
                 RenderComponent renderComponent = selectedObjects.get(i).getRenderComponent();
                 ImageView imageView = new ImageView(renderComponent.getImage());
                 imageView.setViewport(new Rectangle2D(0, 0, renderComponent.getFrameWidth(), renderComponent.getFrameHeight()));
-                add(imageView, i % maxItemsPerRow, i / maxItemsPerRow);
+                if (i <= maxItemsPerColumn * maxItemsPerRow) {
+                    add(imageView, i % maxItemsPerRow, i / maxItemsPerRow);
+                }
             }
         }
     }
 
-    private void populateColumns() {
+    @Override
+    protected void setupUI() {
         for (int i = 0; i < maxItemsPerRow; i++) {
             addColumn();
         }
+        for (int i = 0; i < maxItemsPerColumn; i++) {
+            addRow();
+        }
     }
 
-    private void resetUI() {
+    @Override
+    protected void resetUI() {
         getChildren().removeAll(getChildren());
         getRowConstraints().removeAll(getRowConstraints());
         getColumnConstraints().removeAll(getColumnConstraints());

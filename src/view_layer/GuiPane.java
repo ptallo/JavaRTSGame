@@ -17,7 +17,15 @@ public abstract class GuiPane extends GridPane {
         setMinHeight(height * 0.3);
     }
 
-    abstract void update(Game game, Player use);
+    protected abstract void populateUI(Game game, Player user);
+    protected abstract void setupUI();
+    protected abstract void resetUI();
+
+    public void update(Game game, Player user) {
+        resetUI();
+        setupUI();
+        populateUI(game, user);
+    }
 
     protected void addRow() {
         RowConstraints rowConstraints = new RowConstraints();
