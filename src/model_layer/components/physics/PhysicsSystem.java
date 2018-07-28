@@ -20,7 +20,7 @@ public class PhysicsSystem {
         if (component.isCollidable()) {
             ArrayList<PhysicsComponent> collidedComponents = getCollidedComponents(component.getRectangle(), physicsComponents);
 
-            if (collidedComponents.size() != 0 && component.getVelocity() != 0) {
+            if (collidedComponents.size() != 0) {
                 component.separateComponent(collidedComponents.get(0).getRectangle());
             }
         }

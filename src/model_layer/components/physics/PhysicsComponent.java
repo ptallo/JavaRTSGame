@@ -15,7 +15,6 @@ public class PhysicsComponent implements Serializable {
     private Double velocity;
 
     private boolean collidable; // want to replace with a value greater than 0
-    private boolean separating;
 
     public PhysicsComponent(Rectangle rectangle) {
         this(rectangle, true, 0.25);
@@ -25,7 +24,6 @@ public class PhysicsComponent implements Serializable {
         this.rectangle = rectangle;
         this.collidable = collidable;
         this.velocity = velocity;
-        this.separating = false;
         destinations = new ArrayList<>();
     }
 
@@ -76,15 +74,12 @@ public class PhysicsComponent implements Serializable {
     }
 
     public void separateComponent (Rectangle collidedRect) {
-        if (!separating) {
-            separating = true;
-            double xDir = collidedRect.getX() - getRectangle().getX() > 0  ? -1.0 : 1.0;
-            double yDir = collidedRect.getY() - getRectangle().getY() > 0 ? -1.0 : 1.0;
-            insertDestination(new Point(
-                    rectangle.getX() + (xDir * rectangle.getWidth()),
-                    rectangle.getY() + (yDir * rectangle.getHeight())
-            ),  -1);
-        }
+        double xDir = collidedRect.getX() - getRectangle().getX() > 0  ? -1.0 : 1.0;
+        double yDir = collidedRect.getY() - getRectangle().getY() > 0 ? -1.0 : 1.0;
+        insertDestination(new Point(
+                rectangle.getX() + (xDir * rectangle.getWidth() / 2),
+                rectangle.getY() + (yDir * rectangle.getHeight() / 2)
+        ),  -1);
     }
 
     private void recalculateVelocities() {
