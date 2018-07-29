@@ -15,6 +15,11 @@ public class ActionPane extends GuiPane {
     }
 
     @Override
+    protected void initEventHandlers() {
+
+    }
+
+    @Override
     protected void setupUI() {
 
     }

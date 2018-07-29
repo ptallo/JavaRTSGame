@@ -29,8 +29,6 @@ public class GameScreen extends VBox {
     public GameScreen(Game game, Player user) {
         this.game = game;
         this.user = user;
-
-        initEventHandlers();
     }
 
     public void drawGame(double width, double height) {
@@ -58,35 +56,35 @@ public class GameScreen extends VBox {
     }
 
     private void initEventHandlers() {
-        setOnMousePressed(event -> {
+        canvas.setOnMousePressed(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
-        setOnMouseReleased(event -> {
+        canvas.setOnMouseReleased(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
-        setOnMouseDragged(event -> {
+        canvas.setOnMouseDragged(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
-        setOnKeyPressed(event -> {
+        canvas.setOnKeyPressed(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
-        setOnMouseMoved(event -> {
+        canvas.setOnMouseMoved(event -> {
             InputItem item = new InputItem(event);
             if (user != null) {
                 user.addInput(item);
@@ -98,6 +96,7 @@ public class GameScreen extends VBox {
         canvas = new Canvas(width, height * 0.7);
         getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
+        initEventHandlers();
     }
 
     private void initGUI(){

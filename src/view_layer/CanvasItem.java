@@ -10,11 +10,13 @@ import model_layer.components.physics.Rectangle;
 
 
 
-public class CanvasItem {
+public abstract class CanvasItem {
 
     private Image image;
     private Rectangle drawRect;
     private Rectangle sourceRect;
+
+    abstract void activate();
 
     public CanvasItem(Image image, Rectangle drawRect, Rectangle sourceRect) {
         this.image = image;
@@ -38,10 +40,13 @@ public class CanvasItem {
     }
 
     public void handleMouseEvent(MouseEvent event) {
-
+        if (event.getX() < drawRect.getX() + drawRect.getWidth() && event.getX() > drawRect.getX() &&
+                event.getY() < drawRect.getY() + drawRect.getHeight() && event.getY() > drawRect.getY()) {
+            activate();
+        }
     }
 
-    public void handleKeyPressed(KeyEvent event) {
+    public void handleKeyEvent(KeyEvent event) {
 
     }
 }

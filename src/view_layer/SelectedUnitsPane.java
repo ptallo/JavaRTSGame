@@ -1,7 +1,5 @@
 package view_layer;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.Player;
@@ -19,18 +17,10 @@ public class SelectedUnitsPane extends GuiPane {
     private int maxItemsPerRow = 20;
     private int maxItemsPerColumn = 5;
 
-    private Canvas canvas;
-    private GraphicsContext gc;
-
     private HashMap<ObjectInterface, CanvasItem> canvasItems = new HashMap<>();
 
     public SelectedUnitsPane(Double width, Double height) {
         super(width, height);
-        canvas = new Canvas();
-        gc = canvas.getGraphicsContext2D();
-        addRow();
-        addColumn();
-        add(canvas, 0, 0);
     }
 
     @Override
@@ -49,7 +39,12 @@ public class SelectedUnitsPane extends GuiPane {
                 Rectangle sourceRect = new Rectangle(0, 0, renderComponent.getFrameWidth(), renderComponent.getFrameHeight());
 
                 if (item == null) {
-                    item = new CanvasItem(renderComponent.getImage(), drawRect, sourceRect);
+                    item = new CanvasItem(renderComponent.getImage(), drawRect, sourceRect) {
+                        @Override
+                        void activate() {
+                            System.out.println("SELECTED ITEM");
+                        }
+                    };
                 } else {
                     item.setDrawPoint(new Point(drawRect.getX(), drawRect.getY()));
                 }
