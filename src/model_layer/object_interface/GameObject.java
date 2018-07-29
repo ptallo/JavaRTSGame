@@ -20,7 +20,7 @@ public class GameObject implements Serializable, ObjectInterface {
         physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0), collidable, velocity);
         Rectangle rectangle = physicsComponent.getRectangle();
 
-        renderComponent = new RenderComponent("character.png", new Point(x, y), 32, 32, -8, -20);
+        renderComponent = new RenderComponent("character/character.png", new Point(x, y), 32, 32, -8, -20);
         renderComponent.setDrawPoint(new Point(rectangle.getX(), rectangle.getY()));
         renderComponent.addAnimation("idle", 0, 4, 250);
         renderComponent.addAnimation("moving", 5, 8, 250);
