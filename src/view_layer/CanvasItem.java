@@ -2,12 +2,12 @@ package view_layer;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 
 public class CanvasItem {
@@ -42,6 +42,6 @@ public class CanvasItem {
     }
 
     public void handleKeyPressed(KeyEvent event) {
-        
+
     }
 }

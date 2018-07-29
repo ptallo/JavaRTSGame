@@ -78,11 +78,9 @@ public class SelectedUnitsPane extends GuiPane {
     @Override
     protected void initEventHandlers() {
         canvas.setOnMousePressed(event -> {
-
-        });
-
-        canvas.setOnKeyPressed(event -> {
-
+            for (CanvasItem item : canvasItems.values()) {
+                item.handleMouseEvent(event);
+            }
         });
     }
 }
