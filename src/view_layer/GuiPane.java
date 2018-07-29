@@ -1,16 +1,19 @@
 package view_layer;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.Player;
 
 public abstract class GuiPane extends GridPane {
 
+    private boolean initialized = false;
     protected Canvas canvas;
     protected GraphicsContext gc;
 
@@ -30,17 +33,29 @@ public abstract class GuiPane extends GridPane {
     }
 
     protected abstract void populateUI(Game game, Player user);
-    protected abstract void setupUI();
-    protected abstract void resetUI();
     protected abstract void initEventHandlers();
 
     public void update(Game game, Player user) {
+        setMargin(canvas, new Insets(0, 0, 0, 0));
         resetUI();
         setupUI();
         populateUI(game, user);
     }
 
-    protected void addRow() {
+    private void resetUI() {
+        gc.setFill(Color.WHITE);
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    protected void setupUI() {
+        if (!initialized || (canvas.getWidth() == 0 && canvas.getHeight() == 0)) {
+            initialized = true;
+            canvas.setWidth(getWidth());
+            canvas.setHeight(getHeight());
+        }
+    }
+
+    private void addRow() {
         RowConstraints rowConstraints = new RowConstraints();
         getRowConstraints().add(rowConstraints);
 
@@ -49,7 +64,7 @@ public abstract class GuiPane extends GridPane {
         }
     }
 
-    protected void addColumn() {
+    private void addColumn() {
         ColumnConstraints columnConstraints = new ColumnConstraints();
         getColumnConstraints().add(columnConstraints);
 

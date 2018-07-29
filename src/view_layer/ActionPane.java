@@ -10,27 +10,12 @@ public class ActionPane extends GuiPane {
     }
 
     @Override
-    protected void resetUI() {
-
-    }
-
-    @Override
     protected void initEventHandlers() {
 
     }
 
     @Override
-    protected void setupUI() {
-
-    }
-
-    @Override
     protected void populateUI(Game game, Player user) {
-
-    }
-
-    @Override
-    public void update(Game game, Player use) {
 
     }
 }

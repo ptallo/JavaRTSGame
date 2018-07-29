@@ -1,7 +1,9 @@
 package view_layer;
 
+import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.Player;
+import model_layer.object_interface.map.MapTile;
 
 public class MinimapPane extends GuiPane {
 
@@ -10,27 +12,13 @@ public class MinimapPane extends GuiPane {
     }
 
     @Override
-    protected void resetUI() {
-
-    }
-
-    @Override
     protected void initEventHandlers() {
 
     }
 
     @Override
-    protected void setupUI() {
-
-    }
-
-    @Override
     protected void populateUI(Game game, Player user) {
-
-    }
-
-    @Override
-    public void update(Game game, Player use) {
-
+        // determine needed scale
+        
     }
 }

@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 public class SelectedUnitsPane extends GuiPane {
 
-    private boolean initialized = false;
     private int maxItemsPerRow = 20;
     private int maxItemsPerColumn = 5;
 
@@ -57,21 +56,6 @@ public class SelectedUnitsPane extends GuiPane {
                 item.draw(gc);
             }
         }
-    }
-
-    @Override
-    protected void setupUI() {
-        if (!initialized || (canvas.getWidth() == 0 && canvas.getHeight() == 0)) {
-            canvas.setWidth(getWidth());
-            canvas.setHeight(getHeight());
-            initialized = true;
-        }
-    }
-
-    @Override
-    protected void resetUI() {
-        gc.setFill(Color.WHITE);
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     @Override

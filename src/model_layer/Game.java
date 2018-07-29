@@ -158,4 +158,8 @@ public class Game implements Serializable {
     public ArrayList<ObjectInterface> getGameObjects() {
         return gameObjects;
     }
+
+    public Map getMap() {
+        return map;
+    }
 }
