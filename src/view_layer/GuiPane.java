@@ -15,11 +15,13 @@ public abstract class GuiPane extends GridPane {
         setStyle("-fx-border-color: #050101");
         setMinWidth(width * 0.975 / 3);
         setMinHeight(height * 0.3);
+        initEventHandlers();
     }
 
     protected abstract void populateUI(Game game, Player user);
     protected abstract void setupUI();
     protected abstract void resetUI();
+    protected abstract void initEventHandlers();
 
     public void update(Game game, Player user) {
         resetUI();
