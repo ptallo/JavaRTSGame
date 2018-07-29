@@ -16,7 +16,7 @@ public abstract class CanvasItem {
     private Rectangle drawRect;
     private Rectangle sourceRect;
 
-    abstract void activate();
+    abstract void activate(MouseEvent event);
 
     public CanvasItem(Image image, Rectangle drawRect, Rectangle sourceRect) {
         this.image = image;
@@ -42,11 +42,12 @@ public abstract class CanvasItem {
     public void handleMouseEvent(MouseEvent event) {
         if (event.getX() < drawRect.getX() + drawRect.getWidth() && event.getX() > drawRect.getX() &&
                 event.getY() < drawRect.getY() + drawRect.getHeight() && event.getY() > drawRect.getY()) {
-            activate();
+            activate(event);
         }
     }
 
     public void handleKeyEvent(KeyEvent event) {
 
     }
+
 }

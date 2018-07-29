@@ -1,5 +1,6 @@
 package view_layer;
 
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.Player;
@@ -29,7 +30,8 @@ public class SelectedUnitsPane extends GuiPane {
         if (selectedObjects != null) {
             for (int i = 0; i < selectedObjects.size(); i++) {
                 CanvasItem item = canvasItems.get(selectedObjects.get(i));
-                RenderComponent renderComponent = selectedObjects.get(i).getRenderComponent();
+                ObjectInterface objectInterface = selectedObjects.get(i);
+                RenderComponent renderComponent = objectInterface.getRenderComponent();
                 Rectangle drawRect = new Rectangle(
                         i % maxItemsPerRow * renderComponent.getFrameWidth(),
                         i / maxItemsPerRow * renderComponent.getFrameHeight(),
@@ -41,8 +43,10 @@ public class SelectedUnitsPane extends GuiPane {
                 if (item == null) {
                     item = new CanvasItem(renderComponent.getImage(), drawRect, sourceRect) {
                         @Override
-                        void activate() {
-                            System.out.println("SELECTED ITEM");
+                        void activate(MouseEvent event) {
+                            if (event.isControlDown()){
+                                game.getPlayerToSelectedObjectMap().get(user).remove(objectInterface);
+                            }
                         }
                     };
                 } else {
