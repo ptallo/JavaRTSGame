@@ -48,13 +48,13 @@ public class Game implements Serializable {
 
         map = new Map();
 
-        GameObject object = new GameObject(100, 100, true, 0.25);
+        GameObject object = new GameObject(100, 100, true, 0.25, user);
         object.getUnitCreationComponent().addEntityToList(
-                new GameObject(100, 100, true, 0.25),
+                new GameObject(100, 100, true, 0.25, user),
                 new Point(200, 100)
         );
         gameObjects.add(object);
-        gameObjects.add(new GameObject(100, 200, true, 0.25));
+        gameObjects.add(new GameObject(100, 200, true, 0.25, user));
     }
 
     public void update(){

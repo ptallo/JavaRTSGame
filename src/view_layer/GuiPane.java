@@ -43,8 +43,8 @@ public abstract class GuiPane extends GridPane {
     }
 
     private void resetUI() {
-        gc.setFill(Color.WHITE);
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(Color.LIGHTGREY);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     protected void setupUI() {

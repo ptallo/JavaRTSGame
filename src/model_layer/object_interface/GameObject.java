@@ -1,5 +1,6 @@
 package model_layer.object_interface;
 
+import model_layer.Player;
 import model_layer.components.SelectionComponent;
 import model_layer.components.UnitCreationComponent;
 import model_layer.components.graphics.RenderComponent;
@@ -16,7 +17,11 @@ public class GameObject implements Serializable, ObjectInterface {
     private SelectionComponent selectionComponent;
     private UnitCreationComponent unitCreationComponent;
 
-    public GameObject(double x, double y, boolean collidable, double velocity){
+    private Player owner;
+
+    public GameObject(double x, double y, boolean collidable, double velocity, Player owner){
+        this.owner = owner;
+
         physicsComponent = new PhysicsComponent(new Rectangle(x , y, 16.0, 16.0), collidable, velocity);
         Rectangle rectangle = physicsComponent.getRectangle();
 
@@ -49,6 +54,11 @@ public class GameObject implements Serializable, ObjectInterface {
     @Override
     public UnitCreationComponent getUnitCreationComponent() {
         return unitCreationComponent;
+    }
+
+    @Override
+    public Player getOwner() {
+        return owner;
     }
 
     @Override

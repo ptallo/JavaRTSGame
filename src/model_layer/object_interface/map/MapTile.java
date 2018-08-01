@@ -1,5 +1,6 @@
 package model_layer.object_interface.map;
 
+import model_layer.Player;
 import model_layer.components.SelectionComponent;
 import model_layer.components.UnitCreationComponent;
 import model_layer.components.graphics.RenderComponent;
@@ -38,6 +39,11 @@ public class MapTile implements Serializable, ObjectInterface {
 
     @Override
     public UnitCreationComponent getUnitCreationComponent() {
+        return null;
+    }
+
+    @Override
+    public Player getOwner() {
         return null;
     }
 

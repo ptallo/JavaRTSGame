@@ -2,6 +2,7 @@ package model_layer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -23,6 +24,8 @@ public class Player implements Serializable {
 
     private Double screenWidth;
     private Double screenHeight;
+
+    private Color playerColor = Color.BLUE;
 
     private Double transformSpeed = 5.0;
     private Double xTransform = 0.0;
@@ -81,18 +84,18 @@ public class Player implements Serializable {
         }
     }
 
-    public void updateTransformDirection(MouseEvent event){
-        if (event.getX() < screenWidth * 0.05){
+    public void updateTransformDirection(MouseEvent event, Canvas canvas, Boolean isCanvasEvent){
+        if (event.getX() < canvas.getWidth() * 0.05){
             updateXTransform = 1;
-        } else if (event.getX() > screenWidth * 0.95) {
+        } else if (event.getX() > canvas.getWidth() * 0.95) {
             updateXTransform = -1;
         } else {
             updateXTransform = 0;
         }
 
-        if (event.getY() < screenHeight * 0.05){
+        if (event.getY() < canvas.getHeight() * 0.05 && isCanvasEvent){
             updateYTransform = 1;
-        } else if (event.getY() > screenHeight * 0.95) {
+        } else if (event.getY() > canvas.getHeight() * 0.95 && isCanvasEvent) {
             updateYTransform = -1;
         } else {
             updateYTransform = 0;
@@ -118,5 +121,9 @@ public class Player implements Serializable {
 
     public ObservableList<InputItem> getInputs() {
         return inputs;
+    }
+
+    public Color getPlayerColor() {
+        return playerColor;
     }
 }

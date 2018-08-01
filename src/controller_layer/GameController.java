@@ -47,11 +47,11 @@ public class GameController {
             user.updateRect((MouseEvent) item.getEvent());
         } else if (item.getEvent().getEventType() == MouseEvent.MOUSE_DRAGGED) {
             user.updateRect((MouseEvent) item.getEvent());
-            user.updateTransformDirection((MouseEvent) item.getEvent());
+            user.updateTransformDirection((MouseEvent) item.getEvent(), view.getCanvas(), item.getSourceNode() == view.getCanvas());
         } else if (item.getEvent().getEventType() == KeyEvent.KEY_PRESSED) {
 
         } else if (item.getEvent().getEventType() == MouseEvent.MOUSE_MOVED) {
-            user.updateTransformDirection((MouseEvent) item.getEvent());
+            user.updateTransformDirection((MouseEvent) item.getEvent(), view.getCanvas(), item.getSourceNode() == view.getCanvas());
         }
     }
 

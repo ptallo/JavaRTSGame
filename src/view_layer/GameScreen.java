@@ -35,6 +35,7 @@ public class GameScreen extends VBox {
         initCanvas(width, height);
         updateDimensions(width, height);
         initGUI();
+        initEventHandlers();
 
         new AnimationTimer() {
             @Override
@@ -57,35 +58,42 @@ public class GameScreen extends VBox {
 
     private void initEventHandlers() {
         canvas.setOnMousePressed(event -> {
-            InputItem item = new InputItem(event);
+            InputItem item = new InputItem(event, canvas);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
         canvas.setOnMouseReleased(event -> {
-            InputItem item = new InputItem(event);
+            InputItem item = new InputItem(event, canvas);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
         canvas.setOnMouseDragged(event -> {
-            InputItem item = new InputItem(event);
+            InputItem item = new InputItem(event, canvas);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
         canvas.setOnKeyPressed(event -> {
-            InputItem item = new InputItem(event);
+            InputItem item = new InputItem(event, canvas);
             if (user != null) {
                 user.addInput(item);
             }
         });
 
         canvas.setOnMouseMoved(event -> {
-            InputItem item = new InputItem(event);
+            InputItem item = new InputItem(event, canvas);
+            if (user != null) {
+                user.addInput(item);
+            }
+        });
+
+        guiHBox.setOnMouseMoved(event -> {
+            InputItem item = new InputItem(event, guiHBox);
             if (user != null) {
                 user.addInput(item);
             }
@@ -96,7 +104,6 @@ public class GameScreen extends VBox {
         canvas = new Canvas(width, height * 0.7);
         getChildren().add(canvas);
         gc = canvas.getGraphicsContext2D();
-        initEventHandlers();
     }
 
     private void initGUI(){
@@ -109,5 +116,9 @@ public class GameScreen extends VBox {
         minimapPane = new MinimapPane(width, height);
         guiHBox.getChildren().addAll(actionPane, selectedUnitsPane, minimapPane);
         getChildren().add(guiHBox);
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 }
