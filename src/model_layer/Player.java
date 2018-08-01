@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import model_layer.components.physics.Point;
 import model_layer.components.physics.Rectangle;
+import model_layer.object_interface.map.Map;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -59,17 +60,32 @@ public class Player implements Serializable {
         }
     }
 
-    public void updateTransform(GraphicsContext gc) {
+    public void updateTransform(GraphicsContext gc, Map map) {
+        Double newX = null;
         if (updateXTransform > 0) {
-            xTransform += transformSpeed;
+            newX = xTransform + transformSpeed;
         } else if (updateXTransform < 0) {
-            xTransform += -transformSpeed;
+            newX = xTransform - transformSpeed;
+
         }
 
+        Double newY = null;
         if (updateYTransform > 0) {
-            yTransform += transformSpeed;
+            newY = yTransform + transformSpeed;
         } else if (updateYTransform < 0) {
-            yTransform += -transformSpeed;
+            newY = yTransform - transformSpeed;
+        }
+
+        Rectangle screenRect = new Rectangle(
+                newX == null ? -xTransform : -newX,
+                newY == null ? -yTransform : -newY,
+                screenWidth,
+                screenHeight
+        );
+
+        if (map.getMapRectangle().containsFully(screenRect)) {
+            xTransform = -screenRect.getX();
+            yTransform = -screenRect.getY();
         }
 
         gc.setTransform(1, 0, 0, 1, xTransform, yTransform);

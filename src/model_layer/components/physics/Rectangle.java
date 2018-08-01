@@ -30,8 +30,8 @@ public class Rectangle {
     }
 
     public Boolean containsFully(Rectangle rectangle) {
-        return rectangle.getX() > x && rectangle.getX() + rectangle.getWidth() < x + width &&
-                rectangle.getY() > y && rectangle.getY() + rectangle.getHeight() < y + height;
+        return rectangle.getX() >= x && rectangle.getX() + rectangle.getWidth() <= x + width &&
+                rectangle.getY() >= y && rectangle.getY() + rectangle.getHeight() <= y + height;
     }
 
     /**
@@ -83,5 +83,9 @@ public class Rectangle {
 
     public Double getHeight() {
         return height;
+    }
+
+    public String toString() {
+        return "x: " + x + ", y: " + y + ", width: " + width + ", height: " + height;
     }
 }

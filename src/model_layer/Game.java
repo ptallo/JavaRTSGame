@@ -96,7 +96,7 @@ public class Game implements Serializable {
     }
 
     public void draw(GraphicsContext gc) {
-        user.updateTransform(gc);
+        user.updateTransform(gc, map);
 
         map.draw();
         map.getMapTiles().forEach(mapTile -> renderSystem.draw(gc, mapTile.getRenderComponent()));
