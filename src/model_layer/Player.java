@@ -142,4 +142,13 @@ public class Player implements Serializable {
     public Color getPlayerColor() {
         return playerColor;
     }
+
+    public Rectangle getScreenRectangle() {
+        return new Rectangle(
+                -xTransform,
+                -yTransform,
+                screenWidth,
+                screenHeight
+        );
+    }
 }

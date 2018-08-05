@@ -3,7 +3,6 @@ package view_layer;
 import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.Player;
-import model_layer.components.graphics.RenderSystem;
 import model_layer.components.physics.Rectangle;
 import model_layer.object_interface.ObjectInterface;
 import model_layer.object_interface.map.MapTile;
@@ -12,11 +11,10 @@ import java.util.ArrayList;
 
 public class MinimapPane extends GuiPane {
 
-    private RenderSystem renderSystem = new RenderSystem();
-
     public MinimapPane(Double width, Double height) {
         super(width, height);
     }
+
 
     @Override
     protected void initEventHandlers() {
@@ -41,8 +39,7 @@ public class MinimapPane extends GuiPane {
             );
         }
 
-        ArrayList<ObjectInterface> objects = new ArrayList<>();
-        objects.addAll(game.getGameObjects());
+        ArrayList<ObjectInterface> objects = new ArrayList<>(game.getGameObjects());
         for (ObjectInterface objectInterface : objects) {
             Color tileColor = objectInterface.getOwner().getPlayerColor();
             gc.setFill(tileColor);
@@ -54,5 +51,14 @@ public class MinimapPane extends GuiPane {
                     drawRect.getHeight() * yScale
             );
         }
+
+        Rectangle rectangle = user.getScreenRectangle();
+        gc.setStroke(Color.BLACK);
+        gc.strokeRect(
+                rectangle.getX() * xScale,
+                rectangle.getY() * yScale,
+                rectangle.getWidth() * xScale,
+                rectangle.getHeight() * yScale
+        );
     }
 }
