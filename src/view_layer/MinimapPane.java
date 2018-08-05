@@ -27,6 +27,14 @@ public class MinimapPane extends GuiPane {
         Double xScale = canvas.getWidth() / mapRectangle.getWidth();
         Double yScale = canvas.getHeight() / mapRectangle.getHeight();
 
+        drawMapTiles(game, xScale, yScale);
+
+        drawGameObjects(game, xScale, yScale);
+
+        drawUserScreen(user, xScale, yScale);
+    }
+
+    private void drawMapTiles(Game game, Double xScale, Double yScale) {
         for (MapTile tile : game.getMap().getMapTiles()) {
             Color tileColor = tile.getRenderComponent().getImage().getPixelReader().getColor(0, 0);
             gc.setFill(tileColor);
@@ -38,7 +46,9 @@ public class MinimapPane extends GuiPane {
                     drawRect.getHeight() * yScale
             );
         }
+    }
 
+    private void drawGameObjects(Game game, Double xScale, Double yScale) {
         ArrayList<ObjectInterface> objects = new ArrayList<>(game.getGameObjects());
         for (ObjectInterface objectInterface : objects) {
             Color tileColor = objectInterface.getOwner().getPlayerColor();
@@ -51,7 +61,9 @@ public class MinimapPane extends GuiPane {
                     drawRect.getHeight() * yScale
             );
         }
+    }
 
+    private void drawUserScreen(Player user, Double xScale, Double yScale) {
         Rectangle rectangle = user.getScreenRectangle();
         gc.setStroke(Color.BLACK);
         gc.strokeRect(
