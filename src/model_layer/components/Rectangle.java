@@ -1,4 +1,4 @@
-package model_layer.components.physics;
+package model_layer.components;
 
 import java.util.ArrayList;
 import java.util.List;

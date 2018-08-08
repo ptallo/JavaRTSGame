@@ -3,7 +3,7 @@ package view_layer;
 import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.Player;
-import model_layer.components.physics.Rectangle;
+import model_layer.components.Rectangle;
 import model_layer.object_interface.ObjectInterface;
 import model_layer.object_interface.map.MapTile;
 

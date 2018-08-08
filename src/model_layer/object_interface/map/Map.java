@@ -1,8 +1,8 @@
 package model_layer.object_interface.map;
 
 import model_layer.components.physics.PhysicsComponent;
-import model_layer.components.physics.Point;
-import model_layer.components.physics.Rectangle;
+import model_layer.components.Point;
+import model_layer.components.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Collections;

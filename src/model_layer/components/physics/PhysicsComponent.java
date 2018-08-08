@@ -1,6 +1,8 @@
 package model_layer.components.physics;
 
 import controller_layer.GameController;
+import model_layer.components.Point;
+import model_layer.components.Rectangle;
 
 import java.io.Serializable;
 import java.util.ArrayList;

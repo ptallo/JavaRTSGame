@@ -1,12 +1,11 @@
 package view_layer;
 
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import model_layer.Game;
 import model_layer.Player;
 import model_layer.components.graphics.RenderComponent;
-import model_layer.components.physics.Point;
-import model_layer.components.physics.Rectangle;
+import model_layer.components.Point;
+import model_layer.components.Rectangle;
 import model_layer.object_interface.ObjectInterface;
 
 import java.util.ArrayList;

@@ -1,11 +1,11 @@
 package model_layer.object_interface.map;
 
 import model_layer.Player;
-import model_layer.components.SelectionComponent;
-import model_layer.components.UnitCreationComponent;
+import model_layer.components.selection.SelectionComponent;
+import model_layer.components.unit_creation.UnitCreationComponent;
 import model_layer.components.graphics.RenderComponent;
 import model_layer.components.physics.PhysicsComponent;
-import model_layer.components.physics.Point;
+import model_layer.components.Point;
 import model_layer.object_interface.ObjectInterface;
 
 import java.io.Serializable;

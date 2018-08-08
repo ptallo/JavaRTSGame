@@ -1,4 +1,4 @@
-package model_layer.components.physics;
+package model_layer.components;
 
 public class Point {
 

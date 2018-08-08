@@ -2,7 +2,7 @@ package model_layer.components.graphics;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import model_layer.components.physics.Point;
+import model_layer.components.Point;
 
 public class Animation {
 

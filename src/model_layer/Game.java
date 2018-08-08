@@ -2,12 +2,12 @@ package model_layer;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import model_layer.components.SelectionSystem;
-import model_layer.components.UnitCreationSystem;
+import model_layer.components.selection.SelectionSystem;
+import model_layer.components.unit_creation.UnitCreationSystem;
 import model_layer.components.graphics.RenderSystem;
 import model_layer.components.physics.PhysicsSystem;
-import model_layer.components.physics.Point;
-import model_layer.components.physics.Rectangle;
+import model_layer.components.Point;
+import model_layer.components.Rectangle;
 import model_layer.object_interface.GameObject;
 import model_layer.object_interface.ObjectInterface;
 import model_layer.object_interface.map.Map;
@@ -49,10 +49,10 @@ public class Game implements Serializable {
         map = new Map();
 
         GameObject object = new GameObject(100, 100, true, 0.25, user);
-        object.getUnitCreationComponent().addEntityToList(
-                new GameObject(100, 100, true, 0.25, user),
-                new Point(200, 100)
-        );
+//        object.getUnitCreationComponent().addEntityToList(
+//                new GameObject(100, 100, true, 0.25, user),
+//                new Point(200, 100)
+//        );
         gameObjects.add(object);
         gameObjects.add(new GameObject(100, 200, true, 0.25, user));
     }
