@@ -1,6 +1,6 @@
-package model_layer.components;
+package model_layer.components.unit_creation;
 
-import model_layer.components.physics.Point;
+import model_layer.components.Point;
 import model_layer.object_interface.ObjectInterface;
 
 import java.util.ArrayList;

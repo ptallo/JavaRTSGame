@@ -1,8 +1,8 @@
-package model_layer.components;
+package model_layer.components.selection;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import model_layer.components.physics.Rectangle;
+import model_layer.components.Rectangle;
 
 public class SelectionSystem {
     public void draw(GraphicsContext gc, SelectionComponent component){

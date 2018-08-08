@@ -1,7 +1,7 @@
-package model_layer.components;
+package model_layer.components.selection;
 
-import model_layer.components.physics.Point;
-import model_layer.components.physics.Rectangle;
+import model_layer.components.Point;
+import model_layer.components.Rectangle;
 
 public class SelectionComponent {
 
